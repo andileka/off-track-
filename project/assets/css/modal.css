@@ -1,0 +1,36 @@
+.modal-dialog{
+	width:calc(100% - 10px);
+	max-width: 800px;
+	margin: 0 auto;
+	top:5px;
+}
+.modal-body{
+	max-height: calc(100vh - 50px);
+	overflow: auto;
+	overflow-x: hidden;
+	background: #f9f9f9;
+}
+.modal-header{
+	padding:0px 15px;
+	height:40px;
+	display: flex;
+	align-items: center;
+}
+.modal-header h4{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.modal-header .close{
+	float:none;
+	margin-left: auto;
+	transition: opacity 0.2s ease;
+}
+.modal-header .close:hover, .modal-header .close:focus, .modal-header .close:active{
+	background: 0;
+	color:#DD4B39;
+	opacity: 1;
+}
+.modal-body .entityWrap{
+	padding:0;
+}

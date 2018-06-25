@@ -1,0 +1,177 @@
+/** MAINTENANCE **/
+.menu_block_item_wrapper{
+	margin-bottom: 5px;
+	margin-top: 15px;
+}
+.menu_block_item{
+	margin:15px;
+	float:left;
+	width: 150px;
+    height: 150px;
+    background: #3c8dbc;
+    border-radius: 5px;
+    font-size: 20px;
+    color: #FFF;
+    text-align: center;
+	cursor:pointer;
+
+}
+.block_vehicles:after{
+	margin-left:-70px;
+	position:absolute;
+	margin-top:50px;
+	font-size: 45px;
+	text-indent:10px;
+	color:#FFF;
+	border-radius:50px;
+	font-family: "FontAwesome";
+	content: "\f1b9";
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+.block_teams:after,.block_users:after{
+	margin-left:-60px;
+	position:absolute;
+	margin-top:45px;
+	font-size: 45px;
+	text-indent:10px;
+	color:#FFF;
+	border-radius:50px;
+	font-family: "FontAwesome";
+	content: "\f0c0";
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+.block_config:after{
+	margin-left:-60px;
+	position:absolute;
+	margin-top:50px;
+	font-size: 45px;
+	text-indent:10px;
+	color:#FFF;
+	border-radius:50px;
+	font-family: "FontAwesome";
+	content: "\f085";
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+.block_communication:after{
+	margin-left:-100px;
+	position:absolute;
+	margin-top:50px;
+	font-size: 45px;
+	text-indent:10px;
+	color:#FFF;
+	border-radius:50px;
+	font-family: "FontAwesome";
+	content: "\f086";
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+.block_area:after{
+	margin-left:-50px;
+	position:absolute;
+	margin-top:50px;
+	font-size: 45px;
+	text-indent:10px;
+	color:#FFF;
+	border-radius:50px;
+	font-family: "FontAwesome";
+	content: "\f279";
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+.block_entity:after{
+	margin-left:-50px;
+	position:absolute;
+	margin-top:50px;
+	font-size: 45px;
+	text-indent:10px;
+	color:#FFF;
+	border-radius:50px;
+	font-family: "FontAwesome";
+	content: "\f275";
+    font-style: normal;
+    font-weight: regular;
+    text-decoration: inherit;
+}
+.block_expert:after{
+	margin-left:-60px;
+	position:absolute;
+	margin-top:50px;
+	font-size: 45px;
+	text-indent:10px;
+	color:#FFF;
+	border-radius:50px;
+	font-family: "FontAwesome";
+	content: "\f2bd";
+    font-style: normal;
+    font-weight: regular;
+    text-decoration: inherit;
+}
+.block_appointments:after{
+	margin-left:-90px;
+	position:absolute;
+	margin-top:50px;
+	font-size: 45px;
+	text-indent:10px;
+	color:#FFF;
+	border-radius:50px;
+	font-family: "FontAwesome";
+	content: "\f073";
+    font-style: normal;
+    font-weight: regular;
+    text-decoration: inherit;
+}
+.block_customfields:after{
+	margin-left:-90px;
+	position:absolute;
+	margin-top:50px;
+	font-size: 45px;
+	text-indent:10px;
+	color:#FFF;
+	border-radius:50px;
+	font-family: "FontAwesome";
+	content: "\f0ad";
+    font-style: normal;
+    font-weight: regular;
+    text-decoration: inherit;
+}
+.block_workflow:after{
+	margin-left:-70px;
+	position:absolute;
+	margin-top:50px;
+	font-size: 45px;
+	text-indent:10px;
+	color:#FFF;
+	border-radius:50px;
+	font-family: "FontAwesome";
+	content: "\f110";
+    font-style: normal;
+    font-weight: regular;
+    text-decoration: inherit;
+}
+.block_job:after{
+	margin-left:-40px;
+	position:absolute;
+	margin-top:50px;
+	font-size: 45px;
+	text-indent:10px;
+	color:#FFF;
+	border-radius:50px;
+	font-family: "FontAwesome";
+	content: "\f140";
+    font-style: normal;
+    font-weight: regular;
+    text-decoration: inherit;
+}
+.menu_block_item:hover{
+	background: #CCC;
+}
+
+/** END MAINTENANCE **/ 

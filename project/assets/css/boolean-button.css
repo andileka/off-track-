@@ -1,0 +1,226 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 22, 2018, 9:14:32 AM
+    Author     : kenny
+*/
+.boolean-button{
+	width:100%;
+	z-index: 0;
+
+}
+.boolean-button label.btn{
+	padding:8px;
+}
+.three-buttons .ui-checkboxradio-icon-space, .three-buttons .ui-checkboxradio-icon,
+.two-buttons .ui-checkboxradio-icon-space, .two-buttons .ui-checkboxradio-icon
+.boolean-button .ui-checkboxradio-icon-space, .boolean-button .ui-checkboxradio-icon,
+.chk_select.form-group .ui-checkboxradio-icon, .chk_select .ui-checkboxradio-icon {
+	display: none;
+}
+.row .ui-button{
+	border-radius: 0;
+	font-weight: 400;
+	padding:8px;
+	font-size: 14px;
+}
+.boolean-button label {
+	width: calc(20% - 1px);
+	margin-left: 1px !important;
+	background: #fff;
+	font-weight: 400 !important;
+	font-size: 14px;
+	text-transform: uppercase;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.workflow_boolean >.boolean-button label {
+	width: 20%;
+}
+
+.boolean-button label.green{
+	border:1px solid rgba(0,166,90,1);
+	color:rgba(0,166,90,1);
+}
+.boolean-button label.green.active, .boolean-button label.green:hover  {
+	background-color: rgba(0,166,90,1);
+	color:#fff;
+}
+
+.boolean-button label.red{
+	border:1px solid rgba(221,75,57,1);
+	color:rgba(221,75,57,1);
+}
+.boolean-button label.red.active, .boolean-button label.red:hover  {
+	background-color: rgba(221,75,57,1);
+	color:#fff;
+
+}
+
+.boolean-button label.blue{
+	border:1px solid rgba(60,141,188,1);
+	color:rgba(60,141,188,1);
+	
+}
+.boolean-button label.blue.active, .boolean-button label.blue:hover {
+	background-color: rgba(60,141,188,1);
+	color:#FFF;
+
+}
+
+.boolean-button label.yellow{
+	border:1px solid rgba(249,219,125,1);
+	color:rgba(249,219,125,1);
+	
+}
+.boolean-button label.yellow.active, .boolean-button label.yellow:hover  {
+	background-color: rgba(249,219,125,1);
+	color:#FFF;
+
+}
+
+.boolean-button label.pink{
+	border:1px solid rgba(216, 27, 96, 1);
+	color:rgba(216, 27, 96, 1);
+	
+}
+.boolean-button label.pink.active, .boolean-button label.pink:hover  {
+	background-color: rgba(216, 27, 96, 1);
+	color:#FFF;
+
+}
+.boolean-button label.orange{
+	border:1px solid rgba( 255, 175, 10, 1);
+	color:rgba( 255, 175, 10, 1);
+	
+}
+.boolean-button label.orange.active, .boolean-button label.orange:hover  {
+	background-color: rgba( 255, 175, 10, 1);
+	color:#FFF;
+}
+.boolean-button label.purple{
+	border:1px solid rgba(64, 40, 144, 1);
+	color:rgba(64, 40, 144, 1);
+	
+}
+.boolean-button label.purple.active, .boolean-button label.purple:hover  {
+	background-color: rgba(64, 40, 144, 1);
+	color:#FFF;
+}
+.boolean-button label.black{
+	border:1px solid rgba(0, 0, 0, 1);
+	color:rgba(0, 0, 0, 1);
+	
+}
+.boolean-button label.black.active, .boolean-button label.black:hover  {
+	background-color: rgba(0, 0, 0, 1);
+	color:#FFF;
+}
+.boolean-button label.white{
+	border:1px solid rgba(255, 255, 255, 1);
+	color:rgba(0, 0, 0, 1);
+	
+}
+.boolean-button label.white.active, .boolean-button label.white:hover  {
+	background-color: rgba(255, 255, 255, 1);
+	color:#000;
+}
+
+
+.boolean-button label.sunrise {
+	border:1px solid rgba(255, 133, 27, 1); /* Old browsers */
+/*	background: -moz-linear-gradient(top, rgba(32,163,154,0.3) 0%, rgba(255,255,186,0.3) 100%);  FF3.6-15 
+	background: -webkit-linear-gradient(top, rgba(32,163,154,0.3) 0%,rgba(255,255,186,0.3) 100%);  Chrome10-25,Safari5.1-6 
+	background: linear-gradient(to bottom, rgba(32,163,154,0.3) 0%,rgba(255,255,186,0.3) 100%);  W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#20a39a', endColorstr='#ffffba',GradientType=0 );  IE6-9 */
+	color: rgba(255, 133, 27, 1);
+}
+.boolean-button label.sunrise.active, .boolean-button label.sunrise:hover  {
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#20a39a+0,ffffba+100 */
+	background: rgba(255, 133, 27, 1);/* Old browsers */
+/*	background: -moz-linear-gradient(top, rgba(32,163,154,1) 0%, rgba(255,255,186,1) 100%);  FF3.6-15 
+	background: -webkit-linear-gradient(top, rgba(32,163,154,1) 0%,rgba(255,255,186,1) 100%);  Chrome10-25,Safari5.1-6 
+	background: linear-gradient(to bottom, rgba(32,163,154,1) 0%,rgba(255,255,186,1) 100%);  W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#20a39a', endColorstr='#ffffba',GradientType=0 );  IE6-9 */
+	color:#FFF;
+}
+
+.boolean-button label.sunset {
+	border:1px solid rgba(34,127,170,1); /* Old browsers */
+/*	background: -moz-linear-gradient(top, rgba(34,127,170,0.3) 0%, rgba(247,98,44,0.3) 100%);  FF3.6-15 
+	background: -webkit-linear-gradient(top, rgba(34,127,170,0.3) 0%,rgba(247,98,44,0.3) 100%);  Chrome10-25,Safari5.1-6 
+	background: linear-gradient(to bottom, rgba(34,127,170,0.3) 0%,rgba(247,98,44,0.3) 100%);  W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#227faa', endColorstr='#f7622c',GradientType=0 );  IE6-9 */
+	
+	color: #FFF;
+}
+.boolean-button label.sunset.active, .boolean-button label.sunset:hover  {
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#227faa+0,f7622c+100 */
+	background: rgba(34,127,170,1); /* Old browsers */
+/*	background: -moz-linear-gradient(top, rgba(34,127,170,1) 0%, rgba(247,98,44,1) 100%);  FF3.6-15 
+	background: -webkit-linear-gradient(top, rgba(34,127,170,1) 0%,rgba(247,98,44,1) 100%);  Chrome10-25,Safari5.1-6 
+	background: linear-gradient(to bottom, rgba(34,127,170,1) 0%,rgba(247,98,44,1) 100%);  W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#227faa', endColorstr='#f7622c',GradientType=0 );  IE6-9 */
+	color:#FFF;
+}
+
+.boolean-button label.sunrise.active, .boolean-button label.sunrise{
+    border:1px solid rgba(255, 133, 27, 1);
+}
+
+.boolean-button label.sunrise.active, .boolean-button label.sunrise:hover{
+   border:1px solid rgba(255, 133, 27, 1);
+}
+
+.boolean-button label.sunset {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#227faa+13,f7622c+78 */
+    border:1px solid rgba(34,127,170,1); /* Old browsers */
+	color :rgba(34,127,170,1);
+/*    background: -moz-linear-gradient(top, rgba(34,127,170,0.3) 13%, rgba(247,98,44,0.3) 78%);  FF3.6-15 
+    background: -webkit-linear-gradient(top, rgba(34,127,170,0.3) 13%,rgba(247,98,44,0.3) 78%);  Chrome10-25,Safari5.1-6 
+    background: linear-gradient(to bottom, rgba(34,127,170,0.3) 13%,rgba(247,98,44,0.3) 78%);  W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ 
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#227faa', endColorstr='#f7622c',GradientType=0 );  IE6-9 */
+    /*background : rgba(0, 31, 63, 0.3);*/
+    
+}
+
+.boolean-button label.sunset.active, .boolean-button label.sunset:hover{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#227faa+13,f7622c+78 */
+    background: rgb(34,127,170,1); /* Old browsers */
+/*    background: -moz-linear-gradient(top, rgba(34,127,170,1) 13%, rgba(247,98,44,1) 78%);  FF3.6-15 
+    background: -webkit-linear-gradient(top, rgba(34,127,170,1) 13%,rgba(247,98,44,1) 78%);  Chrome10-25,Safari5.1-6 
+    background: linear-gradient(to bottom, rgba(34,127,170,1) 13%,rgba(247,98,44,1) 78%);  W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ 
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#227faa', endColorstr='#f7622c',GradientType=0 );  IE6-9 */
+    background : rgba(0, 31, 63, 1);
+    color:#FFF;
+}
+.two-buttons .boolean-button label,.two-buttons.boolean-button label{
+	width: calc(50% - 1px) !important;
+}
+.three-buttons .boolean-button label,.three-buttons.boolean-button label{
+	width: calc(33.33% - 1px) !important;
+}
+
+.chk_select_label{
+	border: #3C8DBC 1px solid !important;
+	background: transparent !important;
+	color: #3C8DBC !important;
+	font-size: 14px !important;
+	margin-left: 1px !important;
+	background: #fff;
+	font-weight: 400 !important;
+	font-size: 14px;
+	text-transform: uppercase;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: calc(100% - 1px);
+}
+.chk_select_label:hover,.chk_select_label.ui-state-active {
+	background: #3C8DBC !important;
+	color: #FFF !important;
+}

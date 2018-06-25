@@ -1,0 +1,70 @@
+.Motorcycle .car_wrapper{
+	/*width: 100%;*/
+	background: url("../images/moto-top.svg") no-repeat;
+	background-size: 17em;
+	height: 125px;
+	background-position-x: 33%;
+	background-position-y: 50%;
+	/* Set max width */
+	width:300px;
+	float:none;
+	margin: 0 auto;
+}
+.car_wrapper{
+	/*width: 100%;*/
+	background: url("../images/car-top.svg") no-repeat;
+	background-size: 17em;
+	height: 125px;
+	background-position-x: 33%;
+	background-position-y: 50%;
+	/* Set max width */
+	width:300px;
+	float:none;
+	margin: 0 auto;
+}
+
+.border{border:solid 1px #DDD;padding:0;}
+.car_block{padding:0;}
+.car_block, .car_block_2{
+	height:25px;
+	background:transparent;
+	color:transparent;
+	text-align:center;
+
+}
+.hover{line-height: 75px;text-align:center;color:#000;}
+.interior_block{
+	height:25px;
+	text-align: center;
+	color:transparent;
+	cursor:pointer;
+}
+.car_block_2, .hover{cursor:pointer;}
+.car_block_2_disabled{cursor:disabled;}
+.car_block_2_disabled, .car_block_2:nth-child(2), .hover{
+	height:75px;
+}
+.interior_block:nth-child(2):hover, .car_block:hover, .car_block_2:hover{
+	color:#FFF;
+	background:rgba(255,0,0,0.5);
+}
+.car_block:first-child{
+	height:127px;
+	cursor:pointer;
+}
+.car_block:nth-child(5){
+	height:129px;
+	cursor:pointer;
+}
+.car_block:first-child:hover, .car_block:nth-child(5):hover, .car_block_2:hover, .hover:hover{
+	background:rgba(255,0,0,0.5);
+}
+.rotate{
+	transform : rotate(90deg);
+}
+@media all and (max-width: 767px) { 
+	/* Fix mobile devices */
+	.damagepointsContainer .form-group{
+		margin: 0;
+	}
+}

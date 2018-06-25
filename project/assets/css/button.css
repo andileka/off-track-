@@ -1,0 +1,73 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 22, 2018, 9:34:22 AM
+    Author     : kenny
+*/
+
+.btn-fa{
+    float:right;
+}
+.btn-fl{
+    float:left !important;
+	margin-top: 10px;
+}
+.fontawsome-button-mail:before {
+    content: "\f0e0";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    color: #000;
+    font-size: 18px;
+    padding-right: 0.5em;
+}
+.fontawsome-button-phone:before {
+    content: "\f095";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    color: #000;
+    font-size: 18px;
+    padding-right: 0.5em;
+}
+.fontawsome-button-relation:before {
+    content: "\f2b5";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    color: #000;
+    font-size: 18px;
+    padding-right: 0.5em;
+}
+
+/* OwnerType */
+.btn-client{
+	background-color: #289059;
+}
+
+.btn-opposition{
+	background-color: #402890;
+}
+
+.single-entity-job > .btn-save-role > .btn{
+    margin-top:0px;
+    width:100%;
+}
+.fa-plus-square{
+	padding:4px;
+}
+@media screen and (max-width: 767px) { 
+    .btnEntitySelect .button{
+        width:100%
+    }
+    /* Add spacing on smaller devices by adding an extra class */
+    .add-button-formgroup > .form-group:first-child{
+        height:15px;
+    }
+}

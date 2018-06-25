@@ -1,0 +1,32 @@
+body.login-page{
+	background: url('../images/astronomy-car-constellation-714059.jpg') no-repeat;
+    background-size: auto auto;
+	background-position-y: -320px;
+	background-size: cover;
+}
+.login-page .main-footer{
+	background: transparent !important;
+	color:#FFF;
+}
+.login-page .content-wrapper, .login-page .main-footer{
+	margin: 0 !important;
+}
+
+.login-page .content-wrapper{
+    padding:15px;
+    height: calc(100vh - 50px) !important;
+	background: transparent !important;
+	
+}
+.login-page .panel-title{
+	font-size: 28px;
+	color: #FFF;
+}
+
+@media screen and (max-width: 767px) { 
+    body.login-page{
+		background-size: auto auto;
+		background-position-y: -0px;
+		background-size: cover;
+	}
+}

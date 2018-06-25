@@ -1,0 +1,104 @@
+.paginator-control{
+	/*display:none;*/
+}
+fa{
+	text-align:center;
+}
+.fa-times{
+	color:#dd4b39;
+}
+.fa-question{
+	color:#f39c12;
+}
+.fa-check{
+	color:rgb(0, 166, 90);
+}
+
+.table, .datagrid {
+  margin-bottom: 0px;
+	border:0;
+	font-size:13px;
+	border-collapse: separate;
+}
+.table tbody tr, .datagrid tbody tr{
+	height: 55px;
+	cursor: pointer;
+}
+.table thead > tr > th, .datagrid thead > tr > th{
+	text-align: left;
+	font-size: 12px;
+	padding:8px;
+	padding-top: 15px;
+	border-bottom: 1px solid #f4f4f4;
+}
+.datagrid thead > tr > th{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	background-color: transparent;
+	color:#333;
+	text-align: left;
+	font-size: 12px;
+	border-bottom: 1px solid #f4f4f4;
+}
+.table thead > tr > th:last-child{
+	text-align: center;
+}
+.table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
+  background: #fff;
+	white-space: nowrap;
+  vertical-align: middle;
+  border: 0;
+	border-bottom: 1px solid #f4f4f4;
+	padding:5px;
+}
+.datagrid > thead > tr > td, .datagrid > tbody > tr > td, .datagrid > tfoot > tr > td{
+	background: #fff;
+	border: 0;
+	border-bottom: 1px solid #f4f4f4;
+	padding:10px 5px;
+	vertical-align: middle;
+}
+.table > thead > tr > th:first-child{
+	text-align: center;
+}
+.table > tbody > tr > td:first-child,.table > tbody > tr > td:last-child, .datagrid > tbody > tr > td:first-child, .datagrid > tbody > tr > td:last-child{
+	border-left: 1px solid #f4f4f4;
+	border-right: 1px solid #f4f4f4;
+}
+.table > tbody > tr > td:first-child{
+	width:50px;
+	text-align: center;
+}
+.datagrid > tbody > tr > td:first-child{
+	text-align: center;
+}
+.table > tbody > tr > td.datecol{
+	width:50px;
+	text-align: center;
+}
+.table .tableSubRow:first-child{
+	margin-bottom: 2px;
+}
+.table .datecol .date{
+	margin: 0 auto;
+}
+.table .idcol{
+	display: none;
+}
+.table .colVehicle{
+
+	padding-left: 10px;
+}
+.table .colTotalLoss{
+
+}
+@media screen and (max-width: 1200px) {
+
+}
+@media screen and (max-width: 960px) {
+
+
+}
+@media screen and (max-width: 550px) {
+}

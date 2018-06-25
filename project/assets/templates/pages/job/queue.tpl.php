@@ -1,0 +1,1 @@
+<div class="col-sm-12 wrapper-content"><?php $_CONTROL->pnlMain->Render(); ?></div>

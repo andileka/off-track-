@@ -1,0 +1,78 @@
+
+/*image gallery*/
+.image-checkbox {
+	cursor: pointer;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	border: 4px solid transparent;
+	margin-bottom: 0;
+	outline: 0;
+}
+
+.image-checkbox input[type="checkbox"] {
+	display: none;
+}
+
+.image-checkbox-checked {
+	border-color: #4783B0;
+}
+.image-checkbox .fa {
+  position: absolute;
+  color: #4A79A3;
+  background-color: #fff;
+  padding: 10px;
+  top: 0;
+  right: 0;
+}
+.image-checkbox-checked .fa {
+  display: block !important;
+}
+
+.img-responsive {
+	overflow: hidden;
+	object-fit: cover;
+	width:	100%;
+	min-height:150px;
+	height: auto;
+	opacity: 1;
+	display: block;
+	transition: .5s ease;
+	backface-visibility: hidden;
+}
+
+.pnlgallery {
+	padding: 25px;
+	min-height: 200px;
+	border-bottom: 1px solid #CCC;
+}
+
+.pnlgallery img {
+	border: 1px solid #CCC;
+}
+
+.wrapper-img-responsive i {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.wrapper-img-responsive:hover .img-responsive {
+  opacity: 0.3;
+}
+
+.wrapper-img-responsive:hover i {
+  opacity: 1;
+}
+
+.docselected {
+	border: 3px solid limegreen;
+}
+.docselectedred {
+	border: 3px solid red;
+}

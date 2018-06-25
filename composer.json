@@ -1,0 +1,37 @@
+{
+  "name": "qcubed/app-starter",
+  "description": "QCubed application starter template",
+  "keywords": ["qcubed", "framework", "project template"],
+  "homepage": "http://qcu.be/",
+  "type": "project",
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/qcubed/application/issues?state=open",
+    "source": "https://github.com/qcubed/application"
+  },
+  "require": {
+   "php": ">=5.5.0",
+    "qcubed/composer": "dev-qcubed4",
+    "qcubed/common": "dev-master",
+    "qcubed/application": "dev-master",
+    "qcubed/orm": "dev-master",
+    "qcubed/i18n": "dev-master",
+    "qcubed/cache": "dev-master",
+    "twbs/bootstrap": "^3.3",
+    "almasaeed2010/adminlte": "~2.4",
+    "guzzlehttp/guzzle": "^6.3",
+    "qcubed/bootstrap": "dev-master",
+    "ezyang/htmlpurifier": "^4.9.3",
+    "textcontrol/txtextcontrol-reportingcloud": "^1.0",
+    "wildbit/postmark-php": "^2.5",
+    "dragonbe/vies": "^1.0",
+	"drmonty/ekko-lightbox": "dev-master"
+  },
+  "require-dev" : {
+    "phpunit/phpunit": "4.8.*"
+  },
+  "suggest": {
+    "qcubed/bootstrap": "dev-master"
+  },
+  "minimum-stability": "dev"
+}
