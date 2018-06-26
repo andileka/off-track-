@@ -27,13 +27,13 @@ class DeviceEditPanelGen extends Panel
 	protected $lblId;
 
 	/** @var \QCubed\Project\Control\TextBox */
-	protected $txtPac;
-
-	/** @var \QCubed\Project\Control\TextBox */
 	protected $txtSerial;
 
 	/** @var \QCubed\Project\Control\ListBox */
 	protected $lstCompany;
+
+	/** @var \QCubed\Project\Control\TextBox */
+	protected $txtRemark;
 
 
 	/**
@@ -63,9 +63,9 @@ class DeviceEditPanelGen extends Panel
 	 **/
 	protected function createObjects() {
 		$this->lblId = $this->mctDevice->lblId_Create();
-		$this->txtPac = $this->mctDevice->txtPac_Create();
 		$this->txtSerial = $this->mctDevice->txtSerial_Create();
 		$this->lstCompany = $this->mctDevice->lstCompany_Create();
+		$this->txtRemark = $this->mctDevice->txtRemark_Create();
 	}
 
 	/**

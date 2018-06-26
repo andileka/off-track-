@@ -16,7 +16,7 @@ class ChartJS extends \QCubed\Control\Panel{
 		$this->addCssFile(__VIRTUAL_DIRECTORY__."/project/assets/css/Chartjs.css");
 		$this->addJavascriptFile(__VIRTUAL_DIRECTORY__."/project/assets/js/Chart.min.js");
 		$this->addJavascriptFile(__VIRTUAL_DIRECTORY__."/project/assets/js/ChartJS.js");
-		$this->strTemplate			= __TEMPLATES__ .  '/pages/planning/charts.tpl.php';
+		$this->strTemplate			= __TEMPLATES__ .  '/pages/charts.tpl.php';
 		
 		\QCubed\Project\Application::executeJavaScript("ChartJS.init('".$this->ControlId."')");
 	}

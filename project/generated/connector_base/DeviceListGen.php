@@ -45,11 +45,11 @@ class DeviceListGen extends \QCubed\Project\Control\DataGrid
 	/** @var NodeColumn */
 	public $colId;
 	/** @var NodeColumn */
-	public $colPac;
-	/** @var NodeColumn */
 	public $colSerial;
 	/** @var NodeColumn */
 	public $colCompany;
+	/** @var NodeColumn */
+	public $colRemark;
 
 
 	/**
@@ -82,9 +82,9 @@ class DeviceListGen extends \QCubed\Project\Control\DataGrid
 	public function createColumns() 
 	{
 		$this->colId = $this->createNodeColumn("Id", QQN::Device()->Id);
-		$this->colPac = $this->createNodeColumn("Pac", QQN::Device()->Pac);
 		$this->colSerial = $this->createNodeColumn("Serial", QQN::Device()->Serial);
 		$this->colCompany = $this->createNodeColumn("Company", QQN::Device()->Company);
+		$this->colRemark = $this->createNodeColumn("Remark", QQN::Device()->Remark);
 	}
 
    /**

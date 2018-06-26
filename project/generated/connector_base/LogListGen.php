@@ -45,13 +45,17 @@ class LogListGen extends \QCubed\Project\Control\DataGrid
 	/** @var NodeColumn */
 	public $colId;
 	/** @var NodeColumn */
-	public $colUserId;
+	public $colUser;
 	/** @var NodeColumn */
-	public $colType;
+	public $colAction;
 	/** @var NodeColumn */
 	public $colValue;
 	/** @var NodeColumn */
 	public $colDatetime;
+	/** @var NodeColumn */
+	public $colIp;
+	/** @var NodeColumn */
+	public $colLogcol;
 
 
 	/**
@@ -84,10 +88,12 @@ class LogListGen extends \QCubed\Project\Control\DataGrid
 	public function createColumns() 
 	{
 		$this->colId = $this->createNodeColumn("Id", QQN::Log()->Id);
-		$this->colUserId = $this->createNodeColumn("User Id", QQN::Log()->UserId);
-		$this->colType = $this->createNodeColumn("Type", QQN::Log()->Type);
+		$this->colUser = $this->createNodeColumn("User", QQN::Log()->User);
+		$this->colAction = $this->createNodeColumn("Action", QQN::Log()->Action);
 		$this->colValue = $this->createNodeColumn("Value", QQN::Log()->Value);
 		$this->colDatetime = $this->createNodeColumn("Datetime", QQN::Log()->Datetime);
+		$this->colIp = $this->createNodeColumn("Ip", QQN::Log()->Ip);
+		$this->colLogcol = $this->createNodeColumn("Logcol", QQN::Log()->Logcol);
 	}
 
    /**

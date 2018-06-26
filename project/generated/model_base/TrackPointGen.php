@@ -31,10 +31,12 @@ use QCubed\Query\ModelTrait;
  * @package My QCubed Application
  * @subpackage ModelGen
  * @property-read integer $Id the value of the id column (Read-Only PK)
- * @property integer $TrackId the value of the track_id column 
- * @property integer $PositionId the value of the position_id column 
- * @property Track $Track the value of the Track object referenced by intTrackId 
- * @property Position $Position the value of the Position object referenced by intPositionId 
+ * @property integer $TrackId the value of the track_id column (Not Null)
+ * @property integer $PositionId the value of the position_id column (Not Null)
+ * @property string $Type the value of the type column (Not Null)
+ * @property string $Name the value of the name column 
+ * @property Track $Track the value of the Track object referenced by intTrackId (Not Null)
+ * @property Position $Position the value of the Position object referenced by intPositionId (Not Null)
  * @property-read boolean $__Restored whether or not this object was restored from the database (as opposed to created new)
  */
 abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggregate, JsonSerializable {
@@ -79,6 +81,28 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
 
     const POSITION_ID_DEFAULT = null;
     const POSITION_ID_FIELD = 'position_id';
+
+
+    /**
+     * Protected member variable that maps to the database column track_point.type
+     * @var string strType
+     */
+    private $strType;
+
+    const TYPE_DEFAULT = null;
+    const TYPE_FIELD = 'type';
+
+
+    /**
+     * Protected member variable that maps to the database column track_point.name
+     * @var string strName
+     */
+    private $strName;
+    const NameMaxLength = 45; // Deprecated
+    const NAME_MAX_LENGTH = 45;
+
+    const NAME_DEFAULT = null;
+    const NAME_FIELD = 'name';
 
 
     /**
@@ -156,6 +180,10 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
         $this->__blnValid[self::TRACK_ID_FIELD] = true;
         $this->intPositionId = TrackPoint::POSITION_ID_DEFAULT;
         $this->__blnValid[self::POSITION_ID_FIELD] = true;
+        $this->strType = TrackPoint::TYPE_DEFAULT;
+        $this->__blnValid[self::TYPE_FIELD] = true;
+        $this->strName = TrackPoint::NAME_DEFAULT;
+        $this->__blnValid[self::NAME_FIELD] = true;
     }
 
    /**
@@ -425,6 +453,26 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
                 }
                 $objToReturn->intPositionId = $mixVal;
                 $objToReturn->__blnValid[self::POSITION_ID_FIELD] = true;
+            }
+            else {
+                $blnNoCache = true;
+            }
+            $strAlias = $strAliasPrefix . 'type';
+            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+            if (isset ($strColumnKeys[$strAliasName])) {
+                $mixVal = $strColumns[$strAliasName];
+                $objToReturn->strType = $mixVal;
+                $objToReturn->__blnValid[self::TYPE_FIELD] = true;
+            }
+            else {
+                $blnNoCache = true;
+            }
+            $strAlias = $strAliasPrefix . 'name';
+            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+            if (isset ($strColumnKeys[$strAliasName])) {
+                $mixVal = $strColumns[$strAliasName];
+                $objToReturn->strName = $mixVal;
+                $objToReturn->__blnValid[self::NAME_FIELD] = true;
             }
             else {
                 $blnNoCache = true;
@@ -704,10 +752,14 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
         $objDatabase->NonQuery('
             INSERT INTO `track_point` (
 							`track_id`,
-							`position_id`
+							`position_id`,
+							`type`,
+							`name`
 						) VALUES (
 							' . $objDatabase->SqlVariable($this->intTrackId) . ',
-							' . $objDatabase->SqlVariable($this->intPositionId) . '
+							' . $objDatabase->SqlVariable($this->intPositionId) . ',
+							' . $objDatabase->SqlVariable($this->strType) . ',
+							' . $objDatabase->SqlVariable($this->strName) . '
 						)
         ');
         // Update Identity column and return its value
@@ -764,6 +816,16 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
 		if (isset($this->__blnDirty[self::POSITION_ID_FIELD])) {
 			$strCol = '`position_id`';
 			$strValue = $objDatabase->sqlVariable($this->intPositionId);
+			$values[] = $strCol . ' = ' . $strValue;
+		}
+		if (isset($this->__blnDirty[self::TYPE_FIELD])) {
+			$strCol = '`type`';
+			$strValue = $objDatabase->sqlVariable($this->strType);
+			$values[] = $strCol . ' = ' . $strValue;
+		}
+		if (isset($this->__blnDirty[self::NAME_FIELD])) {
+			$strCol = '`name`';
+			$strValue = $objDatabase->sqlVariable($this->strName);
 			$values[] = $strCol . ' = ' . $strValue;
 		}
 		if ($values) {
@@ -869,6 +931,14 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
 			$this->objPosition = $objReloaded->objPosition;
 			$this->__blnValid[self::POSITION_ID_FIELD] = true;
 		}
+		if (isset($objReloaded->__blnValid[self::TYPE_FIELD])) {
+			$this->strType = $objReloaded->strType;
+			$this->__blnValid[self::TYPE_FIELD] = true;
+		}
+		if (isset($objReloaded->__blnValid[self::NAME_FIELD])) {
+			$this->strName = $objReloaded->strName;
+			$this->__blnValid[self::NAME_FIELD] = true;
+		}
 	}
     ////////////////////
     // UTILITIES
@@ -910,7 +980,7 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
 
 
    /**
-	* Gets the value of intTrackId 
+	* Gets the value of intTrackId (Not Null)
 	* @throws Caller
 	* @return integer
 	*/
@@ -924,7 +994,7 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
 
 
     /**
-     * Gets the value of the Track object referenced by intTrackId 
+     * Gets the value of the Track object referenced by intTrackId (Not Null)
      * If the object is not loaded, will load the object (caching it) before returning it.
      * @throws Caller
      * @return Track
@@ -943,14 +1013,20 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
 
 
    /**
-	* Sets the value of intTrackId 
+	* Sets the value of intTrackId (Not Null)
 	* Returns $this to allow chaining of setters.
-	* @param integer|null $intTrackId
+	* @param integer $intTrackId
     * @throws Caller
 	* @return TrackPoint
 	*/
 	public function setTrackId($intTrackId)
     {
+        if ($intTrackId === null) {
+             // invalidate
+             $intTrackId = null;
+             $this->__blnValid[self::TRACK_ID_FIELD] = false;
+            return $this; // allows chaining
+        }
 		$intTrackId = Type::Cast($intTrackId, QCubed\Type::INTEGER);
 
 		if ($this->intTrackId !== $intTrackId) {
@@ -963,7 +1039,7 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
 	}
 
     /**
-     * Sets the value of the Track object referenced by intTrackId 
+     * Sets the value of the Track object referenced by intTrackId (Not Null)
      * @param null|Track $objTrack
      * @throws Caller
      * @return TrackPoint
@@ -987,7 +1063,7 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
     }
 
    /**
-	* Gets the value of intPositionId 
+	* Gets the value of intPositionId (Not Null)
 	* @throws Caller
 	* @return integer
 	*/
@@ -1001,7 +1077,7 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
 
 
     /**
-     * Gets the value of the Position object referenced by intPositionId 
+     * Gets the value of the Position object referenced by intPositionId (Not Null)
      * If the object is not loaded, will load the object (caching it) before returning it.
      * @throws Caller
      * @return Position
@@ -1020,14 +1096,20 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
 
 
    /**
-	* Sets the value of intPositionId 
+	* Sets the value of intPositionId (Not Null)
 	* Returns $this to allow chaining of setters.
-	* @param integer|null $intPositionId
+	* @param integer $intPositionId
     * @throws Caller
 	* @return TrackPoint
 	*/
 	public function setPositionId($intPositionId)
     {
+        if ($intPositionId === null) {
+             // invalidate
+             $intPositionId = null;
+             $this->__blnValid[self::POSITION_ID_FIELD] = false;
+            return $this; // allows chaining
+        }
 		$intPositionId = Type::Cast($intPositionId, QCubed\Type::INTEGER);
 
 		if ($this->intPositionId !== $intPositionId) {
@@ -1040,7 +1122,7 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
 	}
 
     /**
-     * Sets the value of the Position object referenced by intPositionId 
+     * Sets the value of the Position object referenced by intPositionId (Not Null)
      * @param null|Position $objPosition
      * @throws Caller
      * @return TrackPoint
@@ -1062,6 +1144,82 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
         }
         return $this;
     }
+
+   /**
+	* Gets the value of strType (Not Null)
+	* @throws Caller
+	* @return string
+	*/
+	public function getType()
+    {
+		if ($this->__blnRestored && empty($this->__blnValid[self::TYPE_FIELD])) {
+			throw new Caller("Type was not selected in the most recent query and is not valid.");
+		}
+		return $this->strType;
+	}
+
+
+
+
+   /**
+	* Sets the value of strType (Not Null)
+	* Returns $this to allow chaining of setters.
+	* @param string $strType
+    * @throws Caller
+	* @return TrackPoint
+	*/
+	public function setType($strType)
+    {
+        if ($strType === null) {
+             // invalidate
+             $strType = null;
+             $this->__blnValid[self::TYPE_FIELD] = false;
+            return $this; // allows chaining
+        }
+		$strType = Type::Cast($strType, QCubed\Type::STRING);
+
+		if ($this->strType !== $strType) {
+			$this->strType = $strType;
+			$this->__blnDirty[self::TYPE_FIELD] = true;
+		}
+		$this->__blnValid[self::TYPE_FIELD] = true;
+		return $this; // allows chaining
+	}
+
+   /**
+	* Gets the value of strName 
+	* @throws Caller
+	* @return string
+	*/
+	public function getName()
+    {
+		if ($this->__blnRestored && empty($this->__blnValid[self::NAME_FIELD])) {
+			throw new Caller("Name was not selected in the most recent query and is not valid.");
+		}
+		return $this->strName;
+	}
+
+
+
+
+   /**
+	* Sets the value of strName 
+	* Returns $this to allow chaining of setters.
+	* @param string|null $strName
+    * @throws Caller
+	* @return TrackPoint
+	*/
+	public function setName($strName)
+    {
+		$strName = Type::Cast($strName, QCubed\Type::STRING);
+
+		if ($this->strName !== $strName) {
+			$this->strName = $strName;
+			$this->__blnDirty[self::NAME_FIELD] = true;
+		}
+		$this->__blnValid[self::NAME_FIELD] = true;
+		return $this; // allows chaining
+	}
 
 
     /**
@@ -1321,6 +1479,8 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
         $strToReturn .= '<element name="Id" type="xsd:int"/>';
         $strToReturn .= '<element name="Track" type="xsd1:Track"/>';
         $strToReturn .= '<element name="Position" type="xsd1:Position"/>';
+        $strToReturn .= '<element name="Type" type="xsd:string"/>';
+        $strToReturn .= '<element name="Name" type="xsd:string"/>';
         $strToReturn .= '<element name="__blnRestored" type="xsd:boolean"/>';
         $strToReturn .= '</sequence></complexType>';
         return $strToReturn;
@@ -1356,6 +1516,10 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
         if ((property_exists($objSoapObject, 'Position')) &&
             ($objSoapObject->Position))
             $objToReturn->Position = Position::GetObjectFromSoapObject($objSoapObject->Position);
+        if (property_exists($objSoapObject, 'Type'))
+            $objToReturn->strType = $objSoapObject->Type;
+        if (property_exists($objSoapObject, 'Name'))
+            $objToReturn->strName = $objSoapObject->Name;
         if (property_exists($objSoapObject, '__blnRestored'))
             $objToReturn->__blnRestored = $objSoapObject->__blnRestored;
         return $objToReturn;
@@ -1403,6 +1567,12 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
         }
         if (isset($this->__blnValid[self::POSITION_ID_FIELD])) {
             $iArray['PositionId'] = $this->intPositionId;
+        }
+        if (isset($this->__blnValid[self::TYPE_FIELD])) {
+            $iArray['Type'] = $this->strType;
+        }
+        if (isset($this->__blnValid[self::NAME_FIELD])) {
+            $iArray['Name'] = $this->strName;
         }
         return new ArrayIterator($iArray);
     }
@@ -1458,6 +1628,12 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
         } elseif (isset($this->__blnValid[self::POSITION_ID_FIELD])) {
             $a['position_id'] = $this->intPositionId;
         }
+        if (isset($this->__blnValid[self::TYPE_FIELD])) {
+            $a['type'] = $this->strType;
+        }
+        if (isset($this->__blnValid[self::NAME_FIELD])) {
+            $a['name'] = $this->strName;
+        }
         return $a;
     }
 
@@ -1479,6 +1655,8 @@ abstract class TrackPointGen extends \QCubed\ObjectBase implements IteratorAggre
  * @property-read NodeTrack $Track
  * @property-read Node\Column $PositionId
  * @property-read NodePosition $Position
+ * @property-read Node\Column $Type
+ * @property-read Node\Column $Name
  * @property-read Node\Column $_PrimaryKeyNode
  **/
 class NodeTrackPoint extends Node\Table {
@@ -1494,6 +1672,8 @@ class NodeTrackPoint extends Node\Table {
             "id",
             "track_id",
             "position_id",
+            "type",
+            "name",
         ];
     }
 
@@ -1532,6 +1712,10 @@ class NodeTrackPoint extends Node\Table {
                 return new Node\Column('position_id', 'PositionId', 'Integer', $this);
             case 'Position':
                 return new NodePosition('position_id', 'Position', 'Integer', $this);
+            case 'Type':
+                return new Node\Column('type', 'Type', 'VarChar', $this);
+            case 'Name':
+                return new Node\Column('name', 'Name', 'VarChar', $this);
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);
@@ -1552,6 +1736,8 @@ class NodeTrackPoint extends Node\Table {
  * @property-read NodeTrack $Track
  * @property-read Node\Column $PositionId
  * @property-read NodePosition $Position
+ * @property-read Node\Column $Type
+ * @property-read Node\Column $Name
 
  * @property-read Node\Column $_PrimaryKeyNode
  **/
@@ -1568,6 +1754,8 @@ class ReverseReferenceNodeTrackPoint extends Node\ReverseReference {
             "id",
             "track_id",
             "position_id",
+            "type",
+            "name",
         ];
     }
 
@@ -1598,6 +1786,10 @@ class ReverseReferenceNodeTrackPoint extends Node\ReverseReference {
                 return new Node\Column('position_id', 'PositionId', 'Integer', $this);
             case 'Position':
                 return new NodePosition('position_id', 'Position', 'Integer', $this);
+            case 'Type':
+                return new Node\Column('type', 'Type', 'VarChar', $this);
+            case 'Name':
+                return new Node\Column('name', 'Name', 'VarChar', $this);
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);

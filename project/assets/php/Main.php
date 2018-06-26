@@ -94,20 +94,23 @@ class Main extends \QCubed\Project\Control\FormBase {
 			// @TODO temporarily bypass language error
 			/*$this->lstLang					= Language::GetListBox($this, 'lstLang', false, \QCubed\Project\Application::$LanguageCode, true);
 			$this->lstLang->AddAction(new \QCubed\Event\Change(), new \QCubed\Action\Ajax('ChangeLanguage'));*/
-			$this->pnlAlert					= new \QCubed\Project\Control\Alert($this);
-			$this->pnlAlert->Display		= false;
-			$this->pnlAlert->HasCloseButton	= true;
-			$this->pnlAlert->AddCssClass(\QCubed\Bootstrap\Bootstrap::ALERT_DANGER);
+			//if($this->ctrl != 'tourist' && $this->action != 'device') {
+				$this->pnlAlert					= new \QCubed\Project\Control\Alert($this);
+				$this->pnlAlert->Display		= false;
+				$this->pnlAlert->HasCloseButton	= true;
+				$this->pnlAlert->AddCssClass(\QCubed\Bootstrap\Bootstrap::ALERT_DANGER);
+
+				$this->pnlMenu					= new Panels\Navigator($this);
+				$this->pnlMenu->ctrl			= $this->ctrl;
+				$this->pnlMenu->action			= $this->action;
+
+				$this->btnLogout				= new \QCubed\Control\Label($this,'btnLogout');
+				$this->btnLogout->Text			= '';
+				$this->btnLogout->ToolTip		= tr('Logout');
+				$this->btnLogout->HtmlEntities	= false;
+				$this->btnLogout->AddAction(new \QCubed\Event\Click(), new \QCubed\Action\Server('Logout'));
+			//}
 			
-			$this->pnlMenu					= new Panels\Navigator($this);
-			$this->pnlMenu->ctrl			= $this->ctrl;
-			$this->pnlMenu->action			= $this->action;
-					
-			$this->btnLogout				= new \QCubed\Control\Label($this,'btnLogout');
-			$this->btnLogout->Text			= '';
-			$this->btnLogout->ToolTip		= tr('Logout');
-			$this->btnLogout->HtmlEntities	= false;
-			$this->btnLogout->AddAction(new \QCubed\Event\Click(), new \QCubed\Action\Server('Logout'));
 
 
 		}

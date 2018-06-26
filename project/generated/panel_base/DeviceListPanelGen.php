@@ -144,9 +144,9 @@ abstract class DeviceListPanelGen extends \QCubed\Control\Panel
 		} else {
 			return \QCubed\Query\QQ::orCondition(
 				\QCubed\Query\QQ::equal(QQN::Device()->Id, $strSearchValue),
-            \QCubed\Query\QQ::like(QQN::Device()->Pac, "%" . $strSearchValue . "%"),
             \QCubed\Query\QQ::like(QQN::Device()->Serial, "%" . $strSearchValue . "%"),
-            \QCubed\Query\QQ::equal(QQN::Device()->CompanyId, $strSearchValue)
+            \QCubed\Query\QQ::equal(QQN::Device()->CompanyId, $strSearchValue),
+            \QCubed\Query\QQ::like(QQN::Device()->Remark, "%" . $strSearchValue . "%")
 			);
 		}
 

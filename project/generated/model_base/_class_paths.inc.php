@@ -1,12 +1,26 @@
 <?php
 $a = [];
 
+// ClassPaths for the City class
+$a['city'] = QCUBED_PROJECT_MODEL_DIR . '/City.php';
+$a['nodecity'] = QCUBED_PROJECT_MODEL_DIR . '/City.php';
+$a['reversereferencenodecity'] = QCUBED_PROJECT_MODEL_DIR . '/City.php';
+$a['cityconnector'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/CityConnector.php';
+$a['citylist'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/CityList.php';
+
 // ClassPaths for the Company class
 $a['company'] = QCUBED_PROJECT_MODEL_DIR . '/Company.php';
 $a['nodecompany'] = QCUBED_PROJECT_MODEL_DIR . '/Company.php';
 $a['reversereferencenodecompany'] = QCUBED_PROJECT_MODEL_DIR . '/Company.php';
 $a['companyconnector'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/CompanyConnector.php';
 $a['companylist'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/CompanyList.php';
+
+// ClassPaths for the Country class
+$a['country'] = QCUBED_PROJECT_MODEL_DIR . '/Country.php';
+$a['nodecountry'] = QCUBED_PROJECT_MODEL_DIR . '/Country.php';
+$a['reversereferencenodecountry'] = QCUBED_PROJECT_MODEL_DIR . '/Country.php';
+$a['countryconnector'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/CountryConnector.php';
+$a['countrylist'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/CountryList.php';
 
 // ClassPaths for the Device class
 $a['device'] = QCUBED_PROJECT_MODEL_DIR . '/Device.php';
@@ -28,6 +42,13 @@ $a['nodeevent'] = QCUBED_PROJECT_MODEL_DIR . '/Event.php';
 $a['reversereferencenodeevent'] = QCUBED_PROJECT_MODEL_DIR . '/Event.php';
 $a['eventconnector'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/EventConnector.php';
 $a['eventlist'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/EventList.php';
+
+// ClassPaths for the Language class
+$a['language'] = QCUBED_PROJECT_MODEL_DIR . '/Language.php';
+$a['nodelanguage'] = QCUBED_PROJECT_MODEL_DIR . '/Language.php';
+$a['reversereferencenodelanguage'] = QCUBED_PROJECT_MODEL_DIR . '/Language.php';
+$a['languageconnector'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/LanguageConnector.php';
+$a['languagelist'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/LanguageList.php';
 
 // ClassPaths for the Log class
 $a['log'] = QCUBED_PROJECT_MODEL_DIR . '/Log.php';

@@ -26,17 +26,23 @@ class LogEditPanelGen extends Panel
 	/** @var \QCubed\Control\Label */
 	protected $lblId;
 
-	/** @var \QCubed\Control\IntegerTextBox */
-	protected $txtUserId;
+	/** @var \QCubed\Project\Control\ListBox */
+	protected $lstUser;
 
 	/** @var \QCubed\Project\Control\TextBox */
-	protected $txtType;
+	protected $txtAction;
 
 	/** @var \QCubed\Project\Control\TextBox */
 	protected $txtValue;
 
 	/** @var \QCubed\Control\DateTimePicker */
 	protected $calDatetime;
+
+	/** @var \QCubed\Control\IntegerTextBox */
+	protected $txtIp;
+
+	/** @var \QCubed\Project\Control\TextBox */
+	protected $txtLogcol;
 
 
 	/**
@@ -66,10 +72,12 @@ class LogEditPanelGen extends Panel
 	 **/
 	protected function createObjects() {
 		$this->lblId = $this->mctLog->lblId_Create();
-		$this->txtUserId = $this->mctLog->txtUserId_Create();
-		$this->txtType = $this->mctLog->txtType_Create();
+		$this->lstUser = $this->mctLog->lstUser_Create();
+		$this->txtAction = $this->mctLog->txtAction_Create();
 		$this->txtValue = $this->mctLog->txtValue_Create();
 		$this->calDatetime = $this->mctLog->calDatetime_Create();
+		$this->txtIp = $this->mctLog->txtIp_Create();
+		$this->txtLogcol = $this->mctLog->txtLogcol_Create();
 	}
 
 	/**

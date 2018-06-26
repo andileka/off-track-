@@ -1,0 +1,1 @@
+<div class="wrapper-content"><?php $_CONTROL->pnlTourist->Render(); ?></div>

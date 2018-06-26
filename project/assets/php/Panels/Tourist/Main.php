@@ -123,7 +123,7 @@ class Main extends \QCubed\Control\Panel {
 		if($objJob) {
 			
 			$this->objJob = $objJob;
-			$this->pnlDetail->SetJob($this->objJob);
+			$this->pnlDetail->SetTourist($this->objJob);
 			
 			$this->pnlM_Vehicle->SetVehicle($this->objJob->Vehicle);		
 			$this->pnlM_Entities->SetJob($this->objJob, "mandator");

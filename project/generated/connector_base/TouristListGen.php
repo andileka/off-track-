@@ -50,6 +50,12 @@ class TouristListGen extends \QCubed\Project\Control\DataGrid
 	public $colPassport;
 	/** @var NodeColumn */
 	public $colContactinfo;
+	/** @var NodeColumn */
+	public $colLanguage;
+	/** @var NodeColumn */
+	public $colCity;
+	/** @var NodeColumn */
+	public $colCountry;
 
 
 	/**
@@ -85,6 +91,9 @@ class TouristListGen extends \QCubed\Project\Control\DataGrid
 		$this->colName = $this->createNodeColumn("Name", QQN::Tourist()->Name);
 		$this->colPassport = $this->createNodeColumn("Passport", QQN::Tourist()->Passport);
 		$this->colContactinfo = $this->createNodeColumn("Contactinfo", QQN::Tourist()->Contactinfo);
+		$this->colLanguage = $this->createNodeColumn("Language", QQN::Tourist()->Language);
+		$this->colCity = $this->createNodeColumn("City", QQN::Tourist()->City);
+		$this->colCountry = $this->createNodeColumn("Country", QQN::Tourist()->Country);
 	}
 
    /**

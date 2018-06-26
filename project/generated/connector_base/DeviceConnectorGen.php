@@ -31,12 +31,12 @@ use QCubed\Query\Clause\ClauseInterface as QQClause;
  * @subpackage ModelConnector
  * @property-read Device $Device the actual Device data class being edited
  * @property-read QCubed\\Control\\Label $IdLabel
- * @property QCubed\Project\Control\TextBox $PacControl
- * @property-read QCubed\\Control\\Label $PacLabel
  * @property QCubed\Project\Control\TextBox $SerialControl
  * @property-read QCubed\\Control\\Label $SerialLabel
  * @property QCubed\Project\Control\ListBox $CompanyIdControl
  * @property-read QCubed\\Control\\Label $CompanyIdLabel
+ * @property QCubed\Project\Control\TextBox $RemarkControl
+ * @property-read QCubed\\Control\\Label $RemarkLabel
  * @property-read string $TitleVerb a verb indicating whether or not this is being edited or created
  * @property-read boolean $EditMode a boolean indicating whether or not this is being edited or created
  */
@@ -71,19 +71,6 @@ class DeviceConnectorGen extends \QCubed\ObjectBase
      * @access protected
      */
     protected $lblId;
-
-    /**
-     * @var QCubed\Project\Control\TextBox
-
-     * @access protected
-     */
-    protected $txtPac;
-
-    /**
-     * @var Label
-     * @access protected
-     */
-    protected $lblPac;
 
     /**
      * @var QCubed\Project\Control\TextBox
@@ -126,6 +113,19 @@ class DeviceConnectorGen extends \QCubed\ObjectBase
      * @access protected
      */
     protected $lblCompany;
+
+    /**
+     * @var QCubed\Project\Control\TextBox
+
+     * @access protected
+     */
+    protected $txtRemark;
+
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblRemark;
 
 
 
@@ -239,39 +239,6 @@ class DeviceConnectorGen extends \QCubed\ObjectBase
 
 
 		/**
-		 * Create and setup a QCubed\Project\Control\TextBox txtPac
-		 * @param string $strControlId optional ControlId to use
-		 * @return QCubed\Project\Control\TextBox
-		 */
-		public function txtPac_Create($strControlId = null) {
-			$this->txtPac = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
-			$this->txtPac->Name = t('Pac');
-			$this->txtPac->MaxLength = Device::PacMaxLength;
-			$this->txtPac->PreferredRenderMethod = 'RenderWithName';
-        $this->txtPac->LinkedNode = QQN::Device()->Pac;
-			$this->txtPac->Text = $this->objDevice->Pac;
-			return $this->txtPac;
-		}
-
-    /**
-     * Create and setup QCubed\Control\Label lblPac
-     *
-     * @param string $strControlId optional ControlId to use
-     * @return QCubed\Control\Label
-     */
-    public function lblPac_Create($strControlId = null) 
-    {
-        $this->lblPac = new \QCubed\Control\Label($this->objParentObject, $strControlId);
-        $this->lblPac->Name = t('Pac');
-        $this->lblPac->PreferredRenderMethod = 'RenderWithName';
-        $this->lblPac->LinkedNode = QQN::Device()->Pac;
-			$this->lblPac->Text = $this->objDevice->Pac;
-        return $this->lblPac;
-    }
-
-
-
-		/**
 		 * Create and setup a QCubed\Project\Control\TextBox txtSerial
 		 * @param string $strControlId optional ControlId to use
 		 * @return QCubed\Project\Control\TextBox
@@ -369,6 +336,39 @@ class DeviceConnectorGen extends \QCubed\ObjectBase
 
 
 
+		/**
+		 * Create and setup a QCubed\Project\Control\TextBox txtRemark
+		 * @param string $strControlId optional ControlId to use
+		 * @return QCubed\Project\Control\TextBox
+		 */
+		public function txtRemark_Create($strControlId = null) {
+			$this->txtRemark = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
+			$this->txtRemark->Name = t('Remark');
+			$this->txtRemark->MaxLength = Device::RemarkMaxLength;
+			$this->txtRemark->PreferredRenderMethod = 'RenderWithName';
+        $this->txtRemark->LinkedNode = QQN::Device()->Remark;
+			$this->txtRemark->Text = $this->objDevice->Remark;
+			return $this->txtRemark;
+		}
+
+    /**
+     * Create and setup QCubed\Control\Label lblRemark
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblRemark_Create($strControlId = null) 
+    {
+        $this->lblRemark = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblRemark->Name = t('Remark');
+        $this->lblRemark->PreferredRenderMethod = 'RenderWithName';
+        $this->lblRemark->LinkedNode = QQN::Device()->Remark;
+			$this->lblRemark->Text = $this->objDevice->Remark;
+        return $this->lblRemark;
+    }
+
+
+
 
 
 
@@ -388,10 +388,6 @@ class DeviceConnectorGen extends \QCubed\ObjectBase
 			if ($this->lblId) $this->lblId->Text =  $this->blnEditMode ? $this->objDevice->Id : t('N\A');
 
 
-			if ($this->txtPac) $this->txtPac->Text = $this->objDevice->Pac;
-			if ($this->lblPac) $this->lblPac->Text = $this->objDevice->Pac;
-
-
 			if ($this->txtSerial) $this->txtSerial->Text = $this->objDevice->Serial;
 			if ($this->lblSerial) $this->lblSerial->Text = $this->objDevice->Serial;
 
@@ -404,6 +400,10 @@ class DeviceConnectorGen extends \QCubed\ObjectBase
       
       }
 			if ($this->lblCompany) $this->lblCompany->Text = $this->objDevice->Company ? $this->objDevice->Company->__toString() : null;
+
+
+			if ($this->txtRemark) $this->txtRemark->Text = $this->objDevice->Remark;
+			if ($this->lblRemark) $this->lblRemark->Text = $this->objDevice->Remark;
 
 
     }
@@ -447,11 +447,11 @@ class DeviceConnectorGen extends \QCubed\ObjectBase
         try {
             // Update any fields for controls that have been created
 
-				if ($this->txtPac) $this->objDevice->Pac = $this->txtPac->Text;
-
 				if ($this->txtSerial) $this->objDevice->Serial = $this->txtSerial->Text;
 
 				if ($this->lstCompany) $this->objDevice->CompanyId = $this->lstCompany->SelectedValue;
+
+				if ($this->txtRemark) $this->objDevice->Remark = $this->txtRemark->Text;
 
 
             // Update any UniqueReverseReferences for controls that have been created for it
@@ -513,12 +513,6 @@ class DeviceConnectorGen extends \QCubed\ObjectBase
             case 'IdLabel':
                 if (!$this->lblId) return $this->lblId_Create();
                 return $this->lblId;
-            case 'PacControl':
-                if (!$this->txtPac) return $this->txtPac_Create();
-                return $this->txtPac;
-            case 'PacLabel':
-                if (!$this->lblPac) return $this->lblPac_Create();
-                return $this->lblPac;
             case 'SerialControl':
                 if (!$this->txtSerial) return $this->txtSerial_Create();
                 return $this->txtSerial;
@@ -533,6 +527,12 @@ class DeviceConnectorGen extends \QCubed\ObjectBase
                 return $this->lblCompany;
             case 'CompanyNullLabel':
                 return $this->strCompanyNullLabel;
+            case 'RemarkControl':
+                if (!$this->txtRemark) return $this->txtRemark_Create();
+                return $this->txtRemark;
+            case 'RemarkLabel':
+                if (!$this->lblRemark) return $this->lblRemark_Create();
+                return $this->lblRemark;
             default:
                 try {
                     return parent::__get($strName);
@@ -565,12 +565,6 @@ class DeviceConnectorGen extends \QCubed\ObjectBase
                 case 'IdLabel':
                     $this->lblId = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
                     break;
-                case 'PacControl':
-                    $this->txtPac = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');
-                    break;
-                case 'PacLabel':
-                    $this->lblPac = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
-                    break;
                 case 'SerialControl':
                     $this->txtSerial = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');
                     break;
@@ -585,6 +579,12 @@ class DeviceConnectorGen extends \QCubed\ObjectBase
                     break;
                 case 'CompanyNullLabel':
                     $this->strCompanyNullLabel = $mixValue;
+                    break;
+                case 'RemarkControl':
+                    $this->txtRemark = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');
+                    break;
+                case 'RemarkLabel':
+                    $this->lblRemark = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
                     break;
                 default:
                     parent::__set($strName, $mixValue);

@@ -10,3 +10,5 @@
 <?= _r($this->lblId); ?>
 <?= _r($this->lstTrack); ?>
 <?= _r($this->lstPosition); ?>
+<?= _r($this->txtType); ?>
+<?= _r($this->txtName); ?>

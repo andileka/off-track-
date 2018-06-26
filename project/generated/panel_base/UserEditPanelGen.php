@@ -100,4 +100,13 @@ class UserEditPanelGen extends Panel
 		$this->mctUser->deleteUser();
 	}
 
+	// Check for records that may violate Unique Clauses
+	public function validate() {
+		$blnToReturn = true;
+		if (($this->txtEmail) && ($objUser = User::LoadByEmail($this->txtEmail->Text)) && ($objUser->Id != $this->mctUser->User->Id )){
+				$blnToReturn = false;
+				$this->txtEmail->Warning = t("This value is already in use.");
+			}
+		return $blnToReturn;
+	}
 }

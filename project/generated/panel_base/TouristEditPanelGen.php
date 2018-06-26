@@ -35,6 +35,15 @@ class TouristEditPanelGen extends Panel
 	/** @var \QCubed\Project\Control\TextBox */
 	protected $txtContactinfo;
 
+	/** @var \QCubed\Project\Control\ListBox */
+	protected $lstLanguage;
+
+	/** @var \QCubed\Project\Control\ListBox */
+	protected $lstCity;
+
+	/** @var \QCubed\Project\Control\ListBox */
+	protected $lstCountry;
+
 
 	/**
 	 * @param FormBase|ControlBase $objParentObject
@@ -66,6 +75,9 @@ class TouristEditPanelGen extends Panel
 		$this->txtName = $this->mctTourist->txtName_Create();
 		$this->txtPassport = $this->mctTourist->txtPassport_Create();
 		$this->txtContactinfo = $this->mctTourist->txtContactinfo_Create();
+		$this->lstLanguage = $this->mctTourist->lstLanguage_Create();
+		$this->lstCity = $this->mctTourist->lstCity_Create();
+		$this->lstCountry = $this->mctTourist->lstCountry_Create();
 	}
 
 	/**

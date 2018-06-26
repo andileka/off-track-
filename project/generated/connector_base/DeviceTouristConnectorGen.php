@@ -281,6 +281,7 @@ class DeviceTouristConnectorGen extends \QCubed\ObjectBase
 			$this->objDeviceClauses = $objClauses;
 			$this->lstDevice = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
 			$this->lstDevice->Name = t('Device');
+			$this->lstDevice->Required = true;
 			$this->lstDevice->PreferredRenderMethod = 'RenderWithName';
         $this->lstDevice->LinkedNode = QQN::DeviceTourist()->Device;
       if (!$this->strDeviceNullLabel) {
@@ -346,6 +347,7 @@ class DeviceTouristConnectorGen extends \QCubed\ObjectBase
 			$this->objTouristClauses = $objClauses;
 			$this->lstTourist = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
 			$this->lstTourist->Name = t('Tourist');
+			$this->lstTourist->Required = true;
 			$this->lstTourist->PreferredRenderMethod = 'RenderWithName';
         $this->lstTourist->LinkedNode = QQN::DeviceTourist()->Tourist;
       if (!$this->strTouristNullLabel) {

@@ -327,6 +327,7 @@ class UserConnectorGen extends \QCubed\ObjectBase
 		public function txtEmail_Create($strControlId = null) {
 			$this->txtEmail = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
 			$this->txtEmail->Name = t('Email');
+			$this->txtEmail->Required = true;
 			$this->txtEmail->MaxLength = User::EmailMaxLength;
 			$this->txtEmail->PreferredRenderMethod = 'RenderWithName';
         $this->txtEmail->LinkedNode = QQN::User()->Email;

@@ -145,8 +145,10 @@ abstract class LogListPanelGen extends \QCubed\Control\Panel
 			return \QCubed\Query\QQ::orCondition(
 				\QCubed\Query\QQ::equal(QQN::Log()->Id, $strSearchValue),
             \QCubed\Query\QQ::equal(QQN::Log()->UserId, $strSearchValue),
-            \QCubed\Query\QQ::like(QQN::Log()->Type, "%" . $strSearchValue . "%"),
-            \QCubed\Query\QQ::like(QQN::Log()->Value, "%" . $strSearchValue . "%")
+            \QCubed\Query\QQ::like(QQN::Log()->Action, "%" . $strSearchValue . "%"),
+            \QCubed\Query\QQ::like(QQN::Log()->Value, "%" . $strSearchValue . "%"),
+            \QCubed\Query\QQ::equal(QQN::Log()->Ip, $strSearchValue),
+            \QCubed\Query\QQ::like(QQN::Log()->Logcol, "%" . $strSearchValue . "%")
 			);
 		}
 

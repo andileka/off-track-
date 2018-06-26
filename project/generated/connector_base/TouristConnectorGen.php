@@ -7,6 +7,11 @@ use QCubed\Project\Control\ControlBase;
 use QCubed\Query\QQ;
 use QCubed\Control\Label;
 use QCubed\Project\Control\TextBox;
+use QCubed\Project\Control\ListBox;
+use QCubed\Control\ListControl;
+use QCubed\Control\ListItem;
+use QCubed\Query\Condition\ConditionInterface as QQCondition;
+use QCubed\Query\Clause\ClauseInterface as QQClause;
 
 /**
  * This is a ModelConnector class, providing a Form or Panel access to event handlers
@@ -32,6 +37,12 @@ use QCubed\Project\Control\TextBox;
  * @property-read QCubed\\Control\\Label $PassportLabel
  * @property QCubed\Project\Control\TextBox $ContactinfoControl
  * @property-read QCubed\\Control\\Label $ContactinfoLabel
+ * @property QCubed\Project\Control\ListBox $LanguageIdControl
+ * @property-read QCubed\\Control\\Label $LanguageIdLabel
+ * @property QCubed\Project\Control\ListBox $CityIdControl
+ * @property-read QCubed\\Control\\Label $CityIdLabel
+ * @property QCubed\Project\Control\ListBox $CountryIdControl
+ * @property-read QCubed\\Control\\Label $CountryIdLabel
  * @property-read string $TitleVerb a verb indicating whether or not this is being edited or created
  * @property-read boolean $EditMode a boolean indicating whether or not this is being edited or created
  */
@@ -105,6 +116,93 @@ class TouristConnectorGen extends \QCubed\ObjectBase
      * @access protected
      */
     protected $lblContactinfo;
+
+    /**
+     * @var QCubed\Project\Control\ListBox
+     * @access protected
+     */
+    protected $lstLanguage;
+
+    /**
+     * @var string 
+     * @access protected
+     */
+    protected $strLanguageNullLabel;
+
+    /**
+    * @var QQCondition
+    * @access protected
+    */
+    protected $objLanguageCondition;
+
+    /**
+    * @var QQClause[]
+    * @access protected
+    */
+    protected $objLanguageClauses;
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblLanguage;
+
+    /**
+     * @var QCubed\Project\Control\ListBox
+     * @access protected
+     */
+    protected $lstCity;
+
+    /**
+     * @var string 
+     * @access protected
+     */
+    protected $strCityNullLabel;
+
+    /**
+    * @var QQCondition
+    * @access protected
+    */
+    protected $objCityCondition;
+
+    /**
+    * @var QQClause[]
+    * @access protected
+    */
+    protected $objCityClauses;
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblCity;
+
+    /**
+     * @var QCubed\Project\Control\ListBox
+     * @access protected
+     */
+    protected $lstCountry;
+
+    /**
+     * @var string 
+     * @access protected
+     */
+    protected $strCountryNullLabel;
+
+    /**
+    * @var QQCondition
+    * @access protected
+    */
+    protected $objCountryCondition;
+
+    /**
+    * @var QQClause[]
+    * @access protected
+    */
+    protected $objCountryClauses;
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblCountry;
 
 
 
@@ -225,6 +323,7 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 		public function txtName_Create($strControlId = null) {
 			$this->txtName = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
 			$this->txtName->Name = t('Name');
+			$this->txtName->Required = true;
 			$this->txtName->MaxLength = Tourist::NameMaxLength;
 			$this->txtName->PreferredRenderMethod = 'RenderWithName';
         $this->txtName->LinkedNode = QQN::Tourist()->Name;
@@ -258,6 +357,7 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 		public function txtPassport_Create($strControlId = null) {
 			$this->txtPassport = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
 			$this->txtPassport->Name = t('Passport');
+			$this->txtPassport->Required = true;
 			$this->txtPassport->MaxLength = Tourist::PassportMaxLength;
 			$this->txtPassport->PreferredRenderMethod = 'RenderWithName';
         $this->txtPassport->LinkedNode = QQN::Tourist()->Passport;
@@ -316,6 +416,201 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 
 
 
+		/**
+		 * Create and setup QCubed\Project\Control\ListBox lstLanguage
+		 * @param string $strControlId optional ControlId to use
+		 * @param QQCondition $objCondition override the default condition of QQ::all() to the query, itself
+		 * @param QQClause[] $objClauses additional QQClause object or array of QQClause objects for the query
+		 * @return ListBox
+		 */
+		public function lstLanguage_Create($strControlId = null, QQCondition $objCondition = null, $objClauses = null) {
+			$this->objLanguageCondition = $objCondition;
+			$this->objLanguageClauses = $objClauses;
+			$this->lstLanguage = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
+			$this->lstLanguage->Name = t('Language');
+			$this->lstLanguage->PreferredRenderMethod = 'RenderWithName';
+        $this->lstLanguage->LinkedNode = QQN::Tourist()->Language;
+      if (!$this->strLanguageNullLabel) {
+      	if (!$this->lstLanguage->Required) {
+      		$this->strLanguageNullLabel = t('- None -');
+      	}
+      	elseif (!$this->blnEditMode) {
+      		$this->strLanguageNullLabel = t('- Select One -');
+      	}
+      }
+      $this->lstLanguage->addItem($this->strLanguageNullLabel, null);
+      $this->lstLanguage->addItems($this->lstLanguage_GetItems());
+      $this->lstLanguage->SelectedValue = $this->objTourist->LanguageId;
+			return $this->lstLanguage;
+		}
+
+		/**
+		 *	Create item list for use by lstLanguage
+		 */
+		 public function lstLanguage_GetItems() {
+			$a = array();
+			$objCondition = $this->objLanguageCondition;
+			if (is_null($objCondition)) $objCondition = QQ::all();
+			$objLanguageCursor = Language::queryCursor($objCondition, $this->objLanguageClauses);
+
+			// Iterate through the Cursor
+			while ($objLanguage = Language::instantiateCursor($objLanguageCursor)) {
+				$objListItem = new ListItem($objLanguage->__toString(), $objLanguage->Id);
+				if (($this->objTourist->Language) && ($this->objTourist->Language->Id == $objLanguage->Id))
+					$objListItem->Selected = true;
+				$a[] = $objListItem;
+			}
+			return $a;
+		 }
+
+    /**
+     * Create and setup QCubed\Control\Label lblLanguage
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblLanguage_Create($strControlId = null) 
+    {
+        $this->lblLanguage = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblLanguage->Name = t('Language');
+        $this->lblLanguage->PreferredRenderMethod = 'RenderWithName';
+        $this->lblLanguage->LinkedNode = QQN::Tourist()->Language;
+			$this->lblLanguage->Text = $this->objTourist->Language ? $this->objTourist->Language->__toString() : null;
+        return $this->lblLanguage;
+    }
+
+
+
+		/**
+		 * Create and setup QCubed\Project\Control\ListBox lstCity
+		 * @param string $strControlId optional ControlId to use
+		 * @param QQCondition $objCondition override the default condition of QQ::all() to the query, itself
+		 * @param QQClause[] $objClauses additional QQClause object or array of QQClause objects for the query
+		 * @return ListBox
+		 */
+		public function lstCity_Create($strControlId = null, QQCondition $objCondition = null, $objClauses = null) {
+			$this->objCityCondition = $objCondition;
+			$this->objCityClauses = $objClauses;
+			$this->lstCity = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
+			$this->lstCity->Name = t('City');
+			$this->lstCity->PreferredRenderMethod = 'RenderWithName';
+        $this->lstCity->LinkedNode = QQN::Tourist()->City;
+      if (!$this->strCityNullLabel) {
+      	if (!$this->lstCity->Required) {
+      		$this->strCityNullLabel = t('- None -');
+      	}
+      	elseif (!$this->blnEditMode) {
+      		$this->strCityNullLabel = t('- Select One -');
+      	}
+      }
+      $this->lstCity->addItem($this->strCityNullLabel, null);
+      $this->lstCity->addItems($this->lstCity_GetItems());
+      $this->lstCity->SelectedValue = $this->objTourist->CityId;
+			return $this->lstCity;
+		}
+
+		/**
+		 *	Create item list for use by lstCity
+		 */
+		 public function lstCity_GetItems() {
+			$a = array();
+			$objCondition = $this->objCityCondition;
+			if (is_null($objCondition)) $objCondition = QQ::all();
+			$objCityCursor = City::queryCursor($objCondition, $this->objCityClauses);
+
+			// Iterate through the Cursor
+			while ($objCity = City::instantiateCursor($objCityCursor)) {
+				$objListItem = new ListItem($objCity->__toString(), $objCity->Id);
+				if (($this->objTourist->City) && ($this->objTourist->City->Id == $objCity->Id))
+					$objListItem->Selected = true;
+				$a[] = $objListItem;
+			}
+			return $a;
+		 }
+
+    /**
+     * Create and setup QCubed\Control\Label lblCity
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblCity_Create($strControlId = null) 
+    {
+        $this->lblCity = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblCity->Name = t('City');
+        $this->lblCity->PreferredRenderMethod = 'RenderWithName';
+        $this->lblCity->LinkedNode = QQN::Tourist()->City;
+			$this->lblCity->Text = $this->objTourist->City ? $this->objTourist->City->__toString() : null;
+        return $this->lblCity;
+    }
+
+
+
+		/**
+		 * Create and setup QCubed\Project\Control\ListBox lstCountry
+		 * @param string $strControlId optional ControlId to use
+		 * @param QQCondition $objCondition override the default condition of QQ::all() to the query, itself
+		 * @param QQClause[] $objClauses additional QQClause object or array of QQClause objects for the query
+		 * @return ListBox
+		 */
+		public function lstCountry_Create($strControlId = null, QQCondition $objCondition = null, $objClauses = null) {
+			$this->objCountryCondition = $objCondition;
+			$this->objCountryClauses = $objClauses;
+			$this->lstCountry = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
+			$this->lstCountry->Name = t('Country');
+			$this->lstCountry->PreferredRenderMethod = 'RenderWithName';
+        $this->lstCountry->LinkedNode = QQN::Tourist()->Country;
+      if (!$this->strCountryNullLabel) {
+      	if (!$this->lstCountry->Required) {
+      		$this->strCountryNullLabel = t('- None -');
+      	}
+      	elseif (!$this->blnEditMode) {
+      		$this->strCountryNullLabel = t('- Select One -');
+      	}
+      }
+      $this->lstCountry->addItem($this->strCountryNullLabel, null);
+      $this->lstCountry->addItems($this->lstCountry_GetItems());
+      $this->lstCountry->SelectedValue = $this->objTourist->CountryId;
+			return $this->lstCountry;
+		}
+
+		/**
+		 *	Create item list for use by lstCountry
+		 */
+		 public function lstCountry_GetItems() {
+			$a = array();
+			$objCondition = $this->objCountryCondition;
+			if (is_null($objCondition)) $objCondition = QQ::all();
+			$objCountryCursor = Country::queryCursor($objCondition, $this->objCountryClauses);
+
+			// Iterate through the Cursor
+			while ($objCountry = Country::instantiateCursor($objCountryCursor)) {
+				$objListItem = new ListItem($objCountry->__toString(), $objCountry->Id);
+				if (($this->objTourist->Country) && ($this->objTourist->Country->Id == $objCountry->Id))
+					$objListItem->Selected = true;
+				$a[] = $objListItem;
+			}
+			return $a;
+		 }
+
+    /**
+     * Create and setup QCubed\Control\Label lblCountry
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblCountry_Create($strControlId = null) 
+    {
+        $this->lblCountry = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblCountry->Name = t('Country');
+        $this->lblCountry->PreferredRenderMethod = 'RenderWithName';
+        $this->lblCountry->LinkedNode = QQN::Tourist()->Country;
+			$this->lblCountry->Text = $this->objTourist->Country ? $this->objTourist->Country->__toString() : null;
+        return $this->lblCountry;
+    }
+
+
+
 
 
 
@@ -345,6 +640,36 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 
 			if ($this->txtContactinfo) $this->txtContactinfo->Text = $this->objTourist->Contactinfo;
 			if ($this->lblContactinfo) $this->lblContactinfo->Text = $this->objTourist->Contactinfo;
+
+
+      if ($this->lstLanguage) {
+        $this->lstLanguage->removeAllItems();
+        $this->lstLanguage->addItem($this->strLanguageNullLabel, null);
+        $this->lstLanguage->addItems($this->lstLanguage_GetItems());
+        $this->lstLanguage->SelectedValue = $this->objTourist->LanguageId;
+      
+      }
+			if ($this->lblLanguage) $this->lblLanguage->Text = $this->objTourist->Language ? $this->objTourist->Language->__toString() : null;
+
+
+      if ($this->lstCity) {
+        $this->lstCity->removeAllItems();
+        $this->lstCity->addItem($this->strCityNullLabel, null);
+        $this->lstCity->addItems($this->lstCity_GetItems());
+        $this->lstCity->SelectedValue = $this->objTourist->CityId;
+      
+      }
+			if ($this->lblCity) $this->lblCity->Text = $this->objTourist->City ? $this->objTourist->City->__toString() : null;
+
+
+      if ($this->lstCountry) {
+        $this->lstCountry->removeAllItems();
+        $this->lstCountry->addItem($this->strCountryNullLabel, null);
+        $this->lstCountry->addItems($this->lstCountry_GetItems());
+        $this->lstCountry->SelectedValue = $this->objTourist->CountryId;
+      
+      }
+			if ($this->lblCountry) $this->lblCountry->Text = $this->objTourist->Country ? $this->objTourist->Country->__toString() : null;
 
 
     }
@@ -393,6 +718,12 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 				if ($this->txtPassport) $this->objTourist->Passport = $this->txtPassport->Text;
 
 				if ($this->txtContactinfo) $this->objTourist->Contactinfo = $this->txtContactinfo->Text;
+
+				if ($this->lstLanguage) $this->objTourist->LanguageId = $this->lstLanguage->SelectedValue;
+
+				if ($this->lstCity) $this->objTourist->CityId = $this->lstCity->SelectedValue;
+
+				if ($this->lstCountry) $this->objTourist->CountryId = $this->lstCountry->SelectedValue;
 
 
             // Update any UniqueReverseReferences for controls that have been created for it
@@ -472,6 +803,30 @@ class TouristConnectorGen extends \QCubed\ObjectBase
             case 'ContactinfoLabel':
                 if (!$this->lblContactinfo) return $this->lblContactinfo_Create();
                 return $this->lblContactinfo;
+            case 'LanguageIdControl':
+                if (!$this->lstLanguage) return $this->lstLanguage_Create();
+                return $this->lstLanguage;
+            case 'LanguageIdLabel':
+                if (!$this->lblLanguage) return $this->lblLanguage_Create();
+                return $this->lblLanguage;
+            case 'LanguageNullLabel':
+                return $this->strLanguageNullLabel;
+            case 'CityIdControl':
+                if (!$this->lstCity) return $this->lstCity_Create();
+                return $this->lstCity;
+            case 'CityIdLabel':
+                if (!$this->lblCity) return $this->lblCity_Create();
+                return $this->lblCity;
+            case 'CityNullLabel':
+                return $this->strCityNullLabel;
+            case 'CountryIdControl':
+                if (!$this->lstCountry) return $this->lstCountry_Create();
+                return $this->lstCountry;
+            case 'CountryIdLabel':
+                if (!$this->lblCountry) return $this->lblCountry_Create();
+                return $this->lblCountry;
+            case 'CountryNullLabel':
+                return $this->strCountryNullLabel;
             default:
                 try {
                     return parent::__get($strName);
@@ -521,6 +876,33 @@ class TouristConnectorGen extends \QCubed\ObjectBase
                     break;
                 case 'ContactinfoLabel':
                     $this->lblContactinfo = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'LanguageIdControl':
+                    $this->lstLanguage = Type::Cast($mixValue, '\\QCubed\Project\Control\ListBox');
+                    break;
+                case 'LanguageIdLabel':
+                    $this->lblLanguage = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'LanguageNullLabel':
+                    $this->strLanguageNullLabel = $mixValue;
+                    break;
+                case 'CityIdControl':
+                    $this->lstCity = Type::Cast($mixValue, '\\QCubed\Project\Control\ListBox');
+                    break;
+                case 'CityIdLabel':
+                    $this->lblCity = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'CityNullLabel':
+                    $this->strCityNullLabel = $mixValue;
+                    break;
+                case 'CountryIdControl':
+                    $this->lstCountry = Type::Cast($mixValue, '\\QCubed\Project\Control\ListBox');
+                    break;
+                case 'CountryIdLabel':
+                    $this->lblCountry = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'CountryNullLabel':
+                    $this->strCountryNullLabel = $mixValue;
                     break;
                 default:
                     parent::__set($strName, $mixValue);

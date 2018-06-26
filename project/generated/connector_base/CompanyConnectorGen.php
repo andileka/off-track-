@@ -195,6 +195,7 @@ class CompanyConnectorGen extends \QCubed\ObjectBase
 		public function txtName_Create($strControlId = null) {
 			$this->txtName = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
 			$this->txtName->Name = t('Name');
+			$this->txtName->Required = true;
 			$this->txtName->MaxLength = Company::NameMaxLength;
 			$this->txtName->PreferredRenderMethod = 'RenderWithName';
         $this->txtName->LinkedNode = QQN::Company()->Name;

@@ -8,6 +8,6 @@
 ?>
 
 <?= _r($this->lblId); ?>
-<?= _r($this->txtPac); ?>
 <?= _r($this->txtSerial); ?>
 <?= _r($this->lstCompany); ?>
+<?= _r($this->txtRemark); ?>

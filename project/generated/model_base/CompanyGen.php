@@ -31,7 +31,7 @@ use QCubed\Query\ModelTrait;
  * @package My QCubed Application
  * @subpackage ModelGen
  * @property-read integer $Id the value of the id column (Read-Only PK)
- * @property string $Name the value of the name column 
+ * @property string $Name the value of the name column (Not Null)
  * @property-read Device $_Device the value of the protected _objDevice (Read-Only) if set due to an expansion on the device.company_id reverse relationship
  * @property-read Device $Device the value of the protected _objDevice (Read-Only) if set due to an expansion on the device.company_id reverse relationship
  * @property-read Device[] $_DeviceArray the value of the protected _objDeviceArray (Read-Only) if set due to an ExpandAsArray on the device.company_id reverse relationship
@@ -71,8 +71,8 @@ abstract class CompanyGen extends \QCubed\ObjectBase implements IteratorAggregat
      * @var string strName
      */
     private $strName;
-    const NameMaxLength = 45; // Deprecated
-    const NAME_MAX_LENGTH = 45;
+    const NameMaxLength = 255; // Deprecated
+    const NAME_MAX_LENGTH = 255;
 
     const NAME_DEFAULT = null;
     const NAME_FIELD = 'name';
@@ -832,7 +832,7 @@ abstract class CompanyGen extends \QCubed\ObjectBase implements IteratorAggregat
 
 
    /**
-	* Gets the value of strName 
+	* Gets the value of strName (Not Null)
 	* @throws Caller
 	* @return string
 	*/
@@ -848,14 +848,20 @@ abstract class CompanyGen extends \QCubed\ObjectBase implements IteratorAggregat
 
 
    /**
-	* Sets the value of strName 
+	* Sets the value of strName (Not Null)
 	* Returns $this to allow chaining of setters.
-	* @param string|null $strName
+	* @param string $strName
     * @throws Caller
 	* @return Company
 	*/
 	public function setName($strName)
     {
+        if ($strName === null) {
+             // invalidate
+             $strName = null;
+             $this->__blnValid[self::NAME_FIELD] = false;
+            return $this; // allows chaining
+        }
 		$strName = Type::Cast($strName, QCubed\Type::STRING);
 
 		if ($this->strName !== $strName) {

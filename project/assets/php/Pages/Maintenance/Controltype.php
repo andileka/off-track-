@@ -8,9 +8,7 @@ class Controltype extends \QCubed\Control\Panel {
 	/** @var \QCubed\Control\Panel */
 	public $pnlIndex;
 	public $pnlFilter;
-	public $txtNumber;
-	public $txtEntity;
-	public $lstType;
+
 	public $btnNew;
 	/** @var \JobRole */
 	public $lstJobRole;
@@ -25,14 +23,7 @@ class Controltype extends \QCubed\Control\Panel {
 		
 	}
 	public function CorrectOrder(){
-		$x = 1;
-		foreach($this->lstJobRole->SelectedOrder as $order){
-			$objJobRole = \JobRole::load($order);
-			if(!$objJobRole) { return false;}
-			$objJobRole->Step	= $x;
-			$objJobRole->Save();
-			$x++;
-		}
+		
 	}
 	public function btnedit_click($intSelectedJobRow){
 		\QCubed\Project\Application::redirect('/?c=maintenance&a=jobroleedit&id='.$intSelectedJobRow); 	
@@ -52,24 +43,12 @@ class Controltype extends \QCubed\Control\Panel {
 		$this->btnNew->AddCssClass('btn btn-flat btn-default newbutton');
 		$this->btnNew->AddAction(new \QCubed\Event\Click(), new \QCubed\Action\Redirect('/?c=maintenance&a=controltypeedit'));
 		
-		$this->lstJobRole						= new \AppointmentTypeList($this);
-		$this->lstJobRole->CssClass				= 'appointmenttype_table table';
-		$this->lstJobRole->AddJavascriptRowAction('maintenance','controltypeedit');
-		$this->lstJobRole->CreateColumns();
 		
 	}
 	
 	protected function ShowFilter(){
 		$this->lblFilter				= new \QCubed\Control\Label($this);
 		$this->lblFilter->Text			= tr('Filter');
-		
-		$this->txtNumber				= new \QCubed\Project\Control\TextBox($this);
-		$this->txtNumber->Placeholder	= tr('Number');
-		
-		$this->txtEntity				= new \QCubed\Project\Control\TextBox($this);
-		$this->txtEntity->Placeholder	= tr('Entity');
-		
-		$this->lstType					= \EntityType::GetListBox($this);
 		
 	}
 	

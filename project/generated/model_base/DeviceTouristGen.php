@@ -31,12 +31,12 @@ use QCubed\Query\ModelTrait;
  * @package My QCubed Application
  * @subpackage ModelGen
  * @property-read integer $Id the value of the id column (Read-Only PK)
- * @property integer $DeviceId the value of the device_id column 
- * @property integer $TouristId the value of the tourist_id column 
- * @property \QCubed\QDateTime $StartDate the value of the start_date column 
+ * @property integer $DeviceId the value of the device_id column (Not Null)
+ * @property integer $TouristId the value of the tourist_id column (Not Null)
+ * @property \QCubed\QDateTime $StartDate the value of the start_date column (Not Null)
  * @property \QCubed\QDateTime $EndDate the value of the end_date column 
- * @property Device $Device the value of the Device object referenced by intDeviceId 
- * @property Tourist $Tourist the value of the Tourist object referenced by intTouristId 
+ * @property Device $Device the value of the Device object referenced by intDeviceId (Not Null)
+ * @property Tourist $Tourist the value of the Tourist object referenced by intTouristId (Not Null)
  * @property-read boolean $__Restored whether or not this object was restored from the database (as opposed to created new)
  */
 abstract class DeviceTouristGen extends \QCubed\ObjectBase implements IteratorAggregate, JsonSerializable {
@@ -984,7 +984,7 @@ abstract class DeviceTouristGen extends \QCubed\ObjectBase implements IteratorAg
 
 
    /**
-	* Gets the value of intDeviceId 
+	* Gets the value of intDeviceId (Not Null)
 	* @throws Caller
 	* @return integer
 	*/
@@ -998,7 +998,7 @@ abstract class DeviceTouristGen extends \QCubed\ObjectBase implements IteratorAg
 
 
     /**
-     * Gets the value of the Device object referenced by intDeviceId 
+     * Gets the value of the Device object referenced by intDeviceId (Not Null)
      * If the object is not loaded, will load the object (caching it) before returning it.
      * @throws Caller
      * @return Device
@@ -1017,14 +1017,20 @@ abstract class DeviceTouristGen extends \QCubed\ObjectBase implements IteratorAg
 
 
    /**
-	* Sets the value of intDeviceId 
+	* Sets the value of intDeviceId (Not Null)
 	* Returns $this to allow chaining of setters.
-	* @param integer|null $intDeviceId
+	* @param integer $intDeviceId
     * @throws Caller
 	* @return DeviceTourist
 	*/
 	public function setDeviceId($intDeviceId)
     {
+        if ($intDeviceId === null) {
+             // invalidate
+             $intDeviceId = null;
+             $this->__blnValid[self::DEVICE_ID_FIELD] = false;
+            return $this; // allows chaining
+        }
 		$intDeviceId = Type::Cast($intDeviceId, QCubed\Type::INTEGER);
 
 		if ($this->intDeviceId !== $intDeviceId) {
@@ -1037,7 +1043,7 @@ abstract class DeviceTouristGen extends \QCubed\ObjectBase implements IteratorAg
 	}
 
     /**
-     * Sets the value of the Device object referenced by intDeviceId 
+     * Sets the value of the Device object referenced by intDeviceId (Not Null)
      * @param null|Device $objDevice
      * @throws Caller
      * @return DeviceTourist
@@ -1061,7 +1067,7 @@ abstract class DeviceTouristGen extends \QCubed\ObjectBase implements IteratorAg
     }
 
    /**
-	* Gets the value of intTouristId 
+	* Gets the value of intTouristId (Not Null)
 	* @throws Caller
 	* @return integer
 	*/
@@ -1075,7 +1081,7 @@ abstract class DeviceTouristGen extends \QCubed\ObjectBase implements IteratorAg
 
 
     /**
-     * Gets the value of the Tourist object referenced by intTouristId 
+     * Gets the value of the Tourist object referenced by intTouristId (Not Null)
      * If the object is not loaded, will load the object (caching it) before returning it.
      * @throws Caller
      * @return Tourist
@@ -1094,14 +1100,20 @@ abstract class DeviceTouristGen extends \QCubed\ObjectBase implements IteratorAg
 
 
    /**
-	* Sets the value of intTouristId 
+	* Sets the value of intTouristId (Not Null)
 	* Returns $this to allow chaining of setters.
-	* @param integer|null $intTouristId
+	* @param integer $intTouristId
     * @throws Caller
 	* @return DeviceTourist
 	*/
 	public function setTouristId($intTouristId)
     {
+        if ($intTouristId === null) {
+             // invalidate
+             $intTouristId = null;
+             $this->__blnValid[self::TOURIST_ID_FIELD] = false;
+            return $this; // allows chaining
+        }
 		$intTouristId = Type::Cast($intTouristId, QCubed\Type::INTEGER);
 
 		if ($this->intTouristId !== $intTouristId) {
@@ -1114,7 +1126,7 @@ abstract class DeviceTouristGen extends \QCubed\ObjectBase implements IteratorAg
 	}
 
     /**
-     * Sets the value of the Tourist object referenced by intTouristId 
+     * Sets the value of the Tourist object referenced by intTouristId (Not Null)
      * @param null|Tourist $objTourist
      * @throws Caller
      * @return DeviceTourist
@@ -1138,7 +1150,7 @@ abstract class DeviceTouristGen extends \QCubed\ObjectBase implements IteratorAg
     }
 
    /**
-	* Gets the value of dttStartDate 
+	* Gets the value of dttStartDate (Not Null)
 	* @throws Caller
 	* @return \QCubed\QDateTime
 	*/
@@ -1154,14 +1166,20 @@ abstract class DeviceTouristGen extends \QCubed\ObjectBase implements IteratorAg
 
 
    /**
-	* Sets the value of dttStartDate 
+	* Sets the value of dttStartDate (Not Null)
 	* Returns $this to allow chaining of setters.
-	* @param \QCubed\QDateTime|null $dttStartDate
+	* @param \QCubed\QDateTime $dttStartDate
     * @throws Caller
 	* @return DeviceTourist
 	*/
 	public function setStartDate($dttStartDate)
     {
+        if ($dttStartDate === null) {
+             // invalidate
+             $dttStartDate = null;
+             $this->__blnValid[self::START_DATE_FIELD] = false;
+            return $this; // allows chaining
+        }
 		$dttStartDate = Type::Cast($dttStartDate, QCubed\Type::DATE_TIME);
 
 		if ($this->dttStartDate !== $dttStartDate) {

@@ -21,21 +21,21 @@ class Navigator extends \QCubed\Control\Panel {
 	public $lstLanguage;
 	public $params		= array(); // to pass parameters from parent
 	public $navItems   = array(
-		'job'			=> array('work','listing','queue'),
+		'tourist'		=> array('listing','find_me'),
 		'planning'		=> array(),
 		'maintenance'	=> array(
-			'vehicles' => array('vehicletypes','makes'),
-			'teams' => array('teams'),
-			'workflow' => array('workflow'),
-			'users' => array('users'),
-			'job' => array('jobtype','jobrole','jobstatus'),
+			'device' => array('device'),
 			'config' => array('config'),
+			'users' => array('users'),
+			/*'teams' => array('teams'),
+			'workflow' => array('workflow'),
+			'job' => array('jobtype','jobrole','jobstatus'),
 			'entity' => array('entity','relationrole'), 
 			'expert' => array('expert'),
 			'communication' => array('templates','documents'),
 			'customfields' => array('customfields'),
 			'area' => array('area'),
-			'appointments' => array('appointmenttype', 'controltype'),
+			'appointments' => array('appointmenttype', 'controltype'),*/
 		),
 //		'booking' => array('booking'),
 	);
@@ -112,18 +112,14 @@ class Navigator extends \QCubed\Control\Panel {
 	
 	private function SetSubNav() {
 		
-		$navbarItems['job'] = $this->navItems['job'];
 		if(isset($_GET['c'])){
 			$navbarItems = "";
 			switch($_GET['c']){
-				case "planning":
-					$navbarItems['job'] = $this->navItems['job'];
-				break;
 				case "maintenance":
 					$navbarItems['maintenance'] = $this->navItems['maintenance'];
 				break;
 				default :
-					$navbarItems['job'] = $this->navItems['job'];
+					$navbarItems['tourist'] = $this->navItems['tourist'];
 				break;
 			}
 		}

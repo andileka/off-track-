@@ -32,9 +32,12 @@ use QCubed\Query\ModelTrait;
  * @subpackage ModelGen
  * @property-read integer $Id the value of the id column (Read-Only PK)
  * @property integer $UserId the value of the user_id column 
- * @property string $Type the value of the type column 
+ * @property string $Action the value of the action column (Not Null)
  * @property string $Value the value of the value column 
  * @property \QCubed\QDateTime $Datetime the value of the datetime column 
+ * @property integer $Ip the value of the ip column 
+ * @property string $Logcol the value of the logcol column 
+ * @property User $User the value of the User object referenced by intUserId 
  * @property-read boolean $__Restored whether or not this object was restored from the database (as opposed to created new)
  */
 abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, JsonSerializable {
@@ -72,15 +75,15 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 
 
     /**
-     * Protected member variable that maps to the database column log.type
-     * @var string strType
+     * Protected member variable that maps to the database column log.action
+     * @var string strAction
      */
-    private $strType;
-    const TypeMaxLength = 45; // Deprecated
-    const TYPE_MAX_LENGTH = 45;
+    private $strAction;
+    const ActionMaxLength = 45; // Deprecated
+    const ACTION_MAX_LENGTH = 45;
 
-    const TYPE_DEFAULT = null;
-    const TYPE_FIELD = 'type';
+    const ACTION_DEFAULT = null;
+    const ACTION_FIELD = 'action';
 
 
     /**
@@ -103,6 +106,28 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 
     const DATETIME_DEFAULT = null;
     const DATETIME_FIELD = 'datetime';
+
+
+    /**
+     * Protected member variable that maps to the database column log.ip
+     * @var integer intIp
+     */
+    private $intIp;
+
+    const IP_DEFAULT = null;
+    const IP_FIELD = 'ip';
+
+
+    /**
+     * Protected member variable that maps to the database column log.logcol
+     * @var string strLogcol
+     */
+    private $strLogcol;
+    const LogcolMaxLength = 45; // Deprecated
+    const LOGCOL_MAX_LENGTH = 45;
+
+    const LOGCOL_DEFAULT = null;
+    const LOGCOL_FIELD = 'logcol';
 
 
     /**
@@ -138,6 +163,16 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
     // PROTECTED MEMBER OBJECTS
     ///////////////////////////////
 
+    /**
+     * Protected member variable that contains the object pointed by the reference
+     * in the database column log.user_id.
+     *
+     * NOTE: Always use the User property getter to correctly retrieve this User object.
+     * (Because this class implements late binding, this variable reference MAY be null.)
+     * @var User objUser
+     */
+    protected $objUser;
+
 
 
     /**
@@ -158,12 +193,16 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
     {
         $this->intUserId = Log::USER_ID_DEFAULT;
         $this->__blnValid[self::USER_ID_FIELD] = true;
-        $this->strType = Log::TYPE_DEFAULT;
-        $this->__blnValid[self::TYPE_FIELD] = true;
+        $this->strAction = Log::ACTION_DEFAULT;
+        $this->__blnValid[self::ACTION_FIELD] = true;
         $this->strValue = Log::VALUE_DEFAULT;
         $this->__blnValid[self::VALUE_FIELD] = true;
         $this->dttDatetime = (Log::DATETIME_DEFAULT === null)?null:new QDateTime(Log::DATETIME_DEFAULT);
         $this->__blnValid[self::DATETIME_FIELD] = true;
+        $this->intIp = Log::IP_DEFAULT;
+        $this->__blnValid[self::IP_FIELD] = true;
+        $this->strLogcol = Log::LOGCOL_DEFAULT;
+        $this->__blnValid[self::LOGCOL_FIELD] = true;
     }
 
    /**
@@ -377,6 +416,18 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
         }
 			
 
+        // See if we're doing an array expansion on the previous item
+        if ($objExpandAsArrayNode &&
+                is_array($objPreviousItemArray) &&
+                count($objPreviousItemArray)) {
+
+            $expansionStatus = static::expandArray ($objDbRow, $strAliasPrefix, $objExpandAsArrayNode, $objPreviousItemArray, $strColumnAliasArray);
+            if ($expansionStatus) {
+                return false; // db row was used but no new object was created
+            } elseif ($expansionStatus === null) {
+                $blnCheckDuplicate = true;
+            }
+        }
 
 
         $objToReturn = static::getFromCache ($key);
@@ -412,12 +463,12 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
             else {
                 $blnNoCache = true;
             }
-            $strAlias = $strAliasPrefix . 'type';
+            $strAlias = $strAliasPrefix . 'action';
             $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
             if (isset ($strColumnKeys[$strAliasName])) {
                 $mixVal = $strColumns[$strAliasName];
-                $objToReturn->strType = $mixVal;
-                $objToReturn->__blnValid[self::TYPE_FIELD] = true;
+                $objToReturn->strAction = $mixVal;
+                $objToReturn->__blnValid[self::ACTION_FIELD] = true;
             }
             else {
                 $blnNoCache = true;
@@ -441,6 +492,29 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
                 }
                 $objToReturn->dttDatetime = $mixVal;
                 $objToReturn->__blnValid[self::DATETIME_FIELD] = true;
+            }
+            else {
+                $blnNoCache = true;
+            }
+            $strAlias = $strAliasPrefix . 'ip';
+            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+            if (isset ($strColumnKeys[$strAliasName])) {
+                $mixVal = $strColumns[$strAliasName];
+                if ($mixVal !== null) {
+                    $mixVal = (integer)$mixVal;
+                }
+                $objToReturn->intIp = $mixVal;
+                $objToReturn->__blnValid[self::IP_FIELD] = true;
+            }
+            else {
+                $blnNoCache = true;
+            }
+            $strAlias = $strAliasPrefix . 'logcol';
+            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+            if (isset ($strColumnKeys[$strAliasName])) {
+                $mixVal = $strColumns[$strAliasName];
+                $objToReturn->strLogcol = $mixVal;
+                $objToReturn->__blnValid[self::LOGCOL_FIELD] = true;
             }
             else {
                 $blnNoCache = true;
@@ -481,6 +555,17 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 
         if (!$strAliasPrefix)
             $strAliasPrefix = 'log__';
+
+        // Check for User Early Binding
+        $strAlias = $strAliasPrefix . 'user_id__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        if (isset ($strColumns[$strAliasName])) {
+            $objExpansionNode = (empty($objExpansionAliasArray['user_id']) ? null : $objExpansionAliasArray['user_id']);
+            $objToReturn->objUser = User::instantiateDbRow($objDbRow, $strAliasPrefix . 'user_id__', $objExpansionNode, null, $strColumnAliasArray, false, 'log', $objToReturn);
+        }
+        elseif ($strParentExpansionKey === 'user_id' && $objExpansionParent) {
+            $objToReturn->objUser = $objExpansionParent;
+        }
 
 
 
@@ -574,6 +659,41 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
         );
     }
 
+    /**
+     * Load an array of Log objects,
+     * by UserId Index(es)
+     * @param integer $intUserId
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @throws Caller
+     * @return Log[]
+    */
+    public static function loadArrayByUserId($intUserId, $objOptionalClauses = null)
+    {
+        // Call Log::QueryArray to perform the LoadArrayByUserId query
+        try {
+            return Log::QueryArray(
+                QQ::Equal(QQN::Log()->UserId, $intUserId),
+                $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Count Logs
+     * by UserId Index(es)
+     * @param integer $intUserId
+     * @return int
+    */
+    public static function countByUserId($intUserId)
+    {
+        // Call Log::QueryCount to perform the CountByUserId query
+        return Log::QueryCount(
+            QQ::Equal(QQN::Log()->UserId, $intUserId)
+        );
+    }
+
 
     ////////////////////////////////////////////////////
     // INDEX-BASED LOAD METHODS (Array via Many to Many)
@@ -628,14 +748,18 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
         $objDatabase->NonQuery('
             INSERT INTO `log` (
 							`user_id`,
-							`type`,
+							`action`,
 							`value`,
-							`datetime`
+							`datetime`,
+							`ip`,
+							`logcol`
 						) VALUES (
 							' . $objDatabase->SqlVariable($this->intUserId) . ',
-							' . $objDatabase->SqlVariable($this->strType) . ',
+							' . $objDatabase->SqlVariable($this->strAction) . ',
 							' . $objDatabase->SqlVariable($this->strValue) . ',
-							' . $objDatabase->SqlVariable($this->dttDatetime) . '
+							' . $objDatabase->SqlVariable($this->dttDatetime) . ',
+							' . $objDatabase->SqlVariable($this->intIp) . ',
+							' . $objDatabase->SqlVariable($this->strLogcol) . '
 						)
         ');
         // Update Identity column and return its value
@@ -689,9 +813,9 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 			$strValue = $objDatabase->sqlVariable($this->intUserId);
 			$values[] = $strCol . ' = ' . $strValue;
 		}
-		if (isset($this->__blnDirty[self::TYPE_FIELD])) {
-			$strCol = '`type`';
-			$strValue = $objDatabase->sqlVariable($this->strType);
+		if (isset($this->__blnDirty[self::ACTION_FIELD])) {
+			$strCol = '`action`';
+			$strValue = $objDatabase->sqlVariable($this->strAction);
 			$values[] = $strCol . ' = ' . $strValue;
 		}
 		if (isset($this->__blnDirty[self::VALUE_FIELD])) {
@@ -702,6 +826,16 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 		if (isset($this->__blnDirty[self::DATETIME_FIELD])) {
 			$strCol = '`datetime`';
 			$strValue = $objDatabase->sqlVariable($this->dttDatetime);
+			$values[] = $strCol . ' = ' . $strValue;
+		}
+		if (isset($this->__blnDirty[self::IP_FIELD])) {
+			$strCol = '`ip`';
+			$strValue = $objDatabase->sqlVariable($this->intIp);
+			$values[] = $strCol . ' = ' . $strValue;
+		}
+		if (isset($this->__blnDirty[self::LOGCOL_FIELD])) {
+			$strCol = '`logcol`';
+			$strValue = $objDatabase->sqlVariable($this->strLogcol);
 			$values[] = $strCol . ' = ' . $strValue;
 		}
 		if ($values) {
@@ -799,11 +933,12 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 		$this->__blnValid[self::ID_FIELD] = true;
 		if (isset($objReloaded->__blnValid[self::USER_ID_FIELD])) {
 			$this->intUserId = $objReloaded->intUserId;
+			$this->objUser = $objReloaded->objUser;
 			$this->__blnValid[self::USER_ID_FIELD] = true;
 		}
-		if (isset($objReloaded->__blnValid[self::TYPE_FIELD])) {
-			$this->strType = $objReloaded->strType;
-			$this->__blnValid[self::TYPE_FIELD] = true;
+		if (isset($objReloaded->__blnValid[self::ACTION_FIELD])) {
+			$this->strAction = $objReloaded->strAction;
+			$this->__blnValid[self::ACTION_FIELD] = true;
 		}
 		if (isset($objReloaded->__blnValid[self::VALUE_FIELD])) {
 			$this->strValue = $objReloaded->strValue;
@@ -812,6 +947,14 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 		if (isset($objReloaded->__blnValid[self::DATETIME_FIELD])) {
 			$this->dttDatetime = $objReloaded->dttDatetime;
 			$this->__blnValid[self::DATETIME_FIELD] = true;
+		}
+		if (isset($objReloaded->__blnValid[self::IP_FIELD])) {
+			$this->intIp = $objReloaded->intIp;
+			$this->__blnValid[self::IP_FIELD] = true;
+		}
+		if (isset($objReloaded->__blnValid[self::LOGCOL_FIELD])) {
+			$this->strLogcol = $objReloaded->strLogcol;
+			$this->__blnValid[self::LOGCOL_FIELD] = true;
 		}
 	}
     ////////////////////
@@ -867,6 +1010,23 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 	}
 
 
+    /**
+     * Gets the value of the User object referenced by intUserId 
+     * If the object is not loaded, will load the object (caching it) before returning it.
+     * @throws Caller
+     * @return User
+     */
+     public function getUser()
+     {
+ 		if ($this->__blnRestored && empty($this->__blnValid[self::USER_ID_FIELD])) {
+			throw new Caller("UserId was not selected in the most recent query and is not valid.");
+		}
+        if ((!$this->objUser) && (!is_null($this->intUserId))) {
+            $this->objUser = User::Load($this->intUserId);
+        }
+        return $this->objUser;
+     }
+
 
 
    /**
@@ -881,6 +1041,7 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 		$intUserId = Type::Cast($intUserId, QCubed\Type::INTEGER);
 
 		if ($this->intUserId !== $intUserId) {
+			$this->objUser = null; // remove the associated object
 			$this->intUserId = $intUserId;
 			$this->__blnDirty[self::USER_ID_FIELD] = true;
 		}
@@ -888,38 +1049,68 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 		return $this; // allows chaining
 	}
 
+    /**
+     * Sets the value of the User object referenced by intUserId 
+     * @param null|User $objUser
+     * @throws Caller
+     * @return Log
+     */
+    public function setUser($objUser) {
+        if (is_null($objUser)) {
+            $this->setUserId(null);
+        } else {
+            $objUser = Type::Cast($objUser, 'User');
+
+            // Make sure its a SAVED User object
+            if (is_null($objUser->Id)) {
+                throw new Caller('Unable to set an unsaved User for this Log');
+            }
+
+            // Update Local Member Variables
+            $this->setUserId($objUser->getId());
+            $this->objUser = $objUser;
+        }
+        return $this;
+    }
+
    /**
-	* Gets the value of strType 
+	* Gets the value of strAction (Not Null)
 	* @throws Caller
 	* @return string
 	*/
-	public function getType()
+	public function getAction()
     {
-		if ($this->__blnRestored && empty($this->__blnValid[self::TYPE_FIELD])) {
-			throw new Caller("Type was not selected in the most recent query and is not valid.");
+		if ($this->__blnRestored && empty($this->__blnValid[self::ACTION_FIELD])) {
+			throw new Caller("Action was not selected in the most recent query and is not valid.");
 		}
-		return $this->strType;
+		return $this->strAction;
 	}
 
 
 
 
    /**
-	* Sets the value of strType 
+	* Sets the value of strAction (Not Null)
 	* Returns $this to allow chaining of setters.
-	* @param string|null $strType
+	* @param string $strAction
     * @throws Caller
 	* @return Log
 	*/
-	public function setType($strType)
+	public function setAction($strAction)
     {
-		$strType = Type::Cast($strType, QCubed\Type::STRING);
+        if ($strAction === null) {
+             // invalidate
+             $strAction = null;
+             $this->__blnValid[self::ACTION_FIELD] = false;
+            return $this; // allows chaining
+        }
+		$strAction = Type::Cast($strAction, QCubed\Type::STRING);
 
-		if ($this->strType !== $strType) {
-			$this->strType = $strType;
-			$this->__blnDirty[self::TYPE_FIELD] = true;
+		if ($this->strAction !== $strAction) {
+			$this->strAction = $strAction;
+			$this->__blnDirty[self::ACTION_FIELD] = true;
 		}
-		$this->__blnValid[self::TYPE_FIELD] = true;
+		$this->__blnValid[self::ACTION_FIELD] = true;
 		return $this; // allows chaining
 	}
 
@@ -990,6 +1181,76 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 			$this->__blnDirty[self::DATETIME_FIELD] = true;
 		}
 		$this->__blnValid[self::DATETIME_FIELD] = true;
+		return $this; // allows chaining
+	}
+
+   /**
+	* Gets the value of intIp 
+	* @throws Caller
+	* @return integer
+	*/
+	public function getIp()
+    {
+		if ($this->__blnRestored && empty($this->__blnValid[self::IP_FIELD])) {
+			throw new Caller("Ip was not selected in the most recent query and is not valid.");
+		}
+		return $this->intIp;
+	}
+
+
+
+
+   /**
+	* Sets the value of intIp 
+	* Returns $this to allow chaining of setters.
+	* @param integer|null $intIp
+    * @throws Caller
+	* @return Log
+	*/
+	public function setIp($intIp)
+    {
+		$intIp = Type::Cast($intIp, QCubed\Type::INTEGER);
+
+		if ($this->intIp !== $intIp) {
+			$this->intIp = $intIp;
+			$this->__blnDirty[self::IP_FIELD] = true;
+		}
+		$this->__blnValid[self::IP_FIELD] = true;
+		return $this; // allows chaining
+	}
+
+   /**
+	* Gets the value of strLogcol 
+	* @throws Caller
+	* @return string
+	*/
+	public function getLogcol()
+    {
+		if ($this->__blnRestored && empty($this->__blnValid[self::LOGCOL_FIELD])) {
+			throw new Caller("Logcol was not selected in the most recent query and is not valid.");
+		}
+		return $this->strLogcol;
+	}
+
+
+
+
+   /**
+	* Sets the value of strLogcol 
+	* Returns $this to allow chaining of setters.
+	* @param string|null $strLogcol
+    * @throws Caller
+	* @return Log
+	*/
+	public function setLogcol($strLogcol)
+    {
+		$strLogcol = Type::Cast($strLogcol, QCubed\Type::STRING);
+
+		if ($this->strLogcol !== $strLogcol) {
+			$this->strLogcol = $strLogcol;
+			$this->__blnDirty[self::LOGCOL_FIELD] = true;
+		}
+		$this->__blnValid[self::LOGCOL_FIELD] = true;
 		return $this; // allows chaining
 	}
 
@@ -1249,10 +1510,12 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
     {
         $strToReturn = '<complexType name="Log"><sequence>';
         $strToReturn .= '<element name="Id" type="xsd:int"/>';
-        $strToReturn .= '<element name="UserId" type="xsd:int"/>';
-        $strToReturn .= '<element name="Type" type="xsd:string"/>';
+        $strToReturn .= '<element name="User" type="xsd1:User"/>';
+        $strToReturn .= '<element name="Action" type="xsd:string"/>';
         $strToReturn .= '<element name="Value" type="xsd:string"/>';
         $strToReturn .= '<element name="Datetime" type="xsd:dateTime"/>';
+        $strToReturn .= '<element name="Ip" type="xsd:int"/>';
+        $strToReturn .= '<element name="Logcol" type="xsd:string"/>';
         $strToReturn .= '<element name="__blnRestored" type="xsd:boolean"/>';
         $strToReturn .= '</sequence></complexType>';
         return $strToReturn;
@@ -1262,6 +1525,7 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
     {
         if (!array_key_exists('Log', $strComplexTypeArray)) {
             $strComplexTypeArray['Log'] = Log::GetSoapComplexTypeXml();
+            User::AlterSoapComplexTypeArray($strComplexTypeArray);
         }
     }
 
@@ -1280,14 +1544,19 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
         $objToReturn = new Log();
         if (property_exists($objSoapObject, 'Id'))
             $objToReturn->intId = $objSoapObject->Id;
-        if (property_exists($objSoapObject, 'UserId'))
-            $objToReturn->intUserId = $objSoapObject->UserId;
-        if (property_exists($objSoapObject, 'Type'))
-            $objToReturn->strType = $objSoapObject->Type;
+        if ((property_exists($objSoapObject, 'User')) &&
+            ($objSoapObject->User))
+            $objToReturn->User = User::GetObjectFromSoapObject($objSoapObject->User);
+        if (property_exists($objSoapObject, 'Action'))
+            $objToReturn->strAction = $objSoapObject->Action;
         if (property_exists($objSoapObject, 'Value'))
             $objToReturn->strValue = $objSoapObject->Value;
         if (property_exists($objSoapObject, 'Datetime'))
             $objToReturn->dttDatetime = new QDateTime($objSoapObject->Datetime);
+        if (property_exists($objSoapObject, 'Ip'))
+            $objToReturn->intIp = $objSoapObject->Ip;
+        if (property_exists($objSoapObject, 'Logcol'))
+            $objToReturn->strLogcol = $objSoapObject->Logcol;
         if (property_exists($objSoapObject, '__blnRestored'))
             $objToReturn->__blnRestored = $objSoapObject->__blnRestored;
         return $objToReturn;
@@ -1308,6 +1577,10 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 
     public static function getSoapObjectFromObject($objObject, $blnBindRelatedObjects)
     {
+        if ($objObject->objUser)
+            $objObject->objUser = User::GetSoapObjectFromObject($objObject->objUser, false);
+        else if (!$blnBindRelatedObjects)
+            $objObject->intUserId = null;
         if ($objObject->dttDatetime)
             $objObject->dttDatetime = $objObject->dttDatetime->qFormat(QDateTime::FormatSoap);
         return $objObject;
@@ -1327,14 +1600,20 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
         if (isset($this->__blnValid[self::USER_ID_FIELD])) {
             $iArray['UserId'] = $this->intUserId;
         }
-        if (isset($this->__blnValid[self::TYPE_FIELD])) {
-            $iArray['Type'] = $this->strType;
+        if (isset($this->__blnValid[self::ACTION_FIELD])) {
+            $iArray['Action'] = $this->strAction;
         }
         if (isset($this->__blnValid[self::VALUE_FIELD])) {
             $iArray['Value'] = $this->strValue;
         }
         if (isset($this->__blnValid[self::DATETIME_FIELD])) {
             $iArray['Datetime'] = $this->dttDatetime;
+        }
+        if (isset($this->__blnValid[self::IP_FIELD])) {
+            $iArray['Ip'] = $this->intIp;
+        }
+        if (isset($this->__blnValid[self::LOGCOL_FIELD])) {
+            $iArray['Logcol'] = $this->strLogcol;
         }
         return new ArrayIterator($iArray);
     }
@@ -1380,17 +1659,25 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
         if (isset($this->__blnValid[self::ID_FIELD])) {
             $a['id'] = $this->intId;
         }
-        if (isset($this->__blnValid[self::USER_ID_FIELD])) {
+        if (isset($this->objUser)) {
+            $a['user'] = $this->objUser;
+        } elseif (isset($this->__blnValid[self::USER_ID_FIELD])) {
             $a['user_id'] = $this->intUserId;
         }
-        if (isset($this->__blnValid[self::TYPE_FIELD])) {
-            $a['type'] = $this->strType;
+        if (isset($this->__blnValid[self::ACTION_FIELD])) {
+            $a['action'] = $this->strAction;
         }
         if (isset($this->__blnValid[self::VALUE_FIELD])) {
             $a['value'] = $this->strValue;
         }
         if (isset($this->__blnValid[self::DATETIME_FIELD])) {
             $a['datetime'] = $this->dttDatetime;
+        }
+        if (isset($this->__blnValid[self::IP_FIELD])) {
+            $a['ip'] = $this->intIp;
+        }
+        if (isset($this->__blnValid[self::LOGCOL_FIELD])) {
+            $a['logcol'] = $this->strLogcol;
         }
         return $a;
     }
@@ -1410,9 +1697,12 @@ abstract class LogGen extends \QCubed\ObjectBase implements IteratorAggregate, J
 /**
  * @property-read Node\Column $Id
  * @property-read Node\Column $UserId
- * @property-read Node\Column $Type
+ * @property-read NodeUser $User
+ * @property-read Node\Column $Action
  * @property-read Node\Column $Value
  * @property-read Node\Column $Datetime
+ * @property-read Node\Column $Ip
+ * @property-read Node\Column $Logcol
  * @property-read Node\Column $_PrimaryKeyNode
  **/
 class NodeLog extends Node\Table {
@@ -1427,9 +1717,11 @@ class NodeLog extends Node\Table {
         return [
             "id",
             "user_id",
-            "type",
+            "action",
             "value",
             "datetime",
+            "ip",
+            "logcol",
         ];
     }
 
@@ -1462,12 +1754,18 @@ class NodeLog extends Node\Table {
                 return new Node\Column('id', 'Id', 'Integer', $this);
             case 'UserId':
                 return new Node\Column('user_id', 'UserId', 'Integer', $this);
-            case 'Type':
-                return new Node\Column('type', 'Type', 'VarChar', $this);
+            case 'User':
+                return new NodeUser('user_id', 'User', 'Integer', $this);
+            case 'Action':
+                return new Node\Column('action', 'Action', 'VarChar', $this);
             case 'Value':
                 return new Node\Column('value', 'Value', 'VarChar', $this);
             case 'Datetime':
                 return new Node\Column('datetime', 'Datetime', 'DateTime', $this);
+            case 'Ip':
+                return new Node\Column('ip', 'Ip', 'Integer', $this);
+            case 'Logcol':
+                return new Node\Column('logcol', 'Logcol', 'VarChar', $this);
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);
@@ -1485,9 +1783,12 @@ class NodeLog extends Node\Table {
 /**
  * @property-read Node\Column $Id
  * @property-read Node\Column $UserId
- * @property-read Node\Column $Type
+ * @property-read NodeUser $User
+ * @property-read Node\Column $Action
  * @property-read Node\Column $Value
  * @property-read Node\Column $Datetime
+ * @property-read Node\Column $Ip
+ * @property-read Node\Column $Logcol
 
  * @property-read Node\Column $_PrimaryKeyNode
  **/
@@ -1503,9 +1804,11 @@ class ReverseReferenceNodeLog extends Node\ReverseReference {
         return [
             "id",
             "user_id",
-            "type",
+            "action",
             "value",
             "datetime",
+            "ip",
+            "logcol",
         ];
     }
 
@@ -1530,12 +1833,18 @@ class ReverseReferenceNodeLog extends Node\ReverseReference {
                 return new Node\Column('id', 'Id', 'Integer', $this);
             case 'UserId':
                 return new Node\Column('user_id', 'UserId', 'Integer', $this);
-            case 'Type':
-                return new Node\Column('type', 'Type', 'VarChar', $this);
+            case 'User':
+                return new NodeUser('user_id', 'User', 'Integer', $this);
+            case 'Action':
+                return new Node\Column('action', 'Action', 'VarChar', $this);
             case 'Value':
                 return new Node\Column('value', 'Value', 'VarChar', $this);
             case 'Datetime':
                 return new Node\Column('datetime', 'Datetime', 'DateTime', $this);
+            case 'Ip':
+                return new Node\Column('ip', 'Ip', 'Integer', $this);
+            case 'Logcol':
+                return new Node\Column('logcol', 'Logcol', 'VarChar', $this);
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);

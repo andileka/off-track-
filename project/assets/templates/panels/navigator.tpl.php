@@ -2,9 +2,9 @@
 <!-- Logo -->
 <a href="index.php" class="logo">
   <!-- mini logo for sidebar mini 50x50 pixels -->
-  <span class="logo-mini"><b>E</b>M</span>
+  <span class="logo-mini"></span>
   <!-- logo for regular state and mobile devices -->
-  <span class="logo-lg"><b>Hikify</b></span>
+  <span class="logo-lg"><b>Off Track</b></span>
 </a>
 <style>
 	.selectpicker{
@@ -33,14 +33,7 @@
 <aside class="main-sidebar">
 <!-- sidebar: style can be found in sidebar.less -->
 <section class="sidebar" style="height: auto;">
-    <div class="fileexpertdetails">
-        <h2><?= $_CONTROL::$expertName ?></h2>
-        <div class="details">
-            <div class="field"><span class="grey"><?= tr('File') ?> : </span><span><?= $_CONTROL::$jobNr ?></span></div>
-            <div class="field"><span class="grey"><?= tr('Plate') ?> : </span><span><?= $_CONTROL::$Lisenceplate ?></span></div>
-        </div>
-    </div>
-	<ul class="sidebar-menu tree" data-widget="tree">
+    <ul class="sidebar-menu tree" data-widget="tree">
         <li class="header"><?= strtoupper(tr('Help')) ?></li>
         <li class="active treeview menu-open">
           <a href="#">

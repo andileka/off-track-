@@ -5,10 +5,22 @@
      */
 	class QQN {
 		/**
+		 * @return NodeCity
+		 */
+		static public function city() {
+			return new NodeCity('city', null, null);
+		}
+		/**
 		 * @return NodeCompany
 		 */
 		static public function company() {
 			return new NodeCompany('company', null, null);
+		}
+		/**
+		 * @return NodeCountry
+		 */
+		static public function country() {
+			return new NodeCountry('country', null, null);
 		}
 		/**
 		 * @return NodeDevice
@@ -27,6 +39,12 @@
 		 */
 		static public function event() {
 			return new NodeEvent('event', null, null);
+		}
+		/**
+		 * @return NodeLanguage
+		 */
+		static public function language() {
+			return new NodeLanguage('language', null, null);
 		}
 		/**
 		 * @return NodeLog

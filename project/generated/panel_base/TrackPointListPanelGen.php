@@ -145,7 +145,9 @@ abstract class TrackPointListPanelGen extends \QCubed\Control\Panel
 			return \QCubed\Query\QQ::orCondition(
 				\QCubed\Query\QQ::equal(QQN::TrackPoint()->Id, $strSearchValue),
             \QCubed\Query\QQ::equal(QQN::TrackPoint()->TrackId, $strSearchValue),
-            \QCubed\Query\QQ::equal(QQN::TrackPoint()->PositionId, $strSearchValue)
+            \QCubed\Query\QQ::equal(QQN::TrackPoint()->PositionId, $strSearchValue),
+            \QCubed\Query\QQ::like(QQN::TrackPoint()->Type, "%" . $strSearchValue . "%"),
+            \QCubed\Query\QQ::like(QQN::TrackPoint()->Name, "%" . $strSearchValue . "%")
 			);
 		}
 

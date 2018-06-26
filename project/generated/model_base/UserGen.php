@@ -32,10 +32,14 @@ use QCubed\Query\ModelTrait;
  * @subpackage ModelGen
  * @property-read integer $Id the value of the id column (Read-Only PK)
  * @property integer $CompanyId the value of the company_id column (Not Null)
- * @property string $Email the value of the email column 
+ * @property string $Email the value of the email column (Unique)
  * @property string $Password the value of the password column 
  * @property string $Salt the value of the salt column 
  * @property Company $Company the value of the Company object referenced by intCompanyId (Not Null)
+ * @property-read Log $_Log the value of the protected _objLog (Read-Only) if set due to an expansion on the log.user_id reverse relationship
+ * @property-read Log $Log the value of the protected _objLog (Read-Only) if set due to an expansion on the log.user_id reverse relationship
+ * @property-read Log[] $_LogArray the value of the protected _objLogArray (Read-Only) if set due to an ExpandAsArray on the log.user_id reverse relationship
+ * @property-read Log[] $LogArray the value of the protected _objLogArray (Read-Only) if set due to an ExpandAsArray on the log.user_id reverse relationship
  * @property-read boolean $__Restored whether or not this object was restored from the database (as opposed to created new)
  */
 abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, JsonSerializable {
@@ -107,6 +111,22 @@ abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, 
     const SALT_DEFAULT = null;
     const SALT_FIELD = 'salt';
 
+
+    /**
+     * Protected member variable that stores a reference to a single Log object
+     * (of type Log), if this User object was restored with
+     * an expansion on the log association table.
+     * @var Log _objLog;
+     */
+    protected $_objLog;
+
+    /**
+     * Protected member variable that stores a reference to an array of Log objects
+     * (of type Log[]), if this User object was restored with
+     * an ExpandAsArray on the log association table.
+     * @var Log[] _objLogArray;
+     */
+    protected $_objLogArray = null;
 
     /**
      * Protected array of virtual attributes for this object (e.g. extra/other calculated and/or non-object bound
@@ -518,6 +538,24 @@ abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, 
 
 
 
+        // Check for Log Virtual Binding
+        $strAlias = $strAliasPrefix . 'log__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        $objExpansionNode = (empty($objExpansionAliasArray['log']) ? null : $objExpansionAliasArray['log']);
+        $blnExpanded = ($objExpansionNode && $objExpansionNode->ExpandAsArray);
+        if ($blnExpanded && null === $objToReturn->_objLogArray)
+            $objToReturn->_objLogArray = array();
+        if (isset ($strColumns[$strAliasName])) {
+            if ($blnExpanded) {
+                $objToReturn->_objLogArray[] = Log::instantiateDbRow($objDbRow, $strAliasPrefix . 'log__', $objExpansionNode, null, $strColumnAliasArray, false, 'user_id', $objToReturn);
+            } elseif (is_null($objToReturn->_objLog)) {
+                $objToReturn->_objLog = Log::instantiateDbRow($objDbRow, $strAliasPrefix . 'log__', $objExpansionNode, null, $strColumnAliasArray, false, 'user_id', $objToReturn);
+            }
+        }
+        elseif ($strParentExpansionKey === 'log' && $objExpansionParent) {
+            $objToReturn->_objLog = $objExpansionParent;
+        }
+
         return $objToReturn;
     }
 
@@ -602,6 +640,23 @@ abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, 
         return User::QuerySingle(
             QQ::AndCondition(
                 QQ::Equal(QQN::User()->Id, $intId)
+            ),
+            $objOptionalClauses
+        );
+    }
+
+    /**
+     * Load a single User object,
+     * by Email Index(es)
+     * @param string $strEmail
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @return User
+    */
+    public static function loadByEmail($strEmail, $objOptionalClauses = null)
+    {
+        return User::QuerySingle(
+            QQ::AndCondition(
+                QQ::Equal(QQN::User()->Email, $strEmail)
             ),
             $objOptionalClauses
         );
@@ -903,6 +958,22 @@ abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, 
         return $ret;
     }
 
+    /**
+     *  Return an array of Users keyed by the unique Email property.
+     *	@param User[]
+     *	@return User[]
+     **/
+    public static function keyUsersByEmail($users) {
+        if (empty($users)) {
+            return $users;
+        }
+        $ret = [];
+        foreach ($users as $user) {
+            $ret[$user->strEmail] = $user;
+        }
+        return $ret;
+    }
+
     
     //////////////////////////////////////////////////////////////
     //															//
@@ -1006,7 +1077,7 @@ abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, 
     }
 
    /**
-	* Gets the value of strEmail 
+	* Gets the value of strEmail (Unique)
 	* @throws Caller
 	* @return string
 	*/
@@ -1022,14 +1093,20 @@ abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, 
 
 
    /**
-	* Sets the value of strEmail 
+	* Sets the value of strEmail (Unique)
 	* Returns $this to allow chaining of setters.
-	* @param string|null $strEmail
+	* @param string $strEmail
     * @throws Caller
 	* @return User
 	*/
 	public function setEmail($strEmail)
     {
+        if ($strEmail === null) {
+             // invalidate
+             $strEmail = null;
+             $this->__blnValid[self::EMAIL_FIELD] = false;
+            return $this; // allows chaining
+        }
 		$strEmail = Type::Cast($strEmail, QCubed\Type::STRING);
 
 		if ($this->strEmail !== $strEmail) {
@@ -1130,6 +1207,10 @@ abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, 
 
 
 
+   		// Reverse references
+		$objCopy->_objLog = null;
+		$objCopy->_objLogArray = null;
+
 		return $objCopy;
 	}
 
@@ -1229,6 +1310,24 @@ abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, 
             // (If restored via a "Many-to" expansion)
             ////////////////////////////
 
+            case 'Log':
+            case '_Log':
+                /**
+                 * Gets the value of the protected _objLog (Read-Only)
+                 * if set due to an expansion on the log.user_id reverse relationship
+                 * @return Log
+                 */
+                return $this->_objLog;
+
+            case 'LogArray':
+            case '_LogArray':
+                /**
+                 * Gets the value of the protected _objLogArray (Read-Only)
+                 * if set due to an ExpandAsArray on the log.user_id reverse relationship
+                 * @return Log[]
+                 */
+                return $this->_objLogArray;
+
 
             case '__Restored':
                 return $this->__blnRestored;
@@ -1311,6 +1410,165 @@ abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, 
     // ASSOCIATED OBJECTS' METHODS
     ///////////////////////////////
 
+
+
+    // Related Objects' Methods for Log
+    //-------------------------------------------------------------------
+
+    /**
+     * Gets all associated Logs as an array of Log objects
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @return Log[]
+     * @throws Caller
+     */
+    public function getLogArray($objOptionalClauses = null)
+    {
+        if ((is_null($this->intId)))
+            return array();
+
+        try {
+            return Log::LoadArrayByUserId($this->intId, $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Counts all associated Logs
+     * @return int
+    */
+    public function countLogs()
+    {
+        if ((is_null($this->intId)))
+            return 0;
+
+        return Log::CountByUserId($this->intId);
+    }
+
+    /**
+     * Associates a Log
+     * @param Log $objLog
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function associateLog(Log $objLog)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateLog on this unsaved User.');
+        if ((is_null($objLog->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateLog on this User with an unsaved Log.');
+
+        // Get the Database Object for this Class
+        $objDatabase = User::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `log`
+            SET
+                `user_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objLog->Id) . '
+        ');
+    }
+
+    /**
+     * Unassociates a Log
+     * @param Log $objLog
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function unassociateLog(Log $objLog)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateLog on this unsaved User.');
+        if ((is_null($objLog->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateLog on this User with an unsaved Log.');
+
+        // Get the Database Object for this Class
+        $objDatabase = User::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `log`
+            SET
+                `user_id` = null
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objLog->Id) . ' AND
+                `user_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Unassociates all Logs
+     * @return void
+    */
+    public function unassociateAllLogs()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateLog on this unsaved User.');
+
+        // Get the Database Object for this Class
+        $objDatabase = User::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `log`
+            SET
+                `user_id` = null
+            WHERE
+                `user_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes an associated Log
+     * @param Log $objLog
+     * @return void
+    */
+    public function deleteAssociatedLog(Log $objLog)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateLog on this unsaved User.');
+        if ((is_null($objLog->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateLog on this User with an unsaved Log.');
+
+        // Get the Database Object for this Class
+        $objDatabase = User::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `log`
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objLog->Id) . ' AND
+                `user_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes all associated Logs
+     * @return void
+    */
+    public function deleteAllLogs()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateLog on this unsaved User.');
+
+        // Get the Database Object for this Class
+        $objDatabase = User::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `log`
+            WHERE
+                `user_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
 
 
     
@@ -1515,6 +1773,11 @@ abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, 
         if (isset($this->__blnValid[self::SALT_FIELD])) {
             $a['salt'] = $this->strSalt;
         }
+        if (isset($this->_objLog)) {
+            $a['log'] = $this->_objLog;
+        } elseif (isset($this->_objLogArray)) {
+            $a['log'] = $this->_objLogArray;
+        }
         return $a;
     }
 
@@ -1537,6 +1800,7 @@ abstract class UserGen extends \QCubed\ObjectBase implements IteratorAggregate, 
  * @property-read Node\Column $Email
  * @property-read Node\Column $Password
  * @property-read Node\Column $Salt
+ * @property-read ReverseReferenceNodeLog $Log
  * @property-read Node\Column $_PrimaryKeyNode
  **/
 class NodeUser extends Node\Table {
@@ -1594,6 +1858,8 @@ class NodeUser extends Node\Table {
                 return new Node\Column('password', 'Password', 'VarChar', $this);
             case 'Salt':
                 return new Node\Column('salt', 'Salt', 'VarChar', $this);
+            case 'Log':
+                return new ReverseReferenceNodeLog($this, 'log', \QCubed\Type::REVERSE_REFERENCE, 'user_id', 'Log');
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);
@@ -1615,6 +1881,7 @@ class NodeUser extends Node\Table {
  * @property-read Node\Column $Email
  * @property-read Node\Column $Password
  * @property-read Node\Column $Salt
+ * @property-read ReverseReferenceNodeLog $Log
 
  * @property-read Node\Column $_PrimaryKeyNode
  **/
@@ -1665,6 +1932,8 @@ class ReverseReferenceNodeUser extends Node\ReverseReference {
                 return new Node\Column('password', 'Password', 'VarChar', $this);
             case 'Salt':
                 return new Node\Column('salt', 'Salt', 'VarChar', $this);
+            case 'Log':
+                return new ReverseReferenceNodeLog($this, 'log', \QCubed\Type::REVERSE_REFERENCE, 'user_id', 'Log');
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);

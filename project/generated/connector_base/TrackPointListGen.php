@@ -48,6 +48,10 @@ class TrackPointListGen extends \QCubed\Project\Control\DataGrid
 	public $colTrack;
 	/** @var NodeColumn */
 	public $colPosition;
+	/** @var NodeColumn */
+	public $colType;
+	/** @var NodeColumn */
+	public $colName;
 
 
 	/**
@@ -82,6 +86,8 @@ class TrackPointListGen extends \QCubed\Project\Control\DataGrid
 		$this->colId = $this->createNodeColumn("Id", QQN::TrackPoint()->Id);
 		$this->colTrack = $this->createNodeColumn("Track", QQN::TrackPoint()->Track);
 		$this->colPosition = $this->createNodeColumn("Position", QQN::TrackPoint()->Position);
+		$this->colType = $this->createNodeColumn("Type", QQN::TrackPoint()->Type);
+		$this->colName = $this->createNodeColumn("Name", QQN::TrackPoint()->Name);
 	}
 
    /**

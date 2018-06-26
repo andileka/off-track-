@@ -32,6 +32,12 @@ class TrackPointEditPanelGen extends Panel
 	/** @var \QCubed\Project\Control\ListBox */
 	protected $lstPosition;
 
+	/** @var \QCubed\Project\Control\TextBox */
+	protected $txtType;
+
+	/** @var \QCubed\Project\Control\TextBox */
+	protected $txtName;
+
 
 	/**
 	 * @param FormBase|ControlBase $objParentObject
@@ -62,6 +68,8 @@ class TrackPointEditPanelGen extends Panel
 		$this->lblId = $this->mctTrackPoint->lblId_Create();
 		$this->lstTrack = $this->mctTrackPoint->lstTrack_Create();
 		$this->lstPosition = $this->mctTrackPoint->lstPosition_Create();
+		$this->txtType = $this->mctTrackPoint->txtType_Create();
+		$this->txtName = $this->mctTrackPoint->txtName_Create();
 	}
 
 	/**

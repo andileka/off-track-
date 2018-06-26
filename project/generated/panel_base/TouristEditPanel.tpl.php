@@ -11,3 +11,6 @@
 <?= _r($this->txtName); ?>
 <?= _r($this->txtPassport); ?>
 <?= _r($this->txtContactinfo); ?>
+<?= _r($this->lstLanguage); ?>
+<?= _r($this->lstCity); ?>
+<?= _r($this->lstCountry); ?>

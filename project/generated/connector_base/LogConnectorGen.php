@@ -6,9 +6,14 @@ use QCubed\Project\Control\FormBase;
 use QCubed\Project\Control\ControlBase;
 use QCubed\Query\QQ;
 use QCubed\Control\Label;
-use QCubed\Control\IntegerTextBox;
+use QCubed\Project\Control\ListBox;
+use QCubed\Control\ListControl;
+use QCubed\Control\ListItem;
+use QCubed\Query\Condition\ConditionInterface as QQCondition;
+use QCubed\Query\Clause\ClauseInterface as QQClause;
 use QCubed\Project\Control\TextBox;
 use QCubed\Control\DateTimePicker;
+use QCubed\Control\IntegerTextBox;
 
 /**
  * This is a ModelConnector class, providing a Form or Panel access to event handlers
@@ -28,14 +33,18 @@ use QCubed\Control\DateTimePicker;
  * @subpackage ModelConnector
  * @property-read Log $Log the actual Log data class being edited
  * @property-read QCubed\\Control\\Label $IdLabel
- * @property QCubed\Control\IntegerTextBox $UserIdControl
+ * @property QCubed\Project\Control\ListBox $UserIdControl
  * @property-read QCubed\\Control\\Label $UserIdLabel
- * @property QCubed\Project\Control\TextBox $TypeControl
- * @property-read QCubed\\Control\\Label $TypeLabel
+ * @property QCubed\Project\Control\TextBox $ActionControl
+ * @property-read QCubed\\Control\\Label $ActionLabel
  * @property QCubed\Project\Control\TextBox $ValueControl
  * @property-read QCubed\\Control\\Label $ValueLabel
  * @property QCubed\Control\DateTimePicker $DatetimeControl
  * @property-read QCubed\\Control\\Label $DatetimeLabel
+ * @property QCubed\Control\IntegerTextBox $IpControl
+ * @property-read QCubed\\Control\\Label $IpLabel
+ * @property QCubed\Project\Control\TextBox $LogcolControl
+ * @property-read QCubed\\Control\\Label $LogcolLabel
  * @property-read string $TitleVerb a verb indicating whether or not this is being edited or created
  * @property-read boolean $EditMode a boolean indicating whether or not this is being edited or created
  */
@@ -72,30 +81,46 @@ class LogConnectorGen extends \QCubed\ObjectBase
     protected $lblId;
 
     /**
-     * @var QCubed\Control\IntegerTextBox
-
+     * @var QCubed\Project\Control\ListBox
      * @access protected
      */
-    protected $txtUserId;
+    protected $lstUser;
 
+    /**
+     * @var string 
+     * @access protected
+     */
+    protected $strUserNullLabel;
+
+    /**
+    * @var QQCondition
+    * @access protected
+    */
+    protected $objUserCondition;
+
+    /**
+    * @var QQClause[]
+    * @access protected
+    */
+    protected $objUserClauses;
     /**
      * @var Label
      * @access protected
      */
-    protected $lblUserId;
+    protected $lblUser;
 
     /**
      * @var QCubed\Project\Control\TextBox
 
      * @access protected
      */
-    protected $txtType;
+    protected $txtAction;
 
     /**
      * @var Label
      * @access protected
      */
-    protected $lblType;
+    protected $lblAction;
 
     /**
      * @var QCubed\Project\Control\TextBox
@@ -122,6 +147,32 @@ class LogConnectorGen extends \QCubed\ObjectBase
      * @access protected
      */
     protected $lblDatetime;
+
+    /**
+     * @var QCubed\Control\IntegerTextBox
+
+     * @access protected
+     */
+    protected $txtIp;
+
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblIp;
+
+    /**
+     * @var QCubed\Project\Control\TextBox
+
+     * @access protected
+     */
+    protected $txtLogcol;
+
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblLogcol;
 
 
 
@@ -235,66 +286,100 @@ class LogConnectorGen extends \QCubed\ObjectBase
 
 
 		/**
-		 * Create and setup a QCubed\Control\IntegerTextBox txtUserId
+		 * Create and setup QCubed\Project\Control\ListBox lstUser
 		 * @param string $strControlId optional ControlId to use
-		 * @return QCubed\Control\IntegerTextBox
+		 * @param QQCondition $objCondition override the default condition of QQ::all() to the query, itself
+		 * @param QQClause[] $objClauses additional QQClause object or array of QQClause objects for the query
+		 * @return ListBox
 		 */
-		public function txtUserId_Create($strControlId = null) {
-			$this->txtUserId = new \QCubed\Control\IntegerTextBox($this->objParentObject, $strControlId);
-			$this->txtUserId->Name = t('User Id');
-			$this->txtUserId->PreferredRenderMethod = 'RenderWithName';
-        $this->txtUserId->LinkedNode = QQN::Log()->UserId;
-			$this->txtUserId->Text = $this->objLog->UserId;
-			return $this->txtUserId;
+		public function lstUser_Create($strControlId = null, QQCondition $objCondition = null, $objClauses = null) {
+			$this->objUserCondition = $objCondition;
+			$this->objUserClauses = $objClauses;
+			$this->lstUser = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
+			$this->lstUser->Name = t('User');
+			$this->lstUser->PreferredRenderMethod = 'RenderWithName';
+        $this->lstUser->LinkedNode = QQN::Log()->User;
+      if (!$this->strUserNullLabel) {
+      	if (!$this->lstUser->Required) {
+      		$this->strUserNullLabel = t('- None -');
+      	}
+      	elseif (!$this->blnEditMode) {
+      		$this->strUserNullLabel = t('- Select One -');
+      	}
+      }
+      $this->lstUser->addItem($this->strUserNullLabel, null);
+      $this->lstUser->addItems($this->lstUser_GetItems());
+      $this->lstUser->SelectedValue = $this->objLog->UserId;
+			return $this->lstUser;
 		}
 
+		/**
+		 *	Create item list for use by lstUser
+		 */
+		 public function lstUser_GetItems() {
+			$a = array();
+			$objCondition = $this->objUserCondition;
+			if (is_null($objCondition)) $objCondition = QQ::all();
+			$objUserCursor = User::queryCursor($objCondition, $this->objUserClauses);
+
+			// Iterate through the Cursor
+			while ($objUser = User::instantiateCursor($objUserCursor)) {
+				$objListItem = new ListItem($objUser->__toString(), $objUser->Id);
+				if (($this->objLog->User) && ($this->objLog->User->Id == $objUser->Id))
+					$objListItem->Selected = true;
+				$a[] = $objListItem;
+			}
+			return $a;
+		 }
+
     /**
-     * Create and setup QCubed\Control\Label lblUserId
+     * Create and setup QCubed\Control\Label lblUser
      *
      * @param string $strControlId optional ControlId to use
      * @return QCubed\Control\Label
      */
-    public function lblUserId_Create($strControlId = null) 
+    public function lblUser_Create($strControlId = null) 
     {
-        $this->lblUserId = new \QCubed\Control\Label($this->objParentObject, $strControlId);
-        $this->lblUserId->Name = t('User Id');
-        $this->lblUserId->PreferredRenderMethod = 'RenderWithName';
-        $this->lblUserId->LinkedNode = QQN::Log()->UserId;
-			$this->lblUserId->Text = $this->objLog->UserId;
-        return $this->lblUserId;
+        $this->lblUser = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblUser->Name = t('User');
+        $this->lblUser->PreferredRenderMethod = 'RenderWithName';
+        $this->lblUser->LinkedNode = QQN::Log()->User;
+			$this->lblUser->Text = $this->objLog->User ? $this->objLog->User->__toString() : null;
+        return $this->lblUser;
     }
 
 
 
 		/**
-		 * Create and setup a QCubed\Project\Control\TextBox txtType
+		 * Create and setup a QCubed\Project\Control\TextBox txtAction
 		 * @param string $strControlId optional ControlId to use
 		 * @return QCubed\Project\Control\TextBox
 		 */
-		public function txtType_Create($strControlId = null) {
-			$this->txtType = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
-			$this->txtType->Name = t('Type');
-			$this->txtType->MaxLength = Log::TypeMaxLength;
-			$this->txtType->PreferredRenderMethod = 'RenderWithName';
-        $this->txtType->LinkedNode = QQN::Log()->Type;
-			$this->txtType->Text = $this->objLog->Type;
-			return $this->txtType;
+		public function txtAction_Create($strControlId = null) {
+			$this->txtAction = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
+			$this->txtAction->Name = t('Action');
+			$this->txtAction->Required = true;
+			$this->txtAction->MaxLength = Log::ActionMaxLength;
+			$this->txtAction->PreferredRenderMethod = 'RenderWithName';
+        $this->txtAction->LinkedNode = QQN::Log()->Action;
+			$this->txtAction->Text = $this->objLog->Action;
+			return $this->txtAction;
 		}
 
     /**
-     * Create and setup QCubed\Control\Label lblType
+     * Create and setup QCubed\Control\Label lblAction
      *
      * @param string $strControlId optional ControlId to use
      * @return QCubed\Control\Label
      */
-    public function lblType_Create($strControlId = null) 
+    public function lblAction_Create($strControlId = null) 
     {
-        $this->lblType = new \QCubed\Control\Label($this->objParentObject, $strControlId);
-        $this->lblType->Name = t('Type');
-        $this->lblType->PreferredRenderMethod = 'RenderWithName';
-        $this->lblType->LinkedNode = QQN::Log()->Type;
-			$this->lblType->Text = $this->objLog->Type;
-        return $this->lblType;
+        $this->lblAction = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblAction->Name = t('Action');
+        $this->lblAction->PreferredRenderMethod = 'RenderWithName';
+        $this->lblAction->LinkedNode = QQN::Log()->Action;
+			$this->lblAction->Text = $this->objLog->Action;
+        return $this->lblAction;
     }
 
 
@@ -365,6 +450,71 @@ class LogConnectorGen extends \QCubed\ObjectBase
 
 
 
+		/**
+		 * Create and setup a QCubed\Control\IntegerTextBox txtIp
+		 * @param string $strControlId optional ControlId to use
+		 * @return QCubed\Control\IntegerTextBox
+		 */
+		public function txtIp_Create($strControlId = null) {
+			$this->txtIp = new \QCubed\Control\IntegerTextBox($this->objParentObject, $strControlId);
+			$this->txtIp->Name = t('Ip');
+			$this->txtIp->PreferredRenderMethod = 'RenderWithName';
+        $this->txtIp->LinkedNode = QQN::Log()->Ip;
+			$this->txtIp->Text = $this->objLog->Ip;
+			return $this->txtIp;
+		}
+
+    /**
+     * Create and setup QCubed\Control\Label lblIp
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblIp_Create($strControlId = null) 
+    {
+        $this->lblIp = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblIp->Name = t('Ip');
+        $this->lblIp->PreferredRenderMethod = 'RenderWithName';
+        $this->lblIp->LinkedNode = QQN::Log()->Ip;
+			$this->lblIp->Text = $this->objLog->Ip;
+        return $this->lblIp;
+    }
+
+
+
+		/**
+		 * Create and setup a QCubed\Project\Control\TextBox txtLogcol
+		 * @param string $strControlId optional ControlId to use
+		 * @return QCubed\Project\Control\TextBox
+		 */
+		public function txtLogcol_Create($strControlId = null) {
+			$this->txtLogcol = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
+			$this->txtLogcol->Name = t('Logcol');
+			$this->txtLogcol->MaxLength = Log::LogcolMaxLength;
+			$this->txtLogcol->PreferredRenderMethod = 'RenderWithName';
+        $this->txtLogcol->LinkedNode = QQN::Log()->Logcol;
+			$this->txtLogcol->Text = $this->objLog->Logcol;
+			return $this->txtLogcol;
+		}
+
+    /**
+     * Create and setup QCubed\Control\Label lblLogcol
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblLogcol_Create($strControlId = null) 
+    {
+        $this->lblLogcol = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblLogcol->Name = t('Logcol');
+        $this->lblLogcol->PreferredRenderMethod = 'RenderWithName';
+        $this->lblLogcol->LinkedNode = QQN::Log()->Logcol;
+			$this->lblLogcol->Text = $this->objLog->Logcol;
+        return $this->lblLogcol;
+    }
+
+
+
 
 
 
@@ -384,12 +534,18 @@ class LogConnectorGen extends \QCubed\ObjectBase
 			if ($this->lblId) $this->lblId->Text =  $this->blnEditMode ? $this->objLog->Id : t('N\A');
 
 
-			if ($this->txtUserId) $this->txtUserId->Text = $this->objLog->UserId;
-			if ($this->lblUserId) $this->lblUserId->Text = $this->objLog->UserId;
+      if ($this->lstUser) {
+        $this->lstUser->removeAllItems();
+        $this->lstUser->addItem($this->strUserNullLabel, null);
+        $this->lstUser->addItems($this->lstUser_GetItems());
+        $this->lstUser->SelectedValue = $this->objLog->UserId;
+      
+      }
+			if ($this->lblUser) $this->lblUser->Text = $this->objLog->User ? $this->objLog->User->__toString() : null;
 
 
-			if ($this->txtType) $this->txtType->Text = $this->objLog->Type;
-			if ($this->lblType) $this->lblType->Text = $this->objLog->Type;
+			if ($this->txtAction) $this->txtAction->Text = $this->objLog->Action;
+			if ($this->lblAction) $this->lblAction->Text = $this->objLog->Action;
 
 
 			if ($this->txtValue) $this->txtValue->Text = $this->objLog->Value;
@@ -398,6 +554,14 @@ class LogConnectorGen extends \QCubed\ObjectBase
 
 			if ($this->calDatetime) $this->calDatetime->DateTime = $this->objLog->Datetime;
 			if ($this->lblDatetime) $this->lblDatetime->Text = $this->objLog->Datetime;
+
+
+			if ($this->txtIp) $this->txtIp->Text = $this->objLog->Ip;
+			if ($this->lblIp) $this->lblIp->Text = $this->objLog->Ip;
+
+
+			if ($this->txtLogcol) $this->txtLogcol->Text = $this->objLog->Logcol;
+			if ($this->lblLogcol) $this->lblLogcol->Text = $this->objLog->Logcol;
 
 
     }
@@ -441,13 +605,17 @@ class LogConnectorGen extends \QCubed\ObjectBase
         try {
             // Update any fields for controls that have been created
 
-				if ($this->txtUserId) $this->objLog->UserId = $this->txtUserId->Text;
+				if ($this->lstUser) $this->objLog->UserId = $this->lstUser->SelectedValue;
 
-				if ($this->txtType) $this->objLog->Type = $this->txtType->Text;
+				if ($this->txtAction) $this->objLog->Action = $this->txtAction->Text;
 
 				if ($this->txtValue) $this->objLog->Value = $this->txtValue->Text;
 
 				if ($this->calDatetime) $this->objLog->Datetime = $this->calDatetime->DateTime;
+
+				if ($this->txtIp) $this->objLog->Ip = $this->txtIp->Text;
+
+				if ($this->txtLogcol) $this->objLog->Logcol = $this->txtLogcol->Text;
 
 
             // Update any UniqueReverseReferences for controls that have been created for it
@@ -510,17 +678,19 @@ class LogConnectorGen extends \QCubed\ObjectBase
                 if (!$this->lblId) return $this->lblId_Create();
                 return $this->lblId;
             case 'UserIdControl':
-                if (!$this->txtUserId) return $this->txtUserId_Create();
-                return $this->txtUserId;
+                if (!$this->lstUser) return $this->lstUser_Create();
+                return $this->lstUser;
             case 'UserIdLabel':
-                if (!$this->lblUserId) return $this->lblUserId_Create();
-                return $this->lblUserId;
-            case 'TypeControl':
-                if (!$this->txtType) return $this->txtType_Create();
-                return $this->txtType;
-            case 'TypeLabel':
-                if (!$this->lblType) return $this->lblType_Create();
-                return $this->lblType;
+                if (!$this->lblUser) return $this->lblUser_Create();
+                return $this->lblUser;
+            case 'UserNullLabel':
+                return $this->strUserNullLabel;
+            case 'ActionControl':
+                if (!$this->txtAction) return $this->txtAction_Create();
+                return $this->txtAction;
+            case 'ActionLabel':
+                if (!$this->lblAction) return $this->lblAction_Create();
+                return $this->lblAction;
             case 'ValueControl':
                 if (!$this->txtValue) return $this->txtValue_Create();
                 return $this->txtValue;
@@ -533,6 +703,18 @@ class LogConnectorGen extends \QCubed\ObjectBase
             case 'DatetimeLabel':
                 if (!$this->lblDatetime) return $this->lblDatetime_Create();
                 return $this->lblDatetime;
+            case 'IpControl':
+                if (!$this->txtIp) return $this->txtIp_Create();
+                return $this->txtIp;
+            case 'IpLabel':
+                if (!$this->lblIp) return $this->lblIp_Create();
+                return $this->lblIp;
+            case 'LogcolControl':
+                if (!$this->txtLogcol) return $this->txtLogcol_Create();
+                return $this->txtLogcol;
+            case 'LogcolLabel':
+                if (!$this->lblLogcol) return $this->lblLogcol_Create();
+                return $this->lblLogcol;
             default:
                 try {
                     return parent::__get($strName);
@@ -566,16 +748,19 @@ class LogConnectorGen extends \QCubed\ObjectBase
                     $this->lblId = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
                     break;
                 case 'UserIdControl':
-                    $this->txtUserId = Type::Cast($mixValue, '\\QCubed\Control\IntegerTextBox');
+                    $this->lstUser = Type::Cast($mixValue, '\\QCubed\Project\Control\ListBox');
                     break;
                 case 'UserIdLabel':
-                    $this->lblUserId = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    $this->lblUser = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
                     break;
-                case 'TypeControl':
-                    $this->txtType = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');
+                case 'UserNullLabel':
+                    $this->strUserNullLabel = $mixValue;
                     break;
-                case 'TypeLabel':
-                    $this->lblType = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                case 'ActionControl':
+                    $this->txtAction = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');
+                    break;
+                case 'ActionLabel':
+                    $this->lblAction = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
                     break;
                 case 'ValueControl':
                     $this->txtValue = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');
@@ -588,6 +773,18 @@ class LogConnectorGen extends \QCubed\ObjectBase
                     break;
                 case 'DatetimeLabel':
                     $this->lblDatetime = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'IpControl':
+                    $this->txtIp = Type::Cast($mixValue, '\\QCubed\Control\IntegerTextBox');
+                    break;
+                case 'IpLabel':
+                    $this->lblIp = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'LogcolControl':
+                    $this->txtLogcol = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');
+                    break;
+                case 'LogcolLabel':
+                    $this->lblLogcol = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
                     break;
                 default:
                     parent::__set($strName, $mixValue);

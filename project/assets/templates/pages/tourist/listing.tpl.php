@@ -6,11 +6,8 @@
 			</div>
 			<div class="col-xs-12">
 				<?php 
-					$_CONTROL->txtNumber->RenderFormGroup(); 
-					$_CONTROL->txtLicensePlate->RenderFormGroup(); 
-					$_CONTROL->txtEntity->RenderFormGroup(); 
-					$_CONTROL->lstState->RenderFormGroup(); 
-					$_CONTROL->lstExpert->RenderFormGroup(); 
+					$_CONTROL->txtDevice->RenderFormGroup();
+					$_CONTROL->txtName->RenderFormGroup();
 				?>
 			</div>
 		</div>
@@ -24,7 +21,7 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
-				<?php $_CONTROL->lstJobs->Render(); ?>
+				<?php $_CONTROL->lstTourists->Render(); ?>
 			</div>
 		</div>
         </div>

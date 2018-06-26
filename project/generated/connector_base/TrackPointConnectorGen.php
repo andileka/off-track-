@@ -11,6 +11,7 @@ use QCubed\Control\ListControl;
 use QCubed\Control\ListItem;
 use QCubed\Query\Condition\ConditionInterface as QQCondition;
 use QCubed\Query\Clause\ClauseInterface as QQClause;
+use QCubed\Project\Control\TextBox;
 
 /**
  * This is a ModelConnector class, providing a Form or Panel access to event handlers
@@ -34,6 +35,10 @@ use QCubed\Query\Clause\ClauseInterface as QQClause;
  * @property-read QCubed\\Control\\Label $TrackIdLabel
  * @property QCubed\Project\Control\ListBox $PositionIdControl
  * @property-read QCubed\\Control\\Label $PositionIdLabel
+ * @property QCubed\Project\Control\TextBox $TypeControl
+ * @property-read QCubed\\Control\\Label $TypeLabel
+ * @property QCubed\Project\Control\TextBox $NameControl
+ * @property-read QCubed\\Control\\Label $NameLabel
  * @property-read string $TitleVerb a verb indicating whether or not this is being edited or created
  * @property-read boolean $EditMode a boolean indicating whether or not this is being edited or created
  */
@@ -126,6 +131,32 @@ class TrackPointConnectorGen extends \QCubed\ObjectBase
      * @access protected
      */
     protected $lblPosition;
+
+    /**
+     * @var QCubed\Project\Control\TextBox
+
+     * @access protected
+     */
+    protected $txtType;
+
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblType;
+
+    /**
+     * @var QCubed\Project\Control\TextBox
+
+     * @access protected
+     */
+    protected $txtName;
+
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblName;
 
 
 
@@ -250,6 +281,7 @@ class TrackPointConnectorGen extends \QCubed\ObjectBase
 			$this->objTrackClauses = $objClauses;
 			$this->lstTrack = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
 			$this->lstTrack->Name = t('Track');
+			$this->lstTrack->Required = true;
 			$this->lstTrack->PreferredRenderMethod = 'RenderWithName';
         $this->lstTrack->LinkedNode = QQN::TrackPoint()->Track;
       if (!$this->strTrackNullLabel) {
@@ -315,6 +347,7 @@ class TrackPointConnectorGen extends \QCubed\ObjectBase
 			$this->objPositionClauses = $objClauses;
 			$this->lstPosition = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
 			$this->lstPosition->Name = t('Position');
+			$this->lstPosition->Required = true;
 			$this->lstPosition->PreferredRenderMethod = 'RenderWithName';
         $this->lstPosition->LinkedNode = QQN::TrackPoint()->Position;
       if (!$this->strPositionNullLabel) {
@@ -368,6 +401,72 @@ class TrackPointConnectorGen extends \QCubed\ObjectBase
 
 
 
+		/**
+		 * Create and setup a QCubed\Project\Control\TextBox txtType
+		 * @param string $strControlId optional ControlId to use
+		 * @return QCubed\Project\Control\TextBox
+		 */
+		public function txtType_Create($strControlId = null) {
+			$this->txtType = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
+			$this->txtType->Name = t('Type');
+			$this->txtType->Required = true;
+			$this->txtType->PreferredRenderMethod = 'RenderWithName';
+        $this->txtType->LinkedNode = QQN::TrackPoint()->Type;
+			$this->txtType->Text = $this->objTrackPoint->Type;
+			return $this->txtType;
+		}
+
+    /**
+     * Create and setup QCubed\Control\Label lblType
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblType_Create($strControlId = null) 
+    {
+        $this->lblType = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblType->Name = t('Type');
+        $this->lblType->PreferredRenderMethod = 'RenderWithName';
+        $this->lblType->LinkedNode = QQN::TrackPoint()->Type;
+			$this->lblType->Text = $this->objTrackPoint->Type;
+        return $this->lblType;
+    }
+
+
+
+		/**
+		 * Create and setup a QCubed\Project\Control\TextBox txtName
+		 * @param string $strControlId optional ControlId to use
+		 * @return QCubed\Project\Control\TextBox
+		 */
+		public function txtName_Create($strControlId = null) {
+			$this->txtName = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
+			$this->txtName->Name = t('Name');
+			$this->txtName->MaxLength = TrackPoint::NameMaxLength;
+			$this->txtName->PreferredRenderMethod = 'RenderWithName';
+        $this->txtName->LinkedNode = QQN::TrackPoint()->Name;
+			$this->txtName->Text = $this->objTrackPoint->Name;
+			return $this->txtName;
+		}
+
+    /**
+     * Create and setup QCubed\Control\Label lblName
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblName_Create($strControlId = null) 
+    {
+        $this->lblName = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblName->Name = t('Name');
+        $this->lblName->PreferredRenderMethod = 'RenderWithName';
+        $this->lblName->LinkedNode = QQN::TrackPoint()->Name;
+			$this->lblName->Text = $this->objTrackPoint->Name;
+        return $this->lblName;
+    }
+
+
+
 
 
 
@@ -405,6 +504,14 @@ class TrackPointConnectorGen extends \QCubed\ObjectBase
       
       }
 			if ($this->lblPosition) $this->lblPosition->Text = $this->objTrackPoint->Position ? $this->objTrackPoint->Position->__toString() : null;
+
+
+			if ($this->txtType) $this->txtType->Text = $this->objTrackPoint->Type;
+			if ($this->lblType) $this->lblType->Text = $this->objTrackPoint->Type;
+
+
+			if ($this->txtName) $this->txtName->Text = $this->objTrackPoint->Name;
+			if ($this->lblName) $this->lblName->Text = $this->objTrackPoint->Name;
 
 
     }
@@ -451,6 +558,10 @@ class TrackPointConnectorGen extends \QCubed\ObjectBase
 				if ($this->lstTrack) $this->objTrackPoint->TrackId = $this->lstTrack->SelectedValue;
 
 				if ($this->lstPosition) $this->objTrackPoint->PositionId = $this->lstPosition->SelectedValue;
+
+				if ($this->txtType) $this->objTrackPoint->Type = $this->txtType->Text;
+
+				if ($this->txtName) $this->objTrackPoint->Name = $this->txtName->Text;
 
 
             // Update any UniqueReverseReferences for controls that have been created for it
@@ -528,6 +639,18 @@ class TrackPointConnectorGen extends \QCubed\ObjectBase
                 return $this->lblPosition;
             case 'PositionNullLabel':
                 return $this->strPositionNullLabel;
+            case 'TypeControl':
+                if (!$this->txtType) return $this->txtType_Create();
+                return $this->txtType;
+            case 'TypeLabel':
+                if (!$this->lblType) return $this->lblType_Create();
+                return $this->lblType;
+            case 'NameControl':
+                if (!$this->txtName) return $this->txtName_Create();
+                return $this->txtName;
+            case 'NameLabel':
+                if (!$this->lblName) return $this->lblName_Create();
+                return $this->lblName;
             default:
                 try {
                     return parent::__get($strName);
@@ -577,6 +700,18 @@ class TrackPointConnectorGen extends \QCubed\ObjectBase
                     break;
                 case 'PositionNullLabel':
                     $this->strPositionNullLabel = $mixValue;
+                    break;
+                case 'TypeControl':
+                    $this->txtType = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');
+                    break;
+                case 'TypeLabel':
+                    $this->lblType = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'NameControl':
+                    $this->txtName = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');
+                    break;
+                case 'NameLabel':
+                    $this->lblName = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
                     break;
                 default:
                     parent::__set($strName, $mixValue);

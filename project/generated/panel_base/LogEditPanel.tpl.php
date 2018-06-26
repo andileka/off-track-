@@ -8,7 +8,9 @@
 ?>
 
 <?= _r($this->lblId); ?>
-<?= _r($this->txtUserId); ?>
-<?= _r($this->txtType); ?>
+<?= _r($this->lstUser); ?>
+<?= _r($this->txtAction); ?>
 <?= _r($this->txtValue); ?>
 <?= _r($this->calDatetime); ?>
+<?= _r($this->txtIp); ?>
+<?= _r($this->txtLogcol); ?>

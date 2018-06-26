@@ -31,9 +31,15 @@ use QCubed\Query\ModelTrait;
  * @package My QCubed Application
  * @subpackage ModelGen
  * @property-read integer $Id the value of the id column (Read-Only PK)
- * @property string $Name the value of the name column 
- * @property string $Passport the value of the passport column 
+ * @property string $Name the value of the name column (Not Null)
+ * @property string $Passport the value of the passport column (Not Null)
  * @property string $Contactinfo the value of the contactinfo column 
+ * @property integer $LanguageId the value of the language_id column 
+ * @property integer $CityId the value of the city_id column 
+ * @property integer $CountryId the value of the country_id column 
+ * @property Language $Language the value of the Language object referenced by intLanguageId 
+ * @property City $City the value of the City object referenced by intCityId 
+ * @property Country $Country the value of the Country object referenced by intCountryId 
  * @property-read DeviceTourist $_DeviceTourist the value of the protected _objDeviceTourist (Read-Only) if set due to an expansion on the device_tourist.tourist_id reverse relationship
  * @property-read DeviceTourist $DeviceTourist the value of the protected _objDeviceTourist (Read-Only) if set due to an expansion on the device_tourist.tourist_id reverse relationship
  * @property-read DeviceTourist[] $_DeviceTouristArray the value of the protected _objDeviceTouristArray (Read-Only) if set due to an ExpandAsArray on the device_tourist.tourist_id reverse relationship
@@ -101,6 +107,36 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 
 
     /**
+     * Protected member variable that maps to the database column tourist.language_id
+     * @var integer intLanguageId
+     */
+    private $intLanguageId;
+
+    const LANGUAGE_ID_DEFAULT = null;
+    const LANGUAGE_ID_FIELD = 'language_id';
+
+
+    /**
+     * Protected member variable that maps to the database column tourist.city_id
+     * @var integer intCityId
+     */
+    private $intCityId;
+
+    const CITY_ID_DEFAULT = null;
+    const CITY_ID_FIELD = 'city_id';
+
+
+    /**
+     * Protected member variable that maps to the database column tourist.country_id
+     * @var integer intCountryId
+     */
+    private $intCountryId;
+
+    const COUNTRY_ID_DEFAULT = null;
+    const COUNTRY_ID_FIELD = 'country_id';
+
+
+    /**
      * Protected member variable that stores a reference to a single DeviceTourist object
      * (of type DeviceTourist), if this Tourist object was restored with
      * an expansion on the device_tourist association table.
@@ -149,6 +185,36 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
     // PROTECTED MEMBER OBJECTS
     ///////////////////////////////
 
+    /**
+     * Protected member variable that contains the object pointed by the reference
+     * in the database column tourist.language_id.
+     *
+     * NOTE: Always use the Language property getter to correctly retrieve this Language object.
+     * (Because this class implements late binding, this variable reference MAY be null.)
+     * @var Language objLanguage
+     */
+    protected $objLanguage;
+
+    /**
+     * Protected member variable that contains the object pointed by the reference
+     * in the database column tourist.city_id.
+     *
+     * NOTE: Always use the City property getter to correctly retrieve this City object.
+     * (Because this class implements late binding, this variable reference MAY be null.)
+     * @var City objCity
+     */
+    protected $objCity;
+
+    /**
+     * Protected member variable that contains the object pointed by the reference
+     * in the database column tourist.country_id.
+     *
+     * NOTE: Always use the Country property getter to correctly retrieve this Country object.
+     * (Because this class implements late binding, this variable reference MAY be null.)
+     * @var Country objCountry
+     */
+    protected $objCountry;
+
 
 
     /**
@@ -173,6 +239,12 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         $this->__blnValid[self::PASSPORT_FIELD] = true;
         $this->strContactinfo = Tourist::CONTACTINFO_DEFAULT;
         $this->__blnValid[self::CONTACTINFO_FIELD] = true;
+        $this->intLanguageId = Tourist::LANGUAGE_ID_DEFAULT;
+        $this->__blnValid[self::LANGUAGE_ID_FIELD] = true;
+        $this->intCityId = Tourist::CITY_ID_DEFAULT;
+        $this->__blnValid[self::CITY_ID_FIELD] = true;
+        $this->intCountryId = Tourist::COUNTRY_ID_DEFAULT;
+        $this->__blnValid[self::COUNTRY_ID_FIELD] = true;
     }
 
    /**
@@ -450,6 +522,45 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
             else {
                 $blnNoCache = true;
             }
+            $strAlias = $strAliasPrefix . 'language_id';
+            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+            if (isset ($strColumnKeys[$strAliasName])) {
+                $mixVal = $strColumns[$strAliasName];
+                if ($mixVal !== null) {
+                    $mixVal = (integer)$mixVal;
+                }
+                $objToReturn->intLanguageId = $mixVal;
+                $objToReturn->__blnValid[self::LANGUAGE_ID_FIELD] = true;
+            }
+            else {
+                $blnNoCache = true;
+            }
+            $strAlias = $strAliasPrefix . 'city_id';
+            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+            if (isset ($strColumnKeys[$strAliasName])) {
+                $mixVal = $strColumns[$strAliasName];
+                if ($mixVal !== null) {
+                    $mixVal = (integer)$mixVal;
+                }
+                $objToReturn->intCityId = $mixVal;
+                $objToReturn->__blnValid[self::CITY_ID_FIELD] = true;
+            }
+            else {
+                $blnNoCache = true;
+            }
+            $strAlias = $strAliasPrefix . 'country_id';
+            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+            if (isset ($strColumnKeys[$strAliasName])) {
+                $mixVal = $strColumns[$strAliasName];
+                if ($mixVal !== null) {
+                    $mixVal = (integer)$mixVal;
+                }
+                $objToReturn->intCountryId = $mixVal;
+                $objToReturn->__blnValid[self::COUNTRY_ID_FIELD] = true;
+            }
+            else {
+                $blnNoCache = true;
+            }
 
             assert ($key === null || $objToReturn->PrimaryKey() == $key);
 
@@ -486,6 +597,39 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 
         if (!$strAliasPrefix)
             $strAliasPrefix = 'tourist__';
+
+        // Check for Language Early Binding
+        $strAlias = $strAliasPrefix . 'language_id__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        if (isset ($strColumns[$strAliasName])) {
+            $objExpansionNode = (empty($objExpansionAliasArray['language_id']) ? null : $objExpansionAliasArray['language_id']);
+            $objToReturn->objLanguage = Language::instantiateDbRow($objDbRow, $strAliasPrefix . 'language_id__', $objExpansionNode, null, $strColumnAliasArray, false, 'tourist', $objToReturn);
+        }
+        elseif ($strParentExpansionKey === 'language_id' && $objExpansionParent) {
+            $objToReturn->objLanguage = $objExpansionParent;
+        }
+
+        // Check for City Early Binding
+        $strAlias = $strAliasPrefix . 'city_id__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        if (isset ($strColumns[$strAliasName])) {
+            $objExpansionNode = (empty($objExpansionAliasArray['city_id']) ? null : $objExpansionAliasArray['city_id']);
+            $objToReturn->objCity = City::instantiateDbRow($objDbRow, $strAliasPrefix . 'city_id__', $objExpansionNode, null, $strColumnAliasArray, false, 'tourist', $objToReturn);
+        }
+        elseif ($strParentExpansionKey === 'city_id' && $objExpansionParent) {
+            $objToReturn->objCity = $objExpansionParent;
+        }
+
+        // Check for Country Early Binding
+        $strAlias = $strAliasPrefix . 'country_id__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        if (isset ($strColumns[$strAliasName])) {
+            $objExpansionNode = (empty($objExpansionAliasArray['country_id']) ? null : $objExpansionAliasArray['country_id']);
+            $objToReturn->objCountry = Country::instantiateDbRow($objDbRow, $strAliasPrefix . 'country_id__', $objExpansionNode, null, $strColumnAliasArray, false, 'tourist', $objToReturn);
+        }
+        elseif ($strParentExpansionKey === 'country_id' && $objExpansionParent) {
+            $objToReturn->objCountry = $objExpansionParent;
+        }
 
 
 
@@ -597,6 +741,111 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         );
     }
 
+    /**
+     * Load an array of Tourist objects,
+     * by LanguageId Index(es)
+     * @param integer $intLanguageId
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @throws Caller
+     * @return Tourist[]
+    */
+    public static function loadArrayByLanguageId($intLanguageId, $objOptionalClauses = null)
+    {
+        // Call Tourist::QueryArray to perform the LoadArrayByLanguageId query
+        try {
+            return Tourist::QueryArray(
+                QQ::Equal(QQN::Tourist()->LanguageId, $intLanguageId),
+                $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Count Tourists
+     * by LanguageId Index(es)
+     * @param integer $intLanguageId
+     * @return int
+    */
+    public static function countByLanguageId($intLanguageId)
+    {
+        // Call Tourist::QueryCount to perform the CountByLanguageId query
+        return Tourist::QueryCount(
+            QQ::Equal(QQN::Tourist()->LanguageId, $intLanguageId)
+        );
+    }
+
+    /**
+     * Load an array of Tourist objects,
+     * by CityId Index(es)
+     * @param integer $intCityId
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @throws Caller
+     * @return Tourist[]
+    */
+    public static function loadArrayByCityId($intCityId, $objOptionalClauses = null)
+    {
+        // Call Tourist::QueryArray to perform the LoadArrayByCityId query
+        try {
+            return Tourist::QueryArray(
+                QQ::Equal(QQN::Tourist()->CityId, $intCityId),
+                $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Count Tourists
+     * by CityId Index(es)
+     * @param integer $intCityId
+     * @return int
+    */
+    public static function countByCityId($intCityId)
+    {
+        // Call Tourist::QueryCount to perform the CountByCityId query
+        return Tourist::QueryCount(
+            QQ::Equal(QQN::Tourist()->CityId, $intCityId)
+        );
+    }
+
+    /**
+     * Load an array of Tourist objects,
+     * by CountryId Index(es)
+     * @param integer $intCountryId
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @throws Caller
+     * @return Tourist[]
+    */
+    public static function loadArrayByCountryId($intCountryId, $objOptionalClauses = null)
+    {
+        // Call Tourist::QueryArray to perform the LoadArrayByCountryId query
+        try {
+            return Tourist::QueryArray(
+                QQ::Equal(QQN::Tourist()->CountryId, $intCountryId),
+                $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Count Tourists
+     * by CountryId Index(es)
+     * @param integer $intCountryId
+     * @return int
+    */
+    public static function countByCountryId($intCountryId)
+    {
+        // Call Tourist::QueryCount to perform the CountByCountryId query
+        return Tourist::QueryCount(
+            QQ::Equal(QQN::Tourist()->CountryId, $intCountryId)
+        );
+    }
+
 
     ////////////////////////////////////////////////////
     // INDEX-BASED LOAD METHODS (Array via Many to Many)
@@ -652,11 +901,17 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
             INSERT INTO `tourist` (
 							`name`,
 							`passport`,
-							`contactinfo`
+							`contactinfo`,
+							`language_id`,
+							`city_id`,
+							`country_id`
 						) VALUES (
 							' . $objDatabase->SqlVariable($this->strName) . ',
 							' . $objDatabase->SqlVariable($this->strPassport) . ',
-							' . $objDatabase->SqlVariable($this->strContactinfo) . '
+							' . $objDatabase->SqlVariable($this->strContactinfo) . ',
+							' . $objDatabase->SqlVariable($this->intLanguageId) . ',
+							' . $objDatabase->SqlVariable($this->intCityId) . ',
+							' . $objDatabase->SqlVariable($this->intCountryId) . '
 						)
         ');
         // Update Identity column and return its value
@@ -718,6 +973,21 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 		if (isset($this->__blnDirty[self::CONTACTINFO_FIELD])) {
 			$strCol = '`contactinfo`';
 			$strValue = $objDatabase->sqlVariable($this->strContactinfo);
+			$values[] = $strCol . ' = ' . $strValue;
+		}
+		if (isset($this->__blnDirty[self::LANGUAGE_ID_FIELD])) {
+			$strCol = '`language_id`';
+			$strValue = $objDatabase->sqlVariable($this->intLanguageId);
+			$values[] = $strCol . ' = ' . $strValue;
+		}
+		if (isset($this->__blnDirty[self::CITY_ID_FIELD])) {
+			$strCol = '`city_id`';
+			$strValue = $objDatabase->sqlVariable($this->intCityId);
+			$values[] = $strCol . ' = ' . $strValue;
+		}
+		if (isset($this->__blnDirty[self::COUNTRY_ID_FIELD])) {
+			$strCol = '`country_id`';
+			$strValue = $objDatabase->sqlVariable($this->intCountryId);
 			$values[] = $strCol . ' = ' . $strValue;
 		}
 		if ($values) {
@@ -825,6 +1095,21 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 			$this->strContactinfo = $objReloaded->strContactinfo;
 			$this->__blnValid[self::CONTACTINFO_FIELD] = true;
 		}
+		if (isset($objReloaded->__blnValid[self::LANGUAGE_ID_FIELD])) {
+			$this->intLanguageId = $objReloaded->intLanguageId;
+			$this->objLanguage = $objReloaded->objLanguage;
+			$this->__blnValid[self::LANGUAGE_ID_FIELD] = true;
+		}
+		if (isset($objReloaded->__blnValid[self::CITY_ID_FIELD])) {
+			$this->intCityId = $objReloaded->intCityId;
+			$this->objCity = $objReloaded->objCity;
+			$this->__blnValid[self::CITY_ID_FIELD] = true;
+		}
+		if (isset($objReloaded->__blnValid[self::COUNTRY_ID_FIELD])) {
+			$this->intCountryId = $objReloaded->intCountryId;
+			$this->objCountry = $objReloaded->objCountry;
+			$this->__blnValid[self::COUNTRY_ID_FIELD] = true;
+		}
 	}
     ////////////////////
     // UTILITIES
@@ -866,7 +1151,7 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 
 
    /**
-	* Gets the value of strName 
+	* Gets the value of strName (Not Null)
 	* @throws Caller
 	* @return string
 	*/
@@ -882,14 +1167,20 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 
 
    /**
-	* Sets the value of strName 
+	* Sets the value of strName (Not Null)
 	* Returns $this to allow chaining of setters.
-	* @param string|null $strName
+	* @param string $strName
     * @throws Caller
 	* @return Tourist
 	*/
 	public function setName($strName)
     {
+        if ($strName === null) {
+             // invalidate
+             $strName = null;
+             $this->__blnValid[self::NAME_FIELD] = false;
+            return $this; // allows chaining
+        }
 		$strName = Type::Cast($strName, QCubed\Type::STRING);
 
 		if ($this->strName !== $strName) {
@@ -901,7 +1192,7 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 	}
 
    /**
-	* Gets the value of strPassport 
+	* Gets the value of strPassport (Not Null)
 	* @throws Caller
 	* @return string
 	*/
@@ -917,14 +1208,20 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 
 
    /**
-	* Sets the value of strPassport 
+	* Sets the value of strPassport (Not Null)
 	* Returns $this to allow chaining of setters.
-	* @param string|null $strPassport
+	* @param string $strPassport
     * @throws Caller
 	* @return Tourist
 	*/
 	public function setPassport($strPassport)
     {
+        if ($strPassport === null) {
+             // invalidate
+             $strPassport = null;
+             $this->__blnValid[self::PASSPORT_FIELD] = false;
+            return $this; // allows chaining
+        }
 		$strPassport = Type::Cast($strPassport, QCubed\Type::STRING);
 
 		if ($this->strPassport !== $strPassport) {
@@ -969,6 +1266,237 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 		$this->__blnValid[self::CONTACTINFO_FIELD] = true;
 		return $this; // allows chaining
 	}
+
+   /**
+	* Gets the value of intLanguageId 
+	* @throws Caller
+	* @return integer
+	*/
+	public function getLanguageId()
+    {
+		if ($this->__blnRestored && empty($this->__blnValid[self::LANGUAGE_ID_FIELD])) {
+			throw new Caller("LanguageId was not selected in the most recent query and is not valid.");
+		}
+		return $this->intLanguageId;
+	}
+
+
+    /**
+     * Gets the value of the Language object referenced by intLanguageId 
+     * If the object is not loaded, will load the object (caching it) before returning it.
+     * @throws Caller
+     * @return Language
+     */
+     public function getLanguage()
+     {
+ 		if ($this->__blnRestored && empty($this->__blnValid[self::LANGUAGE_ID_FIELD])) {
+			throw new Caller("LanguageId was not selected in the most recent query and is not valid.");
+		}
+        if ((!$this->objLanguage) && (!is_null($this->intLanguageId))) {
+            $this->objLanguage = Language::Load($this->intLanguageId);
+        }
+        return $this->objLanguage;
+     }
+
+
+
+   /**
+	* Sets the value of intLanguageId 
+	* Returns $this to allow chaining of setters.
+	* @param integer|null $intLanguageId
+    * @throws Caller
+	* @return Tourist
+	*/
+	public function setLanguageId($intLanguageId)
+    {
+		$intLanguageId = Type::Cast($intLanguageId, QCubed\Type::INTEGER);
+
+		if ($this->intLanguageId !== $intLanguageId) {
+			$this->objLanguage = null; // remove the associated object
+			$this->intLanguageId = $intLanguageId;
+			$this->__blnDirty[self::LANGUAGE_ID_FIELD] = true;
+		}
+		$this->__blnValid[self::LANGUAGE_ID_FIELD] = true;
+		return $this; // allows chaining
+	}
+
+    /**
+     * Sets the value of the Language object referenced by intLanguageId 
+     * @param null|Language $objLanguage
+     * @throws Caller
+     * @return Tourist
+     */
+    public function setLanguage($objLanguage) {
+        if (is_null($objLanguage)) {
+            $this->setLanguageId(null);
+        } else {
+            $objLanguage = Type::Cast($objLanguage, 'Language');
+
+            // Make sure its a SAVED Language object
+            if (is_null($objLanguage->Id)) {
+                throw new Caller('Unable to set an unsaved Language for this Tourist');
+            }
+
+            // Update Local Member Variables
+            $this->setLanguageId($objLanguage->getId());
+            $this->objLanguage = $objLanguage;
+        }
+        return $this;
+    }
+
+   /**
+	* Gets the value of intCityId 
+	* @throws Caller
+	* @return integer
+	*/
+	public function getCityId()
+    {
+		if ($this->__blnRestored && empty($this->__blnValid[self::CITY_ID_FIELD])) {
+			throw new Caller("CityId was not selected in the most recent query and is not valid.");
+		}
+		return $this->intCityId;
+	}
+
+
+    /**
+     * Gets the value of the City object referenced by intCityId 
+     * If the object is not loaded, will load the object (caching it) before returning it.
+     * @throws Caller
+     * @return City
+     */
+     public function getCity()
+     {
+ 		if ($this->__blnRestored && empty($this->__blnValid[self::CITY_ID_FIELD])) {
+			throw new Caller("CityId was not selected in the most recent query and is not valid.");
+		}
+        if ((!$this->objCity) && (!is_null($this->intCityId))) {
+            $this->objCity = City::Load($this->intCityId);
+        }
+        return $this->objCity;
+     }
+
+
+
+   /**
+	* Sets the value of intCityId 
+	* Returns $this to allow chaining of setters.
+	* @param integer|null $intCityId
+    * @throws Caller
+	* @return Tourist
+	*/
+	public function setCityId($intCityId)
+    {
+		$intCityId = Type::Cast($intCityId, QCubed\Type::INTEGER);
+
+		if ($this->intCityId !== $intCityId) {
+			$this->objCity = null; // remove the associated object
+			$this->intCityId = $intCityId;
+			$this->__blnDirty[self::CITY_ID_FIELD] = true;
+		}
+		$this->__blnValid[self::CITY_ID_FIELD] = true;
+		return $this; // allows chaining
+	}
+
+    /**
+     * Sets the value of the City object referenced by intCityId 
+     * @param null|City $objCity
+     * @throws Caller
+     * @return Tourist
+     */
+    public function setCity($objCity) {
+        if (is_null($objCity)) {
+            $this->setCityId(null);
+        } else {
+            $objCity = Type::Cast($objCity, 'City');
+
+            // Make sure its a SAVED City object
+            if (is_null($objCity->Id)) {
+                throw new Caller('Unable to set an unsaved City for this Tourist');
+            }
+
+            // Update Local Member Variables
+            $this->setCityId($objCity->getId());
+            $this->objCity = $objCity;
+        }
+        return $this;
+    }
+
+   /**
+	* Gets the value of intCountryId 
+	* @throws Caller
+	* @return integer
+	*/
+	public function getCountryId()
+    {
+		if ($this->__blnRestored && empty($this->__blnValid[self::COUNTRY_ID_FIELD])) {
+			throw new Caller("CountryId was not selected in the most recent query and is not valid.");
+		}
+		return $this->intCountryId;
+	}
+
+
+    /**
+     * Gets the value of the Country object referenced by intCountryId 
+     * If the object is not loaded, will load the object (caching it) before returning it.
+     * @throws Caller
+     * @return Country
+     */
+     public function getCountry()
+     {
+ 		if ($this->__blnRestored && empty($this->__blnValid[self::COUNTRY_ID_FIELD])) {
+			throw new Caller("CountryId was not selected in the most recent query and is not valid.");
+		}
+        if ((!$this->objCountry) && (!is_null($this->intCountryId))) {
+            $this->objCountry = Country::Load($this->intCountryId);
+        }
+        return $this->objCountry;
+     }
+
+
+
+   /**
+	* Sets the value of intCountryId 
+	* Returns $this to allow chaining of setters.
+	* @param integer|null $intCountryId
+    * @throws Caller
+	* @return Tourist
+	*/
+	public function setCountryId($intCountryId)
+    {
+		$intCountryId = Type::Cast($intCountryId, QCubed\Type::INTEGER);
+
+		if ($this->intCountryId !== $intCountryId) {
+			$this->objCountry = null; // remove the associated object
+			$this->intCountryId = $intCountryId;
+			$this->__blnDirty[self::COUNTRY_ID_FIELD] = true;
+		}
+		$this->__blnValid[self::COUNTRY_ID_FIELD] = true;
+		return $this; // allows chaining
+	}
+
+    /**
+     * Sets the value of the Country object referenced by intCountryId 
+     * @param null|Country $objCountry
+     * @throws Caller
+     * @return Tourist
+     */
+    public function setCountry($objCountry) {
+        if (is_null($objCountry)) {
+            $this->setCountryId(null);
+        } else {
+            $objCountry = Type::Cast($objCountry, 'Country');
+
+            // Make sure its a SAVED Country object
+            if (is_null($objCountry->Id)) {
+                throw new Caller('Unable to set an unsaved Country for this Tourist');
+            }
+
+            // Update Local Member Variables
+            $this->setCountryId($objCountry->getId());
+            $this->objCountry = $objCountry;
+        }
+        return $this;
+    }
 
 
     /**
@@ -1410,6 +1938,9 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         $strToReturn .= '<element name="Name" type="xsd:string"/>';
         $strToReturn .= '<element name="Passport" type="xsd:string"/>';
         $strToReturn .= '<element name="Contactinfo" type="xsd:string"/>';
+        $strToReturn .= '<element name="Language" type="xsd1:Language"/>';
+        $strToReturn .= '<element name="City" type="xsd1:City"/>';
+        $strToReturn .= '<element name="Country" type="xsd1:Country"/>';
         $strToReturn .= '<element name="__blnRestored" type="xsd:boolean"/>';
         $strToReturn .= '</sequence></complexType>';
         return $strToReturn;
@@ -1419,6 +1950,9 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
     {
         if (!array_key_exists('Tourist', $strComplexTypeArray)) {
             $strComplexTypeArray['Tourist'] = Tourist::GetSoapComplexTypeXml();
+            Language::AlterSoapComplexTypeArray($strComplexTypeArray);
+            City::AlterSoapComplexTypeArray($strComplexTypeArray);
+            Country::AlterSoapComplexTypeArray($strComplexTypeArray);
         }
     }
 
@@ -1443,6 +1977,15 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
             $objToReturn->strPassport = $objSoapObject->Passport;
         if (property_exists($objSoapObject, 'Contactinfo'))
             $objToReturn->strContactinfo = $objSoapObject->Contactinfo;
+        if ((property_exists($objSoapObject, 'Language')) &&
+            ($objSoapObject->Language))
+            $objToReturn->Language = Language::GetObjectFromSoapObject($objSoapObject->Language);
+        if ((property_exists($objSoapObject, 'City')) &&
+            ($objSoapObject->City))
+            $objToReturn->City = City::GetObjectFromSoapObject($objSoapObject->City);
+        if ((property_exists($objSoapObject, 'Country')) &&
+            ($objSoapObject->Country))
+            $objToReturn->Country = Country::GetObjectFromSoapObject($objSoapObject->Country);
         if (property_exists($objSoapObject, '__blnRestored'))
             $objToReturn->__blnRestored = $objSoapObject->__blnRestored;
         return $objToReturn;
@@ -1463,6 +2006,18 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 
     public static function getSoapObjectFromObject($objObject, $blnBindRelatedObjects)
     {
+        if ($objObject->objLanguage)
+            $objObject->objLanguage = Language::GetSoapObjectFromObject($objObject->objLanguage, false);
+        else if (!$blnBindRelatedObjects)
+            $objObject->intLanguageId = null;
+        if ($objObject->objCity)
+            $objObject->objCity = City::GetSoapObjectFromObject($objObject->objCity, false);
+        else if (!$blnBindRelatedObjects)
+            $objObject->intCityId = null;
+        if ($objObject->objCountry)
+            $objObject->objCountry = Country::GetSoapObjectFromObject($objObject->objCountry, false);
+        else if (!$blnBindRelatedObjects)
+            $objObject->intCountryId = null;
         return $objObject;
     }
 
@@ -1485,6 +2040,15 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         }
         if (isset($this->__blnValid[self::CONTACTINFO_FIELD])) {
             $iArray['Contactinfo'] = $this->strContactinfo;
+        }
+        if (isset($this->__blnValid[self::LANGUAGE_ID_FIELD])) {
+            $iArray['LanguageId'] = $this->intLanguageId;
+        }
+        if (isset($this->__blnValid[self::CITY_ID_FIELD])) {
+            $iArray['CityId'] = $this->intCityId;
+        }
+        if (isset($this->__blnValid[self::COUNTRY_ID_FIELD])) {
+            $iArray['CountryId'] = $this->intCountryId;
         }
         return new ArrayIterator($iArray);
     }
@@ -1539,6 +2103,21 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         if (isset($this->__blnValid[self::CONTACTINFO_FIELD])) {
             $a['contactinfo'] = $this->strContactinfo;
         }
+        if (isset($this->objLanguage)) {
+            $a['language'] = $this->objLanguage;
+        } elseif (isset($this->__blnValid[self::LANGUAGE_ID_FIELD])) {
+            $a['language_id'] = $this->intLanguageId;
+        }
+        if (isset($this->objCity)) {
+            $a['city'] = $this->objCity;
+        } elseif (isset($this->__blnValid[self::CITY_ID_FIELD])) {
+            $a['city_id'] = $this->intCityId;
+        }
+        if (isset($this->objCountry)) {
+            $a['country'] = $this->objCountry;
+        } elseif (isset($this->__blnValid[self::COUNTRY_ID_FIELD])) {
+            $a['country_id'] = $this->intCountryId;
+        }
         if (isset($this->_objDeviceTourist)) {
             $a['device_tourist'] = $this->_objDeviceTourist;
         } elseif (isset($this->_objDeviceTouristArray)) {
@@ -1564,6 +2143,12 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
  * @property-read Node\Column $Name
  * @property-read Node\Column $Passport
  * @property-read Node\Column $Contactinfo
+ * @property-read Node\Column $LanguageId
+ * @property-read NodeLanguage $Language
+ * @property-read Node\Column $CityId
+ * @property-read NodeCity $City
+ * @property-read Node\Column $CountryId
+ * @property-read NodeCountry $Country
  * @property-read ReverseReferenceNodeDeviceTourist $DeviceTourist
  * @property-read Node\Column $_PrimaryKeyNode
  **/
@@ -1581,6 +2166,9 @@ class NodeTourist extends Node\Table {
             "name",
             "passport",
             "contactinfo",
+            "language_id",
+            "city_id",
+            "country_id",
         ];
     }
 
@@ -1617,6 +2205,18 @@ class NodeTourist extends Node\Table {
                 return new Node\Column('passport', 'Passport', 'VarChar', $this);
             case 'Contactinfo':
                 return new Node\Column('contactinfo', 'Contactinfo', 'VarChar', $this);
+            case 'LanguageId':
+                return new Node\Column('language_id', 'LanguageId', 'Integer', $this);
+            case 'Language':
+                return new NodeLanguage('language_id', 'Language', 'Integer', $this);
+            case 'CityId':
+                return new Node\Column('city_id', 'CityId', 'Integer', $this);
+            case 'City':
+                return new NodeCity('city_id', 'City', 'Integer', $this);
+            case 'CountryId':
+                return new Node\Column('country_id', 'CountryId', 'Integer', $this);
+            case 'Country':
+                return new NodeCountry('country_id', 'Country', 'Integer', $this);
             case 'DeviceTourist':
                 return new ReverseReferenceNodeDeviceTourist($this, 'devicetourist', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'DeviceTourist');
 
@@ -1638,6 +2238,12 @@ class NodeTourist extends Node\Table {
  * @property-read Node\Column $Name
  * @property-read Node\Column $Passport
  * @property-read Node\Column $Contactinfo
+ * @property-read Node\Column $LanguageId
+ * @property-read NodeLanguage $Language
+ * @property-read Node\Column $CityId
+ * @property-read NodeCity $City
+ * @property-read Node\Column $CountryId
+ * @property-read NodeCountry $Country
  * @property-read ReverseReferenceNodeDeviceTourist $DeviceTourist
 
  * @property-read Node\Column $_PrimaryKeyNode
@@ -1656,6 +2262,9 @@ class ReverseReferenceNodeTourist extends Node\ReverseReference {
             "name",
             "passport",
             "contactinfo",
+            "language_id",
+            "city_id",
+            "country_id",
         ];
     }
 
@@ -1684,6 +2293,18 @@ class ReverseReferenceNodeTourist extends Node\ReverseReference {
                 return new Node\Column('passport', 'Passport', 'VarChar', $this);
             case 'Contactinfo':
                 return new Node\Column('contactinfo', 'Contactinfo', 'VarChar', $this);
+            case 'LanguageId':
+                return new Node\Column('language_id', 'LanguageId', 'Integer', $this);
+            case 'Language':
+                return new NodeLanguage('language_id', 'Language', 'Integer', $this);
+            case 'CityId':
+                return new Node\Column('city_id', 'CityId', 'Integer', $this);
+            case 'City':
+                return new NodeCity('city_id', 'City', 'Integer', $this);
+            case 'CountryId':
+                return new Node\Column('country_id', 'CountryId', 'Integer', $this);
+            case 'Country':
+                return new NodeCountry('country_id', 'Country', 'Integer', $this);
             case 'DeviceTourist':
                 return new ReverseReferenceNodeDeviceTourist($this, 'devicetourist', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'DeviceTourist');
 

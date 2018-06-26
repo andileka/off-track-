@@ -31,9 +31,9 @@ use QCubed\Query\ModelTrait;
  * @package My QCubed Application
  * @subpackage ModelGen
  * @property-read integer $Id the value of the id column (Read-Only PK)
- * @property string $Pac the value of the pac column 
  * @property string $Serial the value of the serial column 
  * @property integer $CompanyId the value of the company_id column 
+ * @property string $Remark the value of the remark column 
  * @property Company $Company the value of the Company object referenced by intCompanyId 
  * @property-read DeviceTourist $_DeviceTourist the value of the protected _objDeviceTourist (Read-Only) if set due to an expansion on the device_tourist.device_id reverse relationship
  * @property-read DeviceTourist $DeviceTourist the value of the protected _objDeviceTourist (Read-Only) if set due to an expansion on the device_tourist.device_id reverse relationship
@@ -70,18 +70,6 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
 
 
     /**
-     * Protected member variable that maps to the database column device.pac
-     * @var string strPac
-     */
-    private $strPac;
-    const PacMaxLength = 45; // Deprecated
-    const PAC_MAX_LENGTH = 45;
-
-    const PAC_DEFAULT = null;
-    const PAC_FIELD = 'pac';
-
-
-    /**
      * Protected member variable that maps to the database column device.serial
      * @var string strSerial
      */
@@ -101,6 +89,18 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
 
     const COMPANY_ID_DEFAULT = null;
     const COMPANY_ID_FIELD = 'company_id';
+
+
+    /**
+     * Protected member variable that maps to the database column device.remark
+     * @var string strRemark
+     */
+    private $strRemark;
+    const RemarkMaxLength = 255; // Deprecated
+    const REMARK_MAX_LENGTH = 255;
+
+    const REMARK_DEFAULT = null;
+    const REMARK_FIELD = 'remark';
 
 
     /**
@@ -196,12 +196,12 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
      */
     public function initialize()
     {
-        $this->strPac = Device::PAC_DEFAULT;
-        $this->__blnValid[self::PAC_FIELD] = true;
         $this->strSerial = Device::SERIAL_DEFAULT;
         $this->__blnValid[self::SERIAL_FIELD] = true;
         $this->intCompanyId = Device::COMPANY_ID_DEFAULT;
         $this->__blnValid[self::COMPANY_ID_FIELD] = true;
+        $this->strRemark = Device::REMARK_DEFAULT;
+        $this->__blnValid[self::REMARK_FIELD] = true;
     }
 
    /**
@@ -449,16 +449,6 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
             else {
                 $blnNoCache = true;
             }
-            $strAlias = $strAliasPrefix . 'pac';
-            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
-            if (isset ($strColumnKeys[$strAliasName])) {
-                $mixVal = $strColumns[$strAliasName];
-                $objToReturn->strPac = $mixVal;
-                $objToReturn->__blnValid[self::PAC_FIELD] = true;
-            }
-            else {
-                $blnNoCache = true;
-            }
             $strAlias = $strAliasPrefix . 'serial';
             $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
             if (isset ($strColumnKeys[$strAliasName])) {
@@ -478,6 +468,16 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
                 }
                 $objToReturn->intCompanyId = $mixVal;
                 $objToReturn->__blnValid[self::COMPANY_ID_FIELD] = true;
+            }
+            else {
+                $blnNoCache = true;
+            }
+            $strAlias = $strAliasPrefix . 'remark';
+            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+            if (isset ($strColumnKeys[$strAliasName])) {
+                $mixVal = $strColumns[$strAliasName];
+                $objToReturn->strRemark = $mixVal;
+                $objToReturn->__blnValid[self::REMARK_FIELD] = true;
             }
             else {
                 $blnNoCache = true;
@@ -746,13 +746,13 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
 
         $objDatabase->NonQuery('
             INSERT INTO `device` (
-							`pac`,
 							`serial`,
-							`company_id`
+							`company_id`,
+							`remark`
 						) VALUES (
-							' . $objDatabase->SqlVariable($this->strPac) . ',
 							' . $objDatabase->SqlVariable($this->strSerial) . ',
-							' . $objDatabase->SqlVariable($this->intCompanyId) . '
+							' . $objDatabase->SqlVariable($this->intCompanyId) . ',
+							' . $objDatabase->SqlVariable($this->strRemark) . '
 						)
         ');
         // Update Identity column and return its value
@@ -801,11 +801,6 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
 		$values = [];
 		$objDatabase = static::getDatabase();
 
-		if (isset($this->__blnDirty[self::PAC_FIELD])) {
-			$strCol = '`pac`';
-			$strValue = $objDatabase->sqlVariable($this->strPac);
-			$values[] = $strCol . ' = ' . $strValue;
-		}
 		if (isset($this->__blnDirty[self::SERIAL_FIELD])) {
 			$strCol = '`serial`';
 			$strValue = $objDatabase->sqlVariable($this->strSerial);
@@ -814,6 +809,11 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
 		if (isset($this->__blnDirty[self::COMPANY_ID_FIELD])) {
 			$strCol = '`company_id`';
 			$strValue = $objDatabase->sqlVariable($this->intCompanyId);
+			$values[] = $strCol . ' = ' . $strValue;
+		}
+		if (isset($this->__blnDirty[self::REMARK_FIELD])) {
+			$strCol = '`remark`';
+			$strValue = $objDatabase->sqlVariable($this->strRemark);
 			$values[] = $strCol . ' = ' . $strValue;
 		}
 		if ($values) {
@@ -909,10 +909,6 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
 
 		// Update $this's local variables to match
 		$this->__blnValid[self::ID_FIELD] = true;
-		if (isset($objReloaded->__blnValid[self::PAC_FIELD])) {
-			$this->strPac = $objReloaded->strPac;
-			$this->__blnValid[self::PAC_FIELD] = true;
-		}
 		if (isset($objReloaded->__blnValid[self::SERIAL_FIELD])) {
 			$this->strSerial = $objReloaded->strSerial;
 			$this->__blnValid[self::SERIAL_FIELD] = true;
@@ -921,6 +917,10 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
 			$this->intCompanyId = $objReloaded->intCompanyId;
 			$this->objCompany = $objReloaded->objCompany;
 			$this->__blnValid[self::COMPANY_ID_FIELD] = true;
+		}
+		if (isset($objReloaded->__blnValid[self::REMARK_FIELD])) {
+			$this->strRemark = $objReloaded->strRemark;
+			$this->__blnValid[self::REMARK_FIELD] = true;
 		}
 	}
     ////////////////////
@@ -961,41 +961,6 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
 
 
 
-
-   /**
-	* Gets the value of strPac 
-	* @throws Caller
-	* @return string
-	*/
-	public function getPac()
-    {
-		if ($this->__blnRestored && empty($this->__blnValid[self::PAC_FIELD])) {
-			throw new Caller("Pac was not selected in the most recent query and is not valid.");
-		}
-		return $this->strPac;
-	}
-
-
-
-
-   /**
-	* Sets the value of strPac 
-	* Returns $this to allow chaining of setters.
-	* @param string|null $strPac
-    * @throws Caller
-	* @return Device
-	*/
-	public function setPac($strPac)
-    {
-		$strPac = Type::Cast($strPac, QCubed\Type::STRING);
-
-		if ($this->strPac !== $strPac) {
-			$this->strPac = $strPac;
-			$this->__blnDirty[self::PAC_FIELD] = true;
-		}
-		$this->__blnValid[self::PAC_FIELD] = true;
-		return $this; // allows chaining
-	}
 
    /**
 	* Gets the value of strSerial 
@@ -1108,6 +1073,41 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
         }
         return $this;
     }
+
+   /**
+	* Gets the value of strRemark 
+	* @throws Caller
+	* @return string
+	*/
+	public function getRemark()
+    {
+		if ($this->__blnRestored && empty($this->__blnValid[self::REMARK_FIELD])) {
+			throw new Caller("Remark was not selected in the most recent query and is not valid.");
+		}
+		return $this->strRemark;
+	}
+
+
+
+
+   /**
+	* Sets the value of strRemark 
+	* Returns $this to allow chaining of setters.
+	* @param string|null $strRemark
+    * @throws Caller
+	* @return Device
+	*/
+	public function setRemark($strRemark)
+    {
+		$strRemark = Type::Cast($strRemark, QCubed\Type::STRING);
+
+		if ($this->strRemark !== $strRemark) {
+			$this->strRemark = $strRemark;
+			$this->__blnDirty[self::REMARK_FIELD] = true;
+		}
+		$this->__blnValid[self::REMARK_FIELD] = true;
+		return $this; // allows chaining
+	}
 
 
     /**
@@ -1725,9 +1725,9 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
     {
         $strToReturn = '<complexType name="Device"><sequence>';
         $strToReturn .= '<element name="Id" type="xsd:int"/>';
-        $strToReturn .= '<element name="Pac" type="xsd:string"/>';
         $strToReturn .= '<element name="Serial" type="xsd:string"/>';
         $strToReturn .= '<element name="Company" type="xsd1:Company"/>';
+        $strToReturn .= '<element name="Remark" type="xsd:string"/>';
         $strToReturn .= '<element name="__blnRestored" type="xsd:boolean"/>';
         $strToReturn .= '</sequence></complexType>';
         return $strToReturn;
@@ -1756,13 +1756,13 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
         $objToReturn = new Device();
         if (property_exists($objSoapObject, 'Id'))
             $objToReturn->intId = $objSoapObject->Id;
-        if (property_exists($objSoapObject, 'Pac'))
-            $objToReturn->strPac = $objSoapObject->Pac;
         if (property_exists($objSoapObject, 'Serial'))
             $objToReturn->strSerial = $objSoapObject->Serial;
         if ((property_exists($objSoapObject, 'Company')) &&
             ($objSoapObject->Company))
             $objToReturn->Company = Company::GetObjectFromSoapObject($objSoapObject->Company);
+        if (property_exists($objSoapObject, 'Remark'))
+            $objToReturn->strRemark = $objSoapObject->Remark;
         if (property_exists($objSoapObject, '__blnRestored'))
             $objToReturn->__blnRestored = $objSoapObject->__blnRestored;
         return $objToReturn;
@@ -1801,14 +1801,14 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
         if (isset($this->__blnValid[self::ID_FIELD])) {
             $iArray['Id'] = $this->intId;
         }
-        if (isset($this->__blnValid[self::PAC_FIELD])) {
-            $iArray['Pac'] = $this->strPac;
-        }
         if (isset($this->__blnValid[self::SERIAL_FIELD])) {
             $iArray['Serial'] = $this->strSerial;
         }
         if (isset($this->__blnValid[self::COMPANY_ID_FIELD])) {
             $iArray['CompanyId'] = $this->intCompanyId;
+        }
+        if (isset($this->__blnValid[self::REMARK_FIELD])) {
+            $iArray['Remark'] = $this->strRemark;
         }
         return new ArrayIterator($iArray);
     }
@@ -1854,9 +1854,6 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
         if (isset($this->__blnValid[self::ID_FIELD])) {
             $a['id'] = $this->intId;
         }
-        if (isset($this->__blnValid[self::PAC_FIELD])) {
-            $a['pac'] = $this->strPac;
-        }
         if (isset($this->__blnValid[self::SERIAL_FIELD])) {
             $a['serial'] = $this->strSerial;
         }
@@ -1864,6 +1861,9 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
             $a['company'] = $this->objCompany;
         } elseif (isset($this->__blnValid[self::COMPANY_ID_FIELD])) {
             $a['company_id'] = $this->intCompanyId;
+        }
+        if (isset($this->__blnValid[self::REMARK_FIELD])) {
+            $a['remark'] = $this->strRemark;
         }
         if (isset($this->_objDeviceTourist)) {
             $a['device_tourist'] = $this->_objDeviceTourist;
@@ -1892,10 +1892,10 @@ abstract class DeviceGen extends \QCubed\ObjectBase implements IteratorAggregate
 
 /**
  * @property-read Node\Column $Id
- * @property-read Node\Column $Pac
  * @property-read Node\Column $Serial
  * @property-read Node\Column $CompanyId
  * @property-read NodeCompany $Company
+ * @property-read Node\Column $Remark
  * @property-read ReverseReferenceNodeDeviceTourist $DeviceTourist
  * @property-read ReverseReferenceNodeEvent $Event
  * @property-read Node\Column $_PrimaryKeyNode
@@ -1911,9 +1911,9 @@ class NodeDevice extends Node\Table {
     public function fields() {
         return [
             "id",
-            "pac",
             "serial",
             "company_id",
+            "remark",
         ];
     }
 
@@ -1944,14 +1944,14 @@ class NodeDevice extends Node\Table {
         switch ($strName) {
             case 'Id':
                 return new Node\Column('id', 'Id', 'Integer', $this);
-            case 'Pac':
-                return new Node\Column('pac', 'Pac', 'VarChar', $this);
             case 'Serial':
                 return new Node\Column('serial', 'Serial', 'VarChar', $this);
             case 'CompanyId':
                 return new Node\Column('company_id', 'CompanyId', 'Integer', $this);
             case 'Company':
                 return new NodeCompany('company_id', 'Company', 'Integer', $this);
+            case 'Remark':
+                return new Node\Column('remark', 'Remark', 'VarChar', $this);
             case 'DeviceTourist':
                 return new ReverseReferenceNodeDeviceTourist($this, 'devicetourist', \QCubed\Type::REVERSE_REFERENCE, 'device_id', 'DeviceTourist');
             case 'Event':
@@ -1972,10 +1972,10 @@ class NodeDevice extends Node\Table {
 
 /**
  * @property-read Node\Column $Id
- * @property-read Node\Column $Pac
  * @property-read Node\Column $Serial
  * @property-read Node\Column $CompanyId
  * @property-read NodeCompany $Company
+ * @property-read Node\Column $Remark
  * @property-read ReverseReferenceNodeDeviceTourist $DeviceTourist
  * @property-read ReverseReferenceNodeEvent $Event
 
@@ -1992,9 +1992,9 @@ class ReverseReferenceNodeDevice extends Node\ReverseReference {
     public function fields() {
         return [
             "id",
-            "pac",
             "serial",
             "company_id",
+            "remark",
         ];
     }
 
@@ -2017,14 +2017,14 @@ class ReverseReferenceNodeDevice extends Node\ReverseReference {
         switch ($strName) {
             case 'Id':
                 return new Node\Column('id', 'Id', 'Integer', $this);
-            case 'Pac':
-                return new Node\Column('pac', 'Pac', 'VarChar', $this);
             case 'Serial':
                 return new Node\Column('serial', 'Serial', 'VarChar', $this);
             case 'CompanyId':
                 return new Node\Column('company_id', 'CompanyId', 'Integer', $this);
             case 'Company':
                 return new NodeCompany('company_id', 'Company', 'Integer', $this);
+            case 'Remark':
+                return new Node\Column('remark', 'Remark', 'VarChar', $this);
             case 'DeviceTourist':
                 return new ReverseReferenceNodeDeviceTourist($this, 'devicetourist', \QCubed\Type::REVERSE_REFERENCE, 'device_id', 'DeviceTourist');
             case 'Event':
