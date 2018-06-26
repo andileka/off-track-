@@ -33,8 +33,8 @@ namespace QCubed\Project\Control;
 		 * 
 		 * @param QMapBoxCoordinate[] $arrCoordinates
 		 */
-		public function Draw($arrCoordinates) {
-			\QCubed\Project\Application::executeJavaScript("mapbox.DrawMap(".json_encode($arrCoordinates).")");
+		public function Draw($arrCoordinates, $arrProperties=null) {
+			\QCubed\Project\Application::executeJavaScript("mapbox.DrawMap(".json_encode($arrCoordinates).','.json_encode($arrProperties).")");
 		}
 		/**
 		 * 

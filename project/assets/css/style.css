@@ -484,6 +484,20 @@ sup{color:red;}
 	border-radius: 50%;
 	cursor: pointer;
 }
+.marker.counter {
+	background-image: initial;
+	background-color: rgba(255,255,255,0.7);
+	border: 1px solid white;
+	border-radius: 25px;
+}
+.marker.counter:after{
+	position: absolute;
+	top: 14px;
+	left: 1px;
+	font-size: 1.5em;
+	font-weight: bold;
+	content: attr(data-id);
+}
 .mapboxgl-popup {
 	max-width: 200px;
 }

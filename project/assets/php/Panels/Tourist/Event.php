@@ -65,11 +65,13 @@ class Event extends \QCubed\Project\Control\Editor {
 		$this->mpbox				= new \QCubed\Project\Control\Mapbox($this);
 		$this->mpbox->Name			= tr("Mapview");
 
-		$arrCoordinates = array_map(function(\Event $objEvent) {
-			return (string)$objEvent->Position;
-		}, $arrEvents); 
+		$i=0;
+		foreach($arrEvents as $objEvent) {
+			$arrCoordinates[] = (string)$objEvent->Position;
+			$arrProperties [] = array('title'=>(string)$objEvent->Type,'description'=>$objEvent->Datetime->format('Y-m-d H:i'),'className'=>'counter','dataid'=>$objEvent->Datetime->format('H:i'));
+		}
 
-		$this->mpbox->Draw($arrCoordinates);
+		$this->mpbox->Draw($arrCoordinates,$arrProperties);
 
 	}
 }

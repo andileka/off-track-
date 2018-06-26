@@ -135,8 +135,12 @@ class Map extends \QCubed\Control\Panel {
 		$arrCoordinates = array_map(function(\Tourist $objTourist) {
 			return (string)$objTourist->Position;
 		}, $arrTourists); //ff adressen omzetten naar coordinates
+
+		$arrProperties = array_map(function(\Tourist $objTourist) {
+			return array('title'=>(string)$objTourist, 'description'=>'desc'.$objTourist);
+		}, $arrTourists); //ff adressen omzetten naar coordinates
 		
-		$this->mpbox->Draw($arrCoordinates);
+		$this->mpbox->Draw($arrCoordinates, $arrProperties);
 		
 	}
 	

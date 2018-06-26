@@ -39,11 +39,14 @@
 		 * @param float $long
 		 * @return \Event
 		 */
-		public static function CreateForDeviceId($intDeviceId, $type, $lat, $long) {
+		public static function CreateForDeviceId($intDeviceId, $type, $lat, $long, $datetime=null) {
 			$event				= new Event();
 			$event->DeviceId	= $intDeviceId;
 			$event->Position	= Position::Create($lat, $long);
 			$event->Type		= $type;
+			if($datetime) {
+				$event->Datetime = $datetime;
+			}
 			$event->save();
 			return $event;
 		}

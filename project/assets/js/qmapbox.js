@@ -1,5 +1,6 @@
 var mapbox = function () {
 	var arrCoordinates;
+	var arrProperties;
 	var token;
 	var map;
 	var containerId;
@@ -23,10 +24,7 @@ var mapbox = function () {
 				 "type": "Point",
 				 "coordinates": arrCoordinates[i]
 				},
-				 "properties": {
-					 "title": "<a href='?c=tourist&a=edit&id=1'>Matthias Van Woensel</a>",
-					 "description": "Last check in 14:00<br/>"
-				 }
+				 "properties": arrProperties[i]
 			 });
 		}
 		var geojson = {
@@ -42,12 +40,16 @@ var mapbox = function () {
 		});
 
 		// add markers to map
+		markercounter=0;
 		geojson.features.forEach(function(marker) {
 
 			// create a HTML element for each feature
 			var el = document.createElement('div');
-			el.className = 'marker';
-
+			console.log(marker.properties);
+			el.className = 'marker ' + (marker.properties.className ? marker.properties.className : '');
+			if(marker.properties.dataid) {
+				$(el).attr('data-id',marker.properties.dataid);
+			}
 			// make a marker for each feature and add it to the map
 			new mapboxgl.Marker(el)
 				.setLngLat(marker.geometry.coordinates)
@@ -64,15 +66,17 @@ var mapbox = function () {
 			token = api_token;
 		},
 		// SetAPI : function(api_token){token = api_token},
-		DrawMap: function (arr) {
-			mapbox.AddCoordinates(arr);
+		DrawMap: function (arr, _arrProperties) {
+			mapbox.AddCoordinates(arr, _arrProperties);
 			DrawMap();
 		},
-		AddCoordinates: function (arr) {
-			arrCoordinates = [];
+		AddCoordinates: function (arr, _arrProperties) {
+			arrCoordinates	= [];
+			arrProperties	= _arrProperties;
 			for (var i = 0; i < arr.length; i++) {
 				arrCoordinates.push(arr[i].split(","));
 			}
+
 		},
 		AddPinsOnMap: function (arr = []) {
 			console.log(arr);
