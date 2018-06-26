@@ -121,8 +121,6 @@ class Map extends \QCubed\Control\Panel {
 	}
 	
 	protected function DraWMap(){
-		error_log('DrawMap');
-
 		$arrTourists = $this->GetAllFilteredTourists();
 		if(!count($arrTourists)) {
 			return;
