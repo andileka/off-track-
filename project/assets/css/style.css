@@ -149,6 +149,17 @@ li a.maintenance:before{
     padding-right: 0.5em;
 }
 
+li a.main:before{
+	content: "\f278";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    font-size: 18px;
+    padding-right: 0.5em;
+}
+
+
 @media screen and (max-width: 767px) { 
     .hidden-md-up.devider{
         /* hide devider on small screens, it adds margins between fields */
