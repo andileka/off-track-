@@ -31,7 +31,6 @@ class Device extends \QCubed\Control\Panel {
 			)
 		);
 		if($devicetourist) {
-			error_log("device tourist found");
 			$this->pnlTourist = new \Hikify\Panels\Tourist\Detail($this);
 			$this->pnlTourist->SetTourist($devicetourist->Tourist);
 		} else {

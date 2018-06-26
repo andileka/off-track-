@@ -16,4 +16,37 @@
 	 *
 	 */
 	class TouristList extends TouristListGen {
+
+		/**
+		* Creates the columns for the table. Override to customize, or use the ModelConnectorEditor to turn on and off
+		* individual columns. This is a public function and called by the parent control.
+		*/
+	   public function createColumns()
+	   {
+		   $this->colId = $this->createNodeColumn("Id", QQN::Tourist()->Id);
+		   $this->colName = $this->createNodeColumn("Name", QQN::Tourist()->Name);
+		   $this->colPassport = $this->createNodeColumn("Passport", QQN::Tourist()->Passport);
+		   $this->colContactinfo = $this->createNodeColumn("Contactinfo", QQN::Tourist()->Contactinfo);
+		   $this->colLanguage = $this->createNodeColumn("Language", QQN::Tourist()->Language);
+		   $this->colCity = $this->createNodeColumn("City", QQN::Tourist()->City);
+		   $this->colCountry = $this->createNodeColumn("Country", QQN::Tourist()->Country);
+
+			
+
+		}
+
+		public function AddDeviceColumn() {
+			$this->Clauses = QCubed\Query\QQ::clause(
+					QCubed\Query\QQ::expand(QQN::tourist()->DeviceTourist),
+					QCubed\Query\QQ::expand(QQN::tourist()->DeviceTourist->Device)
+			);
+			$this->createCallableColumn(tr("Device")			, [$this,'renderDevice'])->HtmlEntities = false;
+		}
+
+		public function renderDevice(Tourist $objTourist) {
+			error_log(print_r($objTourist, true));
+			return (string)$objTourist->DeviceTourist->Device;
+		}
+
+	   
 	}

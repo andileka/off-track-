@@ -26,27 +26,7 @@ class Listing extends \QCubed\Control\Panel {
 	 *
 	 * @var \QCubed\Project\Control\TextBox
 	 */
-	public $txtEntity;
-	/**
-	 *
-	 * @var \QCubed\Project\Control\TextBox
-	 */
 	public $txtName;
-	/**
-	 *
-	 * @var \QCubed\Project\Control\ListBox
-	 */
-	public $lstType;
-	/**
-	 *
-	 * @var \QCubed\Project\Control\ListBox
-	 */
-	public $lstState;
-	/**
-	 *
-	 * @var \QCubed\Project\Control\ListBox
-	 */
-	public $lstExpert;
 
 	public function __construct($objParentObject, $strControlId = null) {
 		parent::__construct($objParentObject, $strControlId);
@@ -75,30 +55,15 @@ class Listing extends \QCubed\Control\Panel {
 	public function Databind(){
 		$conditions = array();
 		if($this->txtName->Text){
-			$conditions[] = \QCubed\Query\QQ::like(\QQN::tourist()->Vehicle->Plate, $this->txtName->Text."%");
+			$conditions[] = \QCubed\Query\QQ::like(\QQN::tourist()->Name, '%'.$this->txtName->Text."%");
 		}
 		if($this->txtDevice->Text){
-			$conditions[] = \QCubed\Query\QQ::equal(\QQN::tourist()->Number, $this->txtDevice->Text);
+			$conditions[] = \QCubed\Query\QQ::like(\QQN::tourist()->DeviceTourist->Device->Serial, $this->txtDevice->Text . '%');
 		}
-		if($this->txtEntity->Text){
-			$conditions[] = \QCubed\Query\QQ::orCondition(
-						\QCubed\Query\QQ::like(\QQN::tourist()->EntityTourist->Entity->CompanyName, "%".$this->txtEntity->Text."%"),
-						\QCubed\Query\QQ::like(\QQN::tourist()->EntityTourist->Entity->FirstName, "%".$this->txtEntity->Text."%")
-						);
-		}
-		if($this->lstState->SelectedValue){
-			$conditions[] = \QCubed\Query\QQ::equal(\QQN::tourist()->Status, $this->lstState->SelectedValue);
-		}
-		if($this->lstExpert->SelectedValue){
-			$conditions[] = \QCubed\Query\QQ::equal(\QQN::tourist()->Appointment->ExpertId, $this->lstExpert->SelectedValue);
-		}
-		if(count($conditions) > 0) {
-			$this->lstTourists->Condition = \QCubed\Query\QQ::andCondition($conditions);
-		} else {
-			$conditions[] = \QCubed\Query\QQ::like(\QQN::tourist()->Vehicle->Plate, "%");
-			$this->lstTourists->Condition = \QCubed\Query\QQ::orCondition($conditions);
-		}
+		
+		$this->lstTourists->Condition = \QCubed\Query\QQ::andCondition($conditions);
 		$this->lstTourists->Databind();
+		
 	}
 
 
@@ -114,7 +79,7 @@ class Listing extends \QCubed\Control\Panel {
 
 //		$this->lstTourists->AddJavascriptRowAction('tourist','edit');
 		$this->lstTourists->CreateColumns();
-
+		$this->lstTourists->AddDeviceColumn();
 		$this->pnlFilter = self::ShowFilter();
 	}
 
