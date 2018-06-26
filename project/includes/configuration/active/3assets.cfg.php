@@ -108,7 +108,7 @@ define ('__BOOTSTRAP_ADMINLTE_CSS_SKINS__', __VENDOR_ASSETS__ . '/almasaeed2010/
 define ('__BOOTSTRAP_ADMINLTE_JS__', __VENDOR_ASSETS__ . '/almasaeed2010/adminlte/dist/js/adminlte.min.js');
 define ('__BOOTSTRAP_ADMINLTE_BOWER_COMPONENTS__', __VENDOR_ASSETS__ . '/almasaeed2010/adminlte/bower_components');
 define ('__BOOTSTRAP_ADMINLTE_FONTAWSOME__', __BOOTSTRAP_ADMINLTE_BOWER_COMPONENTS__.'/font-awesome/css/font-awesome.min.css');
-define ('__STYLE_CSS__', __SUBDIRECTORY__. '/project/assets/css/style.css');
+define ('__STYLE_CSS__', __SUBDIRECTORY__. __VIRTUAL_DIRECTORY__.'/project/assets/css/style.css');
 define ('__GLOBALJS__',  'project/assets/js/app.js');
 
 

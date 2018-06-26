@@ -38,6 +38,8 @@ use QCubed\Control\DateTimePicker;
  * @property-read QCubed\\Control\\Label $TypeLabel
  * @property QCubed\Control\DateTimePicker $DatetimeControl
  * @property-read QCubed\\Control\\Label $DatetimeLabel
+ * @property QCubed\Project\Control\ListBox $PositionIdControl
+ * @property-read QCubed\\Control\\Label $PositionIdLabel
  * @property-read string $TitleVerb a verb indicating whether or not this is being edited or created
  * @property-read boolean $EditMode a boolean indicating whether or not this is being edited or created
  */
@@ -127,6 +129,35 @@ class EventConnectorGen extends \QCubed\ObjectBase
      * @access protected
      */
     protected $lblDatetime;
+
+    /**
+     * @var QCubed\Project\Control\ListBox
+     * @access protected
+     */
+    protected $lstPosition;
+
+    /**
+     * @var string 
+     * @access protected
+     */
+    protected $strPositionNullLabel;
+
+    /**
+    * @var QQCondition
+    * @access protected
+    */
+    protected $objPositionCondition;
+
+    /**
+    * @var QQClause[]
+    * @access protected
+    */
+    protected $objPositionClauses;
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblPosition;
 
 
 
@@ -369,6 +400,71 @@ class EventConnectorGen extends \QCubed\ObjectBase
 
 
 
+		/**
+		 * Create and setup QCubed\Project\Control\ListBox lstPosition
+		 * @param string $strControlId optional ControlId to use
+		 * @param QQCondition $objCondition override the default condition of QQ::all() to the query, itself
+		 * @param QQClause[] $objClauses additional QQClause object or array of QQClause objects for the query
+		 * @return ListBox
+		 */
+		public function lstPosition_Create($strControlId = null, QQCondition $objCondition = null, $objClauses = null) {
+			$this->objPositionCondition = $objCondition;
+			$this->objPositionClauses = $objClauses;
+			$this->lstPosition = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
+			$this->lstPosition->Name = t('Position');
+			$this->lstPosition->PreferredRenderMethod = 'RenderWithName';
+        $this->lstPosition->LinkedNode = QQN::Event()->Position;
+      if (!$this->strPositionNullLabel) {
+      	if (!$this->lstPosition->Required) {
+      		$this->strPositionNullLabel = t('- None -');
+      	}
+      	elseif (!$this->blnEditMode) {
+      		$this->strPositionNullLabel = t('- Select One -');
+      	}
+      }
+      $this->lstPosition->addItem($this->strPositionNullLabel, null);
+      $this->lstPosition->addItems($this->lstPosition_GetItems());
+      $this->lstPosition->SelectedValue = $this->objEvent->PositionId;
+			return $this->lstPosition;
+		}
+
+		/**
+		 *	Create item list for use by lstPosition
+		 */
+		 public function lstPosition_GetItems() {
+			$a = array();
+			$objCondition = $this->objPositionCondition;
+			if (is_null($objCondition)) $objCondition = QQ::all();
+			$objPositionCursor = Position::queryCursor($objCondition, $this->objPositionClauses);
+
+			// Iterate through the Cursor
+			while ($objPosition = Position::instantiateCursor($objPositionCursor)) {
+				$objListItem = new ListItem($objPosition->__toString(), $objPosition->Id);
+				if (($this->objEvent->Position) && ($this->objEvent->Position->Id == $objPosition->Id))
+					$objListItem->Selected = true;
+				$a[] = $objListItem;
+			}
+			return $a;
+		 }
+
+    /**
+     * Create and setup QCubed\Control\Label lblPosition
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblPosition_Create($strControlId = null) 
+    {
+        $this->lblPosition = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblPosition->Name = t('Position');
+        $this->lblPosition->PreferredRenderMethod = 'RenderWithName';
+        $this->lblPosition->LinkedNode = QQN::Event()->Position;
+			$this->lblPosition->Text = $this->objEvent->Position ? $this->objEvent->Position->__toString() : null;
+        return $this->lblPosition;
+    }
+
+
+
 
 
 
@@ -404,6 +500,16 @@ class EventConnectorGen extends \QCubed\ObjectBase
 
 			if ($this->calDatetime) $this->calDatetime->DateTime = $this->objEvent->Datetime;
 			if ($this->lblDatetime) $this->lblDatetime->Text = $this->objEvent->Datetime;
+
+
+      if ($this->lstPosition) {
+        $this->lstPosition->removeAllItems();
+        $this->lstPosition->addItem($this->strPositionNullLabel, null);
+        $this->lstPosition->addItems($this->lstPosition_GetItems());
+        $this->lstPosition->SelectedValue = $this->objEvent->PositionId;
+      
+      }
+			if ($this->lblPosition) $this->lblPosition->Text = $this->objEvent->Position ? $this->objEvent->Position->__toString() : null;
 
 
     }
@@ -452,6 +558,8 @@ class EventConnectorGen extends \QCubed\ObjectBase
 				if ($this->txtType) $this->objEvent->Type = $this->txtType->Text;
 
 				if ($this->calDatetime) $this->objEvent->Datetime = $this->calDatetime->DateTime;
+
+				if ($this->lstPosition) $this->objEvent->PositionId = $this->lstPosition->SelectedValue;
 
 
             // Update any UniqueReverseReferences for controls that have been created for it
@@ -533,6 +641,14 @@ class EventConnectorGen extends \QCubed\ObjectBase
             case 'DatetimeLabel':
                 if (!$this->lblDatetime) return $this->lblDatetime_Create();
                 return $this->lblDatetime;
+            case 'PositionIdControl':
+                if (!$this->lstPosition) return $this->lstPosition_Create();
+                return $this->lstPosition;
+            case 'PositionIdLabel':
+                if (!$this->lblPosition) return $this->lblPosition_Create();
+                return $this->lblPosition;
+            case 'PositionNullLabel':
+                return $this->strPositionNullLabel;
             default:
                 try {
                     return parent::__get($strName);
@@ -585,6 +701,15 @@ class EventConnectorGen extends \QCubed\ObjectBase
                     break;
                 case 'DatetimeLabel':
                     $this->lblDatetime = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'PositionIdControl':
+                    $this->lstPosition = Type::Cast($mixValue, '\\QCubed\Project\Control\ListBox');
+                    break;
+                case 'PositionIdLabel':
+                    $this->lblPosition = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'PositionNullLabel':
+                    $this->strPositionNullLabel = $mixValue;
                     break;
                 default:
                     parent::__set($strName, $mixValue);

@@ -1,0 +1,44 @@
+<?php
+
+namespace Hikify\Pages\Tourist;
+
+class Edit extends \QCubed\Control\Panel {
+	/**
+	 *
+	 * @var \QCubed\Control\Label 
+	 */
+	public $lblTemp;
+
+	/**
+	 *
+	 * @var \Hikify\Panels\Tourist\Detail
+	 */
+	public $pnlTourist;
+
+	public $btnSave;
+	
+	public function __construct($objParentObject, $strControlId = null) {
+		parent::__construct($objParentObject, $strControlId);
+		
+		$this->strTemplate			= __TEMPLATES__ .  '/pages/tourist/edit.tpl.php';
+		$this->Build();
+		
+		
+	}
+
+	public function Save() {
+		$this->pnlTourist->Save();
+	}
+
+	private function Build() {
+		$this->lblTemp			= new \QCubed\Control\Label($this);
+		$this->lblTemp->Text	= tr("Edit");
+
+		$this->pnlTourist		= new \Hikify\Panels\Tourist\Detail($this);
+		$this->pnlTourist->SetTourist(\Tourist::loadById($_GET['id']));
+
+		$this->btnSave			= \QCubed\Project\Jqui\Button::GetSaveButton($this,'Save');
+	}
+
+	
+}

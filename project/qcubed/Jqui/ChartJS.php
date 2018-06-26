@@ -47,6 +47,9 @@ class ChartJS extends \QCubed\Control\Panel{
 		\QCubed\Project\Application::executeJavaScript("ChartJS.SetDataSet('".json_encode($arrData['DataSet'])."')");	
 	}
 	public function SetDataSet($strType="bar", $arrData){
+		if(!isset($arrData[2])) {
+			return;
+		}
 		$this->SetType($strType);
 		$arrLabels = $arrData[2];
 		

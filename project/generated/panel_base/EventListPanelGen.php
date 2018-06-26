@@ -145,7 +145,8 @@ abstract class EventListPanelGen extends \QCubed\Control\Panel
 			return \QCubed\Query\QQ::orCondition(
 				\QCubed\Query\QQ::equal(QQN::Event()->Id, $strSearchValue),
             \QCubed\Query\QQ::equal(QQN::Event()->DeviceId, $strSearchValue),
-            \QCubed\Query\QQ::like(QQN::Event()->Type, "%" . $strSearchValue . "%")
+            \QCubed\Query\QQ::like(QQN::Event()->Type, "%" . $strSearchValue . "%"),
+            \QCubed\Query\QQ::equal(QQN::Event()->PositionId, $strSearchValue)
 			);
 		}
 

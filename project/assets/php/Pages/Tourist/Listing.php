@@ -71,13 +71,13 @@ class Listing extends \QCubed\Control\Panel {
 		$this->btnNew				= new \QCubed\Project\Control\Button($this);
 		$this->btnNew->Text			= tr('New tourist');
 		$this->btnNew->AddCssClass('btn btn-flat btn-default newbutton');
-		$this->btnNew->AddAction(new \QCubed\Event\Click(), new \QCubed\Action\Redirect('/?c=tourist&a=edit'));
+		$this->btnNew->AddAction(new \QCubed\Event\Click(), new \QCubed\Action\Redirect('?c=tourist&a=edit'));
 
 		$this->lstTourists							= new \TouristList($this);
 		$this->lstTourists->addWrapperCssClass("table-responsive");
 		$this->lstTourists->CssClass				= 'table no-margin';
 
-//		$this->lstTourists->AddJavascriptRowAction('tourist','edit');
+		$this->lstTourists->AddJavascriptRowAction('tourist','edit');
 		$this->lstTourists->CreateColumns();
 		$this->lstTourists->AddDeviceColumn();
 		$this->pnlFilter = self::ShowFilter();

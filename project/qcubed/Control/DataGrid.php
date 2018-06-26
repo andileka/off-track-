@@ -47,7 +47,7 @@ class DataGrid extends DataGridBase
     }
 	
 	public function AddJavascriptRowAction($strController, $strAction='edit') {
-		$this->AddAction(new \QCubed\Event\CellClick(0, null, \QCubed\Event\CellClick::RowDataValue('value')), new \QCubed\Action\JavaScript('document.location.href = "/?c='.$strController.'&a='.$strAction.'&id="+'.\QCubed\Event\CellClick::RowDataValue('value').';') );		
+		$this->AddAction(new \QCubed\Event\CellClick(0, null, \QCubed\Event\CellClick::RowDataValue('value')), new \QCubed\Action\JavaScript('document.location.href = "?c='.$strController.'&a='.$strAction.'&id="+'.\QCubed\Event\CellClick::RowDataValue('value').';') );		
 	}
 	
 	public function AddAjaxRowAction($objParent, $strMethod) {

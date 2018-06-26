@@ -14,3 +14,4 @@
 <?= _r($this->lstLanguage); ?>
 <?= _r($this->lstCity); ?>
 <?= _r($this->lstCountry); ?>
+<?= _r($this->lstPosition); ?>

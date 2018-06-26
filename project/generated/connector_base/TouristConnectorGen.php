@@ -43,6 +43,8 @@ use QCubed\Query\Clause\ClauseInterface as QQClause;
  * @property-read QCubed\\Control\\Label $CityIdLabel
  * @property QCubed\Project\Control\ListBox $CountryIdControl
  * @property-read QCubed\\Control\\Label $CountryIdLabel
+ * @property QCubed\Project\Control\ListBox $PositionIdControl
+ * @property-read QCubed\\Control\\Label $PositionIdLabel
  * @property-read string $TitleVerb a verb indicating whether or not this is being edited or created
  * @property-read boolean $EditMode a boolean indicating whether or not this is being edited or created
  */
@@ -203,6 +205,35 @@ class TouristConnectorGen extends \QCubed\ObjectBase
      * @access protected
      */
     protected $lblCountry;
+
+    /**
+     * @var QCubed\Project\Control\ListBox
+     * @access protected
+     */
+    protected $lstPosition;
+
+    /**
+     * @var string 
+     * @access protected
+     */
+    protected $strPositionNullLabel;
+
+    /**
+    * @var QQCondition
+    * @access protected
+    */
+    protected $objPositionCondition;
+
+    /**
+    * @var QQClause[]
+    * @access protected
+    */
+    protected $objPositionClauses;
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblPosition;
 
 
 
@@ -611,6 +642,71 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 
 
 
+		/**
+		 * Create and setup QCubed\Project\Control\ListBox lstPosition
+		 * @param string $strControlId optional ControlId to use
+		 * @param QQCondition $objCondition override the default condition of QQ::all() to the query, itself
+		 * @param QQClause[] $objClauses additional QQClause object or array of QQClause objects for the query
+		 * @return ListBox
+		 */
+		public function lstPosition_Create($strControlId = null, QQCondition $objCondition = null, $objClauses = null) {
+			$this->objPositionCondition = $objCondition;
+			$this->objPositionClauses = $objClauses;
+			$this->lstPosition = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
+			$this->lstPosition->Name = t('Position');
+			$this->lstPosition->PreferredRenderMethod = 'RenderWithName';
+        $this->lstPosition->LinkedNode = QQN::Tourist()->Position;
+      if (!$this->strPositionNullLabel) {
+      	if (!$this->lstPosition->Required) {
+      		$this->strPositionNullLabel = t('- None -');
+      	}
+      	elseif (!$this->blnEditMode) {
+      		$this->strPositionNullLabel = t('- Select One -');
+      	}
+      }
+      $this->lstPosition->addItem($this->strPositionNullLabel, null);
+      $this->lstPosition->addItems($this->lstPosition_GetItems());
+      $this->lstPosition->SelectedValue = $this->objTourist->PositionId;
+			return $this->lstPosition;
+		}
+
+		/**
+		 *	Create item list for use by lstPosition
+		 */
+		 public function lstPosition_GetItems() {
+			$a = array();
+			$objCondition = $this->objPositionCondition;
+			if (is_null($objCondition)) $objCondition = QQ::all();
+			$objPositionCursor = Position::queryCursor($objCondition, $this->objPositionClauses);
+
+			// Iterate through the Cursor
+			while ($objPosition = Position::instantiateCursor($objPositionCursor)) {
+				$objListItem = new ListItem($objPosition->__toString(), $objPosition->Id);
+				if (($this->objTourist->Position) && ($this->objTourist->Position->Id == $objPosition->Id))
+					$objListItem->Selected = true;
+				$a[] = $objListItem;
+			}
+			return $a;
+		 }
+
+    /**
+     * Create and setup QCubed\Control\Label lblPosition
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblPosition_Create($strControlId = null) 
+    {
+        $this->lblPosition = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblPosition->Name = t('Position');
+        $this->lblPosition->PreferredRenderMethod = 'RenderWithName';
+        $this->lblPosition->LinkedNode = QQN::Tourist()->Position;
+			$this->lblPosition->Text = $this->objTourist->Position ? $this->objTourist->Position->__toString() : null;
+        return $this->lblPosition;
+    }
+
+
+
 
 
 
@@ -672,6 +768,16 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 			if ($this->lblCountry) $this->lblCountry->Text = $this->objTourist->Country ? $this->objTourist->Country->__toString() : null;
 
 
+      if ($this->lstPosition) {
+        $this->lstPosition->removeAllItems();
+        $this->lstPosition->addItem($this->strPositionNullLabel, null);
+        $this->lstPosition->addItems($this->lstPosition_GetItems());
+        $this->lstPosition->SelectedValue = $this->objTourist->PositionId;
+      
+      }
+			if ($this->lblPosition) $this->lblPosition->Text = $this->objTourist->Position ? $this->objTourist->Position->__toString() : null;
+
+
     }
 
     /**
@@ -724,6 +830,8 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 				if ($this->lstCity) $this->objTourist->CityId = $this->lstCity->SelectedValue;
 
 				if ($this->lstCountry) $this->objTourist->CountryId = $this->lstCountry->SelectedValue;
+
+				if ($this->lstPosition) $this->objTourist->PositionId = $this->lstPosition->SelectedValue;
 
 
             // Update any UniqueReverseReferences for controls that have been created for it
@@ -827,6 +935,14 @@ class TouristConnectorGen extends \QCubed\ObjectBase
                 return $this->lblCountry;
             case 'CountryNullLabel':
                 return $this->strCountryNullLabel;
+            case 'PositionIdControl':
+                if (!$this->lstPosition) return $this->lstPosition_Create();
+                return $this->lstPosition;
+            case 'PositionIdLabel':
+                if (!$this->lblPosition) return $this->lblPosition_Create();
+                return $this->lblPosition;
+            case 'PositionNullLabel':
+                return $this->strPositionNullLabel;
             default:
                 try {
                     return parent::__get($strName);
@@ -903,6 +1019,15 @@ class TouristConnectorGen extends \QCubed\ObjectBase
                     break;
                 case 'CountryNullLabel':
                     $this->strCountryNullLabel = $mixValue;
+                    break;
+                case 'PositionIdControl':
+                    $this->lstPosition = Type::Cast($mixValue, '\\QCubed\Project\Control\ListBox');
+                    break;
+                case 'PositionIdLabel':
+                    $this->lblPosition = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'PositionNullLabel':
+                    $this->strPositionNullLabel = $mixValue;
                     break;
                 default:
                     parent::__set($strName, $mixValue);

@@ -71,6 +71,13 @@ $a['reversereferencenodetourist'] = QCUBED_PROJECT_MODEL_DIR . '/Tourist.php';
 $a['touristconnector'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/TouristConnector.php';
 $a['touristlist'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/TouristList.php';
 
+// ClassPaths for the TouristTrack class
+$a['touristtrack'] = QCUBED_PROJECT_MODEL_DIR . '/TouristTrack.php';
+$a['nodetouristtrack'] = QCUBED_PROJECT_MODEL_DIR . '/TouristTrack.php';
+$a['reversereferencenodetouristtrack'] = QCUBED_PROJECT_MODEL_DIR . '/TouristTrack.php';
+$a['touristtrackconnector'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/TouristTrackConnector.php';
+$a['touristtracklist'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/TouristTrackList.php';
+
 // ClassPaths for the Track class
 $a['track'] = QCUBED_PROJECT_MODEL_DIR . '/Track.php';
 $a['nodetrack'] = QCUBED_PROJECT_MODEL_DIR . '/Track.php';

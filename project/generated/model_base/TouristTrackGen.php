@@ -1,6 +1,6 @@
 <?php
 /**
- * Generated Track base class file
+ * Generated TouristTrack base class file
  */
 
 use QCubed\Query\QQ;
@@ -13,43 +13,38 @@ use QCubed\QDateTime;
 use QCubed\Query\ModelTrait;
 
 /**
- * Class TrackGen
+ * Class TouristTrackGen
  *
- * The abstract TrackGen class defined here is
+ * The abstract TouristTrackGen class defined here is
  * code-generated and contains all the basic CRUD-type functionality as well as
  * basic methods to handle relationships and index-based loading.
  *
- * To use, you should use the Track subclass which
- * extends this TrackGen class.
+ * To use, you should use the TouristTrack subclass which
+ * extends this TouristTrackGen class.
  *
  * Because subsequent re-code generations will overwrite any changes to this
  * file, you should leave this file unaltered to prevent yourself from losing
  * any information or code changes.  All customizations should be done by
  * overriding existing or implementing new methods, properties and variables
- * in the Track class.
+ * in the TouristTrack class.
  *
  * @package My QCubed Application
  * @subpackage ModelGen
  * @property-read integer $Id the value of the id column (Read-Only PK)
- * @property string $Name the value of the name column 
- * @property-read TouristTrack $_TouristTrack the value of the protected _objTouristTrack (Read-Only) if set due to an expansion on the tourist_track.track_id reverse relationship
- * @property-read TouristTrack $TouristTrack the value of the protected _objTouristTrack (Read-Only) if set due to an expansion on the tourist_track.track_id reverse relationship
- * @property-read TouristTrack[] $_TouristTrackArray the value of the protected _objTouristTrackArray (Read-Only) if set due to an ExpandAsArray on the tourist_track.track_id reverse relationship
- * @property-read TouristTrack[] $TouristTrackArray the value of the protected _objTouristTrackArray (Read-Only) if set due to an ExpandAsArray on the tourist_track.track_id reverse relationship
- * @property-read TrackPoint $_TrackPoint the value of the protected _objTrackPoint (Read-Only) if set due to an expansion on the track_point.track_id reverse relationship
- * @property-read TrackPoint $TrackPoint the value of the protected _objTrackPoint (Read-Only) if set due to an expansion on the track_point.track_id reverse relationship
- * @property-read TrackPoint[] $_TrackPointArray the value of the protected _objTrackPointArray (Read-Only) if set due to an ExpandAsArray on the track_point.track_id reverse relationship
- * @property-read TrackPoint[] $TrackPointArray the value of the protected _objTrackPointArray (Read-Only) if set due to an ExpandAsArray on the track_point.track_id reverse relationship
+ * @property integer $TouristId the value of the tourist_id column 
+ * @property integer $TrackId the value of the track_id column 
+ * @property Tourist $Tourist the value of the Tourist object referenced by intTouristId 
+ * @property Track $Track the value of the Track object referenced by intTrackId 
  * @property-read boolean $__Restored whether or not this object was restored from the database (as opposed to created new)
  */
-abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate, JsonSerializable {
+abstract class TouristTrackGen extends \QCubed\ObjectBase implements IteratorAggregate, JsonSerializable {
 
     use ModelTrait;
 
     /** @var boolean Set to false in superclass to save a little time if this db object should not be watched for changes. */
     public static $blnWatchChanges = true;
 
-    /** @var Track[] Short term cached Track objects */
+    /** @var TouristTrack[] Short term cached TouristTrack objects */
     protected static $objCacheArray = array();
 
     ///////////////////////////////////////////////////////////////////////
@@ -57,7 +52,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     ///////////////////////////////////////////////////////////////////////
 
     /**
-     * Protected member variable that maps to the database PK Identity column track.id
+     * Protected member variable that maps to the database PK Identity column tourist_track.id
      * @var integer intId
      */
     private $intId;
@@ -67,48 +62,24 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
 
     /**
-     * Protected member variable that maps to the database column track.name
-     * @var string strName
+     * Protected member variable that maps to the database column tourist_track.tourist_id
+     * @var integer intTouristId
      */
-    private $strName;
-    const NameMaxLength = 45; // Deprecated
-    const NAME_MAX_LENGTH = 45;
+    private $intTouristId;
 
-    const NAME_DEFAULT = null;
-    const NAME_FIELD = 'name';
+    const TOURIST_ID_DEFAULT = null;
+    const TOURIST_ID_FIELD = 'tourist_id';
 
 
     /**
-     * Protected member variable that stores a reference to a single TouristTrack object
-     * (of type TouristTrack), if this Track object was restored with
-     * an expansion on the tourist_track association table.
-     * @var TouristTrack _objTouristTrack;
+     * Protected member variable that maps to the database column tourist_track.track_id
+     * @var integer intTrackId
      */
-    protected $_objTouristTrack;
+    private $intTrackId;
 
-    /**
-     * Protected member variable that stores a reference to an array of TouristTrack objects
-     * (of type TouristTrack[]), if this Track object was restored with
-     * an ExpandAsArray on the tourist_track association table.
-     * @var TouristTrack[] _objTouristTrackArray;
-     */
-    protected $_objTouristTrackArray = null;
+    const TRACK_ID_DEFAULT = null;
+    const TRACK_ID_FIELD = 'track_id';
 
-    /**
-     * Protected member variable that stores a reference to a single TrackPoint object
-     * (of type TrackPoint), if this Track object was restored with
-     * an expansion on the track_point association table.
-     * @var TrackPoint _objTrackPoint;
-     */
-    protected $_objTrackPoint;
-
-    /**
-     * Protected member variable that stores a reference to an array of TrackPoint objects
-     * (of type TrackPoint[]), if this Track object was restored with
-     * an ExpandAsArray on the track_point association table.
-     * @var TrackPoint[] _objTrackPointArray;
-     */
-    protected $_objTrackPointArray = null;
 
     /**
      * Protected array of virtual attributes for this object (e.g. extra/other calculated and/or non-object bound
@@ -143,10 +114,30 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     // PROTECTED MEMBER OBJECTS
     ///////////////////////////////
 
+    /**
+     * Protected member variable that contains the object pointed by the reference
+     * in the database column tourist_track.tourist_id.
+     *
+     * NOTE: Always use the Tourist property getter to correctly retrieve this Tourist object.
+     * (Because this class implements late binding, this variable reference MAY be null.)
+     * @var Tourist objTourist
+     */
+    protected $objTourist;
+
+    /**
+     * Protected member variable that contains the object pointed by the reference
+     * in the database column tourist_track.track_id.
+     *
+     * NOTE: Always use the Track property getter to correctly retrieve this Track object.
+     * (Because this class implements late binding, this variable reference MAY be null.)
+     * @var Track objTrack
+     */
+    protected $objTrack;
+
 
 
     /**
-     * Construct a new Track object.
+     * Construct a new TouristTrack object.
      * @param bool $blnInitialize
      */
     public function __construct($blnInitialize = true)
@@ -161,8 +152,10 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
      */
     public function initialize()
     {
-        $this->strName = Track::NAME_DEFAULT;
-        $this->__blnValid[self::NAME_FIELD] = true;
+        $this->intTouristId = TouristTrack::TOURIST_ID_DEFAULT;
+        $this->__blnValid[self::TOURIST_ID_FIELD] = true;
+        $this->intTrackId = TouristTrack::TRACK_ID_DEFAULT;
+        $this->__blnValid[self::TRACK_ID_FIELD] = true;
     }
 
    /**
@@ -211,10 +204,10 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     }
 
     /**
-     * Load a Track from PK Info
+     * Load a TouristTrack from PK Info
      * @param integer $intId
      * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
-     * @return Track
+     * @return TouristTrack
      */
     public static function load($intId, $objOptionalClauses = null)
     {
@@ -224,9 +217,9 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
         }
 
         // Use QuerySingle to Perform the Query
-        $objToReturn = Track::querySingle(
+        $objToReturn = TouristTrack::querySingle(
             QQ::AndCondition(
-                QQ::Equal(QQN::Track()->Id, $intId)
+                QQ::Equal(QQN::TouristTrack()->Id, $intId)
             ),
             $objOptionalClauses
         );
@@ -235,10 +228,10 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
 
     /**
-     * Load all Tracks
+     * Load all TouristTracks
      * @param iClause[]|null $objOptionalClauses additional optional iClause objects for this query
      * @throws Caller
-     * @return Track[]
+     * @return TouristTrack[]
      * @throws Caller
      */
     public static function loadAll($objOptionalClauses = null)
@@ -246,9 +239,9 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
         if (func_num_args() > 1) {
             throw new Caller("LoadAll must be called with an array of optional clauses as a single argument");
         }
-        // Call Track::queryArray to perform the LoadAll query
+        // Call TouristTrack::queryArray to perform the LoadAll query
         try {
-            return Track::queryArray(QQ::All(), $objOptionalClauses);
+            return TouristTrack::queryArray(QQ::All(), $objOptionalClauses);
         } catch (Caller $objExc) {
             $objExc->incrementOffset();
             throw $objExc;
@@ -256,23 +249,23 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     }
 
     /**
-     * Count all Tracks
+     * Count all TouristTracks
      * @return int
      */
     public static function countAll()
     {
-        // Call Track::queryCount to perform the CountAll query
-        return Track::queryCount(QQ::All());
+        // Call TouristTrack::queryCount to perform the CountAll query
+        return TouristTrack::queryCount(QQ::All());
     }
 
 
     /**
-     * Static Qcubed Query method to query for a single Track object.
+     * Static Qcubed Query method to query for a single TouristTrack object.
      * Offloads work to QModelTrait.trait.php
      * @param iCondition $objConditions any conditions on the query, itself
      * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
      * @param mixed[] $mixParameterArray a array of name-value pairs to perform PrepareStatement with
-     * @return Track the queried object
+     * @return TouristTrack the queried object
      */
     public static function querySingle(iCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null)
     {
@@ -280,12 +273,12 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     }
 
     /**
-     * Static Qcubed Query method to query for an array of Track objects.
+     * Static Qcubed Query method to query for an array of TouristTrack objects.
      * Offloads work to QModelTrait.trait.php
      * @param iCondition $objConditions any conditions on the query, itself
      * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
      * @param mixed[] $mixParameterArray a array of name-value pairs to perform PrepareStatement with
-     * @return Track[] the queried objects as an array
+     * @return TouristTrack[] the queried objects as an array
      */
     public static function queryArray(iCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null)
     {
@@ -297,11 +290,11 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
         if ($objConditions === null) {
             $objConditions = QQ::All();
         }
-        $clauses[] = QQ::Select(QQN::Track()->Id);
-        $objTracks = self::QueryArray($objConditions, $clauses);
+        $clauses[] = QQ::Select(QQN::TouristTrack()->Id);
+        $objTouristTracks = self::QueryArray($objConditions, $clauses);
         $pks = [];
-        foreach ($objTracks as $objTrack) {
-            $pks[] = $objTrack->intId;
+        foreach ($objTouristTracks as $objTouristTrack) {
+            $pks[] = $objTouristTrack->intId;
         }
         return $pks;
     }
@@ -328,7 +321,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     * Offloads the work to the ModelTrait
     *
     * @param $key
-    * @return Track the queried object
+    * @return TouristTrack the queried object
     */
     public static function getFromCache($key)
     {
@@ -337,9 +330,9 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
 
     /**
-     * Instantiate a Track from a Database Row.
+     * Instantiate a TouristTrack from a Database Row.
      * Takes in an optional strAliasPrefix, used in case another Object::instantiateDbRow
-     * is calling this Track::instantiateDbRow in order to perform
+     * is calling this TouristTrack::instantiateDbRow in order to perform
      * early binding on referenced objects.
      * @param \QCubed\Database\RowBase $objDbRow
      * @param string $strAliasPrefix
@@ -349,7 +342,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
      * @param boolean $blnCheckDuplicate Used by ExpandArray to indicate we should not create a new object if this is a duplicate of a previoius object
      * @param string $strParentExpansionKey If this is part of an expansion, indicates what the parent item is
      * @param mixed $objExpansionParent If this is part of an expansion, is the object corresponding to the key so that we can refer back to the parent object
-     * @return mixed Either a Track, or false to indicate the dbrow was used in an expansion, or null to indicate that this leaf is a duplicate.
+     * @return mixed Either a TouristTrack, or false to indicate the dbrow was used in an expansion, or null to indicate that this leaf is a duplicate.
     */
     public static function instantiateDbRow(
         \QCubed\Database\RowBase $objDbRow,
@@ -392,8 +385,8 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
         $objToReturn = static::getFromCache ($key);
         if (empty($objToReturn)) {
-            // Create a new instance of the Track object
-            $objToReturn = new Track(false);
+            // Create a new instance of the TouristTrack object
+            $objToReturn = new TouristTrack(false);
             $objToReturn->__blnRestored = true;
             $blnNoCache = false;
 
@@ -410,12 +403,28 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
             else {
                 $blnNoCache = true;
             }
-            $strAlias = $strAliasPrefix . 'name';
+            $strAlias = $strAliasPrefix . 'tourist_id';
             $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
             if (isset ($strColumnKeys[$strAliasName])) {
                 $mixVal = $strColumns[$strAliasName];
-                $objToReturn->strName = $mixVal;
-                $objToReturn->__blnValid[self::NAME_FIELD] = true;
+                if ($mixVal !== null) {
+                    $mixVal = (integer)$mixVal;
+                }
+                $objToReturn->intTouristId = $mixVal;
+                $objToReturn->__blnValid[self::TOURIST_ID_FIELD] = true;
+            }
+            else {
+                $blnNoCache = true;
+            }
+            $strAlias = $strAliasPrefix . 'track_id';
+            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+            if (isset ($strColumnKeys[$strAliasName])) {
+                $mixVal = $strColumns[$strAliasName];
+                if ($mixVal !== null) {
+                    $mixVal = (integer)$mixVal;
+                }
+                $objToReturn->intTrackId = $mixVal;
+                $objToReturn->__blnValid[self::TRACK_ID_FIELD] = true;
             }
             else {
                 $blnNoCache = true;
@@ -455,56 +464,42 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
         }
 
         if (!$strAliasPrefix)
-            $strAliasPrefix = 'track__';
+            $strAliasPrefix = 'tourist_track__';
 
-
-
-
-        // Check for TouristTrack Virtual Binding
-        $strAlias = $strAliasPrefix . 'touristtrack__id';
+        // Check for Tourist Early Binding
+        $strAlias = $strAliasPrefix . 'tourist_id__id';
         $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
-        $objExpansionNode = (empty($objExpansionAliasArray['touristtrack']) ? null : $objExpansionAliasArray['touristtrack']);
-        $blnExpanded = ($objExpansionNode && $objExpansionNode->ExpandAsArray);
-        if ($blnExpanded && null === $objToReturn->_objTouristTrackArray)
-            $objToReturn->_objTouristTrackArray = array();
         if (isset ($strColumns[$strAliasName])) {
-            if ($blnExpanded) {
-                $objToReturn->_objTouristTrackArray[] = TouristTrack::instantiateDbRow($objDbRow, $strAliasPrefix . 'touristtrack__', $objExpansionNode, null, $strColumnAliasArray, false, 'track_id', $objToReturn);
-            } elseif (is_null($objToReturn->_objTouristTrack)) {
-                $objToReturn->_objTouristTrack = TouristTrack::instantiateDbRow($objDbRow, $strAliasPrefix . 'touristtrack__', $objExpansionNode, null, $strColumnAliasArray, false, 'track_id', $objToReturn);
-            }
+            $objExpansionNode = (empty($objExpansionAliasArray['tourist_id']) ? null : $objExpansionAliasArray['tourist_id']);
+            $objToReturn->objTourist = Tourist::instantiateDbRow($objDbRow, $strAliasPrefix . 'tourist_id__', $objExpansionNode, null, $strColumnAliasArray, false, 'touristtrack', $objToReturn);
         }
-        elseif ($strParentExpansionKey === 'touristtrack' && $objExpansionParent) {
-            $objToReturn->_objTouristTrack = $objExpansionParent;
+        elseif ($strParentExpansionKey === 'tourist_id' && $objExpansionParent) {
+            $objToReturn->objTourist = $objExpansionParent;
         }
 
-        // Check for TrackPoint Virtual Binding
-        $strAlias = $strAliasPrefix . 'trackpoint__id';
+        // Check for Track Early Binding
+        $strAlias = $strAliasPrefix . 'track_id__id';
         $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
-        $objExpansionNode = (empty($objExpansionAliasArray['trackpoint']) ? null : $objExpansionAliasArray['trackpoint']);
-        $blnExpanded = ($objExpansionNode && $objExpansionNode->ExpandAsArray);
-        if ($blnExpanded && null === $objToReturn->_objTrackPointArray)
-            $objToReturn->_objTrackPointArray = array();
         if (isset ($strColumns[$strAliasName])) {
-            if ($blnExpanded) {
-                $objToReturn->_objTrackPointArray[] = TrackPoint::instantiateDbRow($objDbRow, $strAliasPrefix . 'trackpoint__', $objExpansionNode, null, $strColumnAliasArray, false, 'track_id', $objToReturn);
-            } elseif (is_null($objToReturn->_objTrackPoint)) {
-                $objToReturn->_objTrackPoint = TrackPoint::instantiateDbRow($objDbRow, $strAliasPrefix . 'trackpoint__', $objExpansionNode, null, $strColumnAliasArray, false, 'track_id', $objToReturn);
-            }
+            $objExpansionNode = (empty($objExpansionAliasArray['track_id']) ? null : $objExpansionAliasArray['track_id']);
+            $objToReturn->objTrack = Track::instantiateDbRow($objDbRow, $strAliasPrefix . 'track_id__', $objExpansionNode, null, $strColumnAliasArray, false, 'touristtrack', $objToReturn);
         }
-        elseif ($strParentExpansionKey === 'trackpoint' && $objExpansionParent) {
-            $objToReturn->_objTrackPoint = $objExpansionParent;
+        elseif ($strParentExpansionKey === 'track_id' && $objExpansionParent) {
+            $objToReturn->objTrack = $objExpansionParent;
         }
+
+
+
 
         return $objToReturn;
     }
 
     /**
-     * Instantiate an array of Tracks from a Database Result
+     * Instantiate an array of TouristTracks from a Database Result
      * @param \QCubed\Database\ResultBase $objDbResult
      * @param Node\NodeBase $objExpandAsArrayNode
      * @param string[] $strColumnAliasArray
-     * @return Track[]
+     * @return TouristTrack[]
      */
     public static function instantiateDbResult(\QCubed\Database\ResultBase $objDbResult, Node\NodeBase $objExpandAsArrayNode = null, $strColumnAliasArray = null)
     {
@@ -522,7 +517,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
             $objToReturn = array();
             $objPrevItemArray = array();
             while ($objDbRow = $objDbResult->GetNextRow()) {
-                $objItem = Track::instantiateDbRow($objDbRow, null, $objExpandAsArrayNode, $objPrevItemArray, $strColumnAliasArray);
+                $objItem = TouristTrack::instantiateDbRow($objDbRow, null, $objExpandAsArrayNode, $objPrevItemArray, $strColumnAliasArray);
                 if ($objItem) {
                     $objToReturn[] = $objItem;
                     $objPrevItemArray[$objItem->intId][] = $objItem;
@@ -531,7 +526,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
             }
         } else {
             while ($objDbRow = $objDbResult->GetNextRow())
-                $objToReturn[] = Track::instantiateDbRow($objDbRow, null, null, null, $strColumnAliasArray);
+                $objToReturn[] = TouristTrack::instantiateDbRow($objDbRow, null, null, null, $strColumnAliasArray);
         }
 
         return $objToReturn;
@@ -539,11 +534,11 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
 
     /**
-     * Instantiate a single Track object from a query cursor (e.g. a DB ResultSet).
+     * Instantiate a single TouristTrack object from a query cursor (e.g. a DB ResultSet).
      * Cursor is automatically moved to the "next row" of the result set.
      * Will return NULL if no cursor or if the cursor has no more rows in the resultset.
      * @param \QCubed\Database\ResultBase $objDbResult cursor resource
-     * @return Track next row resulting from the query
+     * @return TouristTrack next row resulting from the query
      */
     public static function instantiateCursor(\QCubed\Database\ResultBase $objDbResult)
     {
@@ -559,7 +554,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
         if (!$strColumnAliasArray) $strColumnAliasArray = array();
 
         // Load up the return result with a row and return it
-        return Track::instantiateDbRow($objDbRow, null, null, null, $strColumnAliasArray);
+        return TouristTrack::instantiateDbRow($objDbRow, null, null, null, $strColumnAliasArray);
     }
 
 
@@ -569,19 +564,89 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     ///////////////////////////////////////////////////
 
     /**
-     * Load a single Track object,
+     * Load a single TouristTrack object,
      * by Id Index(es)
      * @param integer $intId
      * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
-     * @return Track
+     * @return TouristTrack
     */
     public static function loadById($intId, $objOptionalClauses = null)
     {
-        return Track::QuerySingle(
+        return TouristTrack::QuerySingle(
             QQ::AndCondition(
-                QQ::Equal(QQN::Track()->Id, $intId)
+                QQ::Equal(QQN::TouristTrack()->Id, $intId)
             ),
             $objOptionalClauses
+        );
+    }
+
+    /**
+     * Load an array of TouristTrack objects,
+     * by TrackId Index(es)
+     * @param integer $intTrackId
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @throws Caller
+     * @return TouristTrack[]
+    */
+    public static function loadArrayByTrackId($intTrackId, $objOptionalClauses = null)
+    {
+        // Call TouristTrack::QueryArray to perform the LoadArrayByTrackId query
+        try {
+            return TouristTrack::QueryArray(
+                QQ::Equal(QQN::TouristTrack()->TrackId, $intTrackId),
+                $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Count TouristTracks
+     * by TrackId Index(es)
+     * @param integer $intTrackId
+     * @return int
+    */
+    public static function countByTrackId($intTrackId)
+    {
+        // Call TouristTrack::QueryCount to perform the CountByTrackId query
+        return TouristTrack::QueryCount(
+            QQ::Equal(QQN::TouristTrack()->TrackId, $intTrackId)
+        );
+    }
+
+    /**
+     * Load an array of TouristTrack objects,
+     * by TouristId Index(es)
+     * @param integer $intTouristId
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @throws Caller
+     * @return TouristTrack[]
+    */
+    public static function loadArrayByTouristId($intTouristId, $objOptionalClauses = null)
+    {
+        // Call TouristTrack::QueryArray to perform the LoadArrayByTouristId query
+        try {
+            return TouristTrack::QueryArray(
+                QQ::Equal(QQN::TouristTrack()->TouristId, $intTouristId),
+                $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Count TouristTracks
+     * by TouristId Index(es)
+     * @param integer $intTouristId
+     * @return int
+    */
+    public static function countByTouristId($intTouristId)
+    {
+        // Call TouristTrack::QueryCount to perform the CountByTouristId query
+        return TouristTrack::QueryCount(
+            QQ::Equal(QQN::TouristTrack()->TouristId, $intTouristId)
         );
     }
 
@@ -599,7 +664,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     
 
     /**
-    * Save this Track
+    * Save this TouristTrack
     * @param bool $blnForceInsert
     * @param bool $blnForceUpdate
     * @throws Caller
@@ -629,22 +694,24 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     }
 
     /**
-     * Insert into Track
+     * Insert into TouristTrack
      */
     protected function insert()
     {
         $mixToReturn = null;
-        $objDatabase = Track::GetDatabase();
+        $objDatabase = TouristTrack::GetDatabase();
 
         $objDatabase->NonQuery('
-            INSERT INTO `track` (
-							`name`
+            INSERT INTO `tourist_track` (
+							`tourist_id`,
+							`track_id`
 						) VALUES (
-							' . $objDatabase->SqlVariable($this->strName) . '
+							' . $objDatabase->SqlVariable($this->intTouristId) . ',
+							' . $objDatabase->SqlVariable($this->intTrackId) . '
 						)
         ');
         // Update Identity column and return its value
-        $mixToReturn = $this->intId = $objDatabase->InsertId('track', 'id');
+        $mixToReturn = $this->intId = $objDatabase->InsertId('tourist_track', 'id');
         $this->__blnValid[self::ID_FIELD] = true;
 
 
@@ -654,7 +721,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     }
 
    /**
-    * Update this Track
+    * Update this TouristTrack
     * @param bool $blnForceUpdate
     */
     protected function update($blnForceUpdate = false)
@@ -669,7 +736,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
         $strSql = '
         UPDATE
-            `track`
+            `tourist_track`
         SET
         ' . $strValues . '
 
@@ -689,9 +756,14 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 		$values = [];
 		$objDatabase = static::getDatabase();
 
-		if (isset($this->__blnDirty[self::NAME_FIELD])) {
-			$strCol = '`name`';
-			$strValue = $objDatabase->sqlVariable($this->strName);
+		if (isset($this->__blnDirty[self::TOURIST_ID_FIELD])) {
+			$strCol = '`tourist_id`';
+			$strValue = $objDatabase->sqlVariable($this->intTouristId);
+			$values[] = $strCol . ' = ' . $strValue;
+		}
+		if (isset($this->__blnDirty[self::TRACK_ID_FIELD])) {
+			$strCol = '`track_id`';
+			$strValue = $objDatabase->sqlVariable($this->intTrackId);
 			$values[] = $strCol . ' = ' . $strValue;
 		}
 		if ($values) {
@@ -705,23 +777,23 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
 
     /**
-     * Delete this Track
+     * Delete this TouristTrack
      * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
      * @return void
      */
     public function delete()
     {
         if ((is_null($this->intId)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Cannot delete this Track with an unset primary key.');
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Cannot delete this TouristTrack with an unset primary key.');
 
         // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
+        $objDatabase = TouristTrack::GetDatabase();
 
 
         // Perform the SQL Query
         $objDatabase->NonQuery('
             DELETE FROM
-                `track`
+                `tourist_track`
             WHERE
                 `id` = ' . $objDatabase->SqlVariable($this->intId) . '');
 
@@ -730,35 +802,35 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     }
 
     /**
-     * Delete all Tracks
+     * Delete all TouristTracks
      * @return void
      */
     public static function deleteAll()
     {
         // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
+        $objDatabase = TouristTrack::GetDatabase();
 
         // Perform the Query
         $objDatabase->NonQuery('
             DELETE FROM
-                `track`');
+                `tourist_track`');
 
         static::ClearCache();
         static::BroadcastDeleteAll();
     }
 
     /**
-     * Truncate track table
+     * Truncate tourist_track table
      * @return void
      */
     public static function truncate()
     {
         // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
+        $objDatabase = TouristTrack::GetDatabase();
 
         // Perform the Query
         $objDatabase->NonQuery('
-            TRUNCATE `track`');
+            TRUNCATE `tourist_track`');
 
         static::ClearCache();
         static::BroadcastDeleteAll();
@@ -766,7 +838,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
     
     /**
-	 * Reload this Track from the database.
+	 * Reload this TouristTrack from the database.
      * @param iClause[]|null $clauses
      * @throws Caller
 	 * @return void
@@ -775,7 +847,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     {
 		// Make sure we are actually Restored from the database
 		if (!$this->__blnRestored)
-			throw new Caller('Cannot call Reload() on a new, unsaved Track object.');
+			throw new Caller('Cannot call Reload() on a new, unsaved TouristTrack object.');
 
 		// throw away all previous state of the object
 		$this->DeleteFromCache();
@@ -783,13 +855,19 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 		$this->__blnDirty = null;
 
 		// Reload the Object
-		$objReloaded = Track::Load($this->intId, $clauses);
+		$objReloaded = TouristTrack::Load($this->intId, $clauses);
 
 		// Update $this's local variables to match
 		$this->__blnValid[self::ID_FIELD] = true;
-		if (isset($objReloaded->__blnValid[self::NAME_FIELD])) {
-			$this->strName = $objReloaded->strName;
-			$this->__blnValid[self::NAME_FIELD] = true;
+		if (isset($objReloaded->__blnValid[self::TOURIST_ID_FIELD])) {
+			$this->intTouristId = $objReloaded->intTouristId;
+			$this->objTourist = $objReloaded->objTourist;
+			$this->__blnValid[self::TOURIST_ID_FIELD] = true;
+		}
+		if (isset($objReloaded->__blnValid[self::TRACK_ID_FIELD])) {
+			$this->intTrackId = $objReloaded->intTrackId;
+			$this->objTrack = $objReloaded->objTrack;
+			$this->__blnValid[self::TRACK_ID_FIELD] = true;
 		}
 	}
     ////////////////////
@@ -797,17 +875,17 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
     ////////////////////
     
     /**
-     *  Return an array of Tracks keyed by the unique Id property.
-     *	@param Track[]
-     *	@return Track[]
+     *  Return an array of TouristTracks keyed by the unique Id property.
+     *	@param TouristTrack[]
+     *	@return TouristTrack[]
      **/
-    public static function keyTracksById($tracks) {
-        if (empty($tracks)) {
-            return $tracks;
+    public static function keyTouristTracksById($touristtracks) {
+        if (empty($touristtracks)) {
+            return $touristtracks;
         }
         $ret = [];
-        foreach ($tracks as $track) {
-            $ret[$track->intId] = $track;
+        foreach ($touristtracks as $touristtrack) {
+            $ret[$touristtrack->intId] = $touristtrack;
         }
         return $ret;
     }
@@ -832,39 +910,158 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
 
    /**
-	* Gets the value of strName 
+	* Gets the value of intTouristId 
 	* @throws Caller
-	* @return string
+	* @return integer
 	*/
-	public function getName()
+	public function getTouristId()
     {
-		if ($this->__blnRestored && empty($this->__blnValid[self::NAME_FIELD])) {
-			throw new Caller("Name was not selected in the most recent query and is not valid.");
+		if ($this->__blnRestored && empty($this->__blnValid[self::TOURIST_ID_FIELD])) {
+			throw new Caller("TouristId was not selected in the most recent query and is not valid.");
 		}
-		return $this->strName;
+		return $this->intTouristId;
 	}
 
+
+    /**
+     * Gets the value of the Tourist object referenced by intTouristId 
+     * If the object is not loaded, will load the object (caching it) before returning it.
+     * @throws Caller
+     * @return Tourist
+     */
+     public function getTourist()
+     {
+ 		if ($this->__blnRestored && empty($this->__blnValid[self::TOURIST_ID_FIELD])) {
+			throw new Caller("TouristId was not selected in the most recent query and is not valid.");
+		}
+        if ((!$this->objTourist) && (!is_null($this->intTouristId))) {
+            $this->objTourist = Tourist::Load($this->intTouristId);
+        }
+        return $this->objTourist;
+     }
 
 
 
    /**
-	* Sets the value of strName 
+	* Sets the value of intTouristId 
 	* Returns $this to allow chaining of setters.
-	* @param string|null $strName
+	* @param integer|null $intTouristId
     * @throws Caller
-	* @return Track
+	* @return TouristTrack
 	*/
-	public function setName($strName)
+	public function setTouristId($intTouristId)
     {
-		$strName = Type::Cast($strName, QCubed\Type::STRING);
+		$intTouristId = Type::Cast($intTouristId, QCubed\Type::INTEGER);
 
-		if ($this->strName !== $strName) {
-			$this->strName = $strName;
-			$this->__blnDirty[self::NAME_FIELD] = true;
+		if ($this->intTouristId !== $intTouristId) {
+			$this->objTourist = null; // remove the associated object
+			$this->intTouristId = $intTouristId;
+			$this->__blnDirty[self::TOURIST_ID_FIELD] = true;
 		}
-		$this->__blnValid[self::NAME_FIELD] = true;
+		$this->__blnValid[self::TOURIST_ID_FIELD] = true;
 		return $this; // allows chaining
 	}
+
+    /**
+     * Sets the value of the Tourist object referenced by intTouristId 
+     * @param null|Tourist $objTourist
+     * @throws Caller
+     * @return TouristTrack
+     */
+    public function setTourist($objTourist) {
+        if (is_null($objTourist)) {
+            $this->setTouristId(null);
+        } else {
+            $objTourist = Type::Cast($objTourist, 'Tourist');
+
+            // Make sure its a SAVED Tourist object
+            if (is_null($objTourist->Id)) {
+                throw new Caller('Unable to set an unsaved Tourist for this TouristTrack');
+            }
+
+            // Update Local Member Variables
+            $this->setTouristId($objTourist->getId());
+            $this->objTourist = $objTourist;
+        }
+        return $this;
+    }
+
+   /**
+	* Gets the value of intTrackId 
+	* @throws Caller
+	* @return integer
+	*/
+	public function getTrackId()
+    {
+		if ($this->__blnRestored && empty($this->__blnValid[self::TRACK_ID_FIELD])) {
+			throw new Caller("TrackId was not selected in the most recent query and is not valid.");
+		}
+		return $this->intTrackId;
+	}
+
+
+    /**
+     * Gets the value of the Track object referenced by intTrackId 
+     * If the object is not loaded, will load the object (caching it) before returning it.
+     * @throws Caller
+     * @return Track
+     */
+     public function getTrack()
+     {
+ 		if ($this->__blnRestored && empty($this->__blnValid[self::TRACK_ID_FIELD])) {
+			throw new Caller("TrackId was not selected in the most recent query and is not valid.");
+		}
+        if ((!$this->objTrack) && (!is_null($this->intTrackId))) {
+            $this->objTrack = Track::Load($this->intTrackId);
+        }
+        return $this->objTrack;
+     }
+
+
+
+   /**
+	* Sets the value of intTrackId 
+	* Returns $this to allow chaining of setters.
+	* @param integer|null $intTrackId
+    * @throws Caller
+	* @return TouristTrack
+	*/
+	public function setTrackId($intTrackId)
+    {
+		$intTrackId = Type::Cast($intTrackId, QCubed\Type::INTEGER);
+
+		if ($this->intTrackId !== $intTrackId) {
+			$this->objTrack = null; // remove the associated object
+			$this->intTrackId = $intTrackId;
+			$this->__blnDirty[self::TRACK_ID_FIELD] = true;
+		}
+		$this->__blnValid[self::TRACK_ID_FIELD] = true;
+		return $this; // allows chaining
+	}
+
+    /**
+     * Sets the value of the Track object referenced by intTrackId 
+     * @param null|Track $objTrack
+     * @throws Caller
+     * @return TouristTrack
+     */
+    public function setTrack($objTrack) {
+        if (is_null($objTrack)) {
+            $this->setTrackId(null);
+        } else {
+            $objTrack = Type::Cast($objTrack, 'Track');
+
+            // Make sure its a SAVED Track object
+            if (is_null($objTrack->Id)) {
+                throw new Caller('Unable to set an unsaved Track for this TouristTrack');
+            }
+
+            // Update Local Member Variables
+            $this->setTrackId($objTrack->getId());
+            $this->objTrack = $objTrack;
+        }
+        return $this;
+    }
 
 
     /**
@@ -886,12 +1083,6 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
 
 
-   		// Reverse references
-		$objCopy->_objTouristTrack = null;
-		$objCopy->_objTouristTrackArray = null;
-		$objCopy->_objTrackPoint = null;
-		$objCopy->_objTrackPointArray = null;
-
 		return $objCopy;
 	}
 
@@ -903,7 +1094,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 	protected static function broadcastInsert($pk)
     {
         if (static::$blnWatchChanges) {
-            \QCubed\Project\Watcher\Watcher::markTableModified (static::getDatabase()->Database, 'track');
+            \QCubed\Project\Watcher\Watcher::markTableModified (static::getDatabase()->Database, 'tourist_track');
         }
 	}
 
@@ -916,7 +1107,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 	protected static function broadcastUpdate($pk, $fields)
     {
         if (static::$blnWatchChanges) {
-            \QCubed\Project\Watcher\Watcher::markTableModified (static::getDatabase()->Database, 'track');
+            \QCubed\Project\Watcher\Watcher::markTableModified (static::getDatabase()->Database, 'tourist_track');
         }
 	}
 
@@ -927,7 +1118,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 	protected static function broadcastDelete($pk)
     {
         if (static::$blnWatchChanges) {
-            \QCubed\Project\Watcher\Watcher::markTableModified (static::getDatabase()->Database, 'track');
+            \QCubed\Project\Watcher\Watcher::markTableModified (static::getDatabase()->Database, 'tourist_track');
         }
 	}
 
@@ -937,7 +1128,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 	protected static function broadcastDeleteAll()
     {
         if (static::$blnWatchChanges) {
-            \QCubed\Project\Watcher\Watcher::markTableModified (static::getDatabase()->Database, 'track');
+            \QCubed\Project\Watcher\Watcher::markTableModified (static::getDatabase()->Database, 'tourist_track');
         }
 	}
 
@@ -990,42 +1181,6 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
             // Virtual Object References (Many to Many and Reverse References)
             // (If restored via a "Many-to" expansion)
             ////////////////////////////
-
-            case 'TouristTrack':
-            case '_TouristTrack':
-                /**
-                 * Gets the value of the protected _objTouristTrack (Read-Only)
-                 * if set due to an expansion on the tourist_track.track_id reverse relationship
-                 * @return TouristTrack
-                 */
-                return $this->_objTouristTrack;
-
-            case 'TouristTrackArray':
-            case '_TouristTrackArray':
-                /**
-                 * Gets the value of the protected _objTouristTrackArray (Read-Only)
-                 * if set due to an ExpandAsArray on the tourist_track.track_id reverse relationship
-                 * @return TouristTrack[]
-                 */
-                return $this->_objTouristTrackArray;
-
-            case 'TrackPoint':
-            case '_TrackPoint':
-                /**
-                 * Gets the value of the protected _objTrackPoint (Read-Only)
-                 * if set due to an expansion on the track_point.track_id reverse relationship
-                 * @return TrackPoint
-                 */
-                return $this->_objTrackPoint;
-
-            case 'TrackPointArray':
-            case '_TrackPointArray':
-                /**
-                 * Gets the value of the protected _objTrackPointArray (Read-Only)
-                 * if set due to an ExpandAsArray on the track_point.track_id reverse relationship
-                 * @return TrackPoint[]
-                 */
-                return $this->_objTrackPointArray;
 
 
             case '__Restored':
@@ -1111,324 +1266,6 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
 
 
-    // Related Objects' Methods for TouristTrack
-    //-------------------------------------------------------------------
-
-    /**
-     * Gets all associated TouristTracks as an array of TouristTrack objects
-     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
-     * @return TouristTrack[]
-     * @throws Caller
-     */
-    public function getTouristTrackArray($objOptionalClauses = null)
-    {
-        if ((is_null($this->intId)))
-            return array();
-
-        try {
-            return TouristTrack::LoadArrayByTrackId($this->intId, $objOptionalClauses);
-        } catch (Caller $objExc) {
-            $objExc->incrementOffset();
-            throw $objExc;
-        }
-    }
-
-    /**
-     * Counts all associated TouristTracks
-     * @return int
-    */
-    public function countTouristTracks()
-    {
-        if ((is_null($this->intId)))
-            return 0;
-
-        return TouristTrack::CountByTrackId($this->intId);
-    }
-
-    /**
-     * Associates a TouristTrack
-     * @param TouristTrack $objTouristTrack
-     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
-     * @return void
-    */
-    public function associateTouristTrack(TouristTrack $objTouristTrack)
-    {
-        if ((is_null($this->intId)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTouristTrack on this unsaved Track.');
-        if ((is_null($objTouristTrack->Id)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTouristTrack on this Track with an unsaved TouristTrack.');
-
-        // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
-
-        // Perform the SQL Query
-        $objDatabase->NonQuery('
-            UPDATE
-                `tourist_track`
-            SET
-                `track_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-            WHERE
-                `id` = ' . $objDatabase->SqlVariable($objTouristTrack->Id) . '
-        ');
-    }
-
-    /**
-     * Unassociates a TouristTrack
-     * @param TouristTrack $objTouristTrack
-     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
-     * @return void
-    */
-    public function unassociateTouristTrack(TouristTrack $objTouristTrack)
-    {
-        if ((is_null($this->intId)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this unsaved Track.');
-        if ((is_null($objTouristTrack->Id)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this Track with an unsaved TouristTrack.');
-
-        // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
-
-        // Perform the SQL Query
-        $objDatabase->NonQuery('
-            UPDATE
-                `tourist_track`
-            SET
-                `track_id` = null
-            WHERE
-                `id` = ' . $objDatabase->SqlVariable($objTouristTrack->Id) . ' AND
-                `track_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-        ');
-    }
-
-    /**
-     * Unassociates all TouristTracks
-     * @return void
-    */
-    public function unassociateAllTouristTracks()
-    {
-        if ((is_null($this->intId)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this unsaved Track.');
-
-        // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
-
-        // Perform the SQL Query
-        $objDatabase->NonQuery('
-            UPDATE
-                `tourist_track`
-            SET
-                `track_id` = null
-            WHERE
-                `track_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-        ');
-    }
-
-    /**
-     * Deletes an associated TouristTrack
-     * @param TouristTrack $objTouristTrack
-     * @return void
-    */
-    public function deleteAssociatedTouristTrack(TouristTrack $objTouristTrack)
-    {
-        if ((is_null($this->intId)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this unsaved Track.');
-        if ((is_null($objTouristTrack->Id)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this Track with an unsaved TouristTrack.');
-
-        // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
-
-        // Perform the SQL Query
-        $objDatabase->NonQuery('
-            DELETE FROM
-                `tourist_track`
-            WHERE
-                `id` = ' . $objDatabase->SqlVariable($objTouristTrack->Id) . ' AND
-                `track_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-        ');
-    }
-
-    /**
-     * Deletes all associated TouristTracks
-     * @return void
-    */
-    public function deleteAllTouristTracks()
-    {
-        if ((is_null($this->intId)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this unsaved Track.');
-
-        // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
-
-        // Perform the SQL Query
-        $objDatabase->NonQuery('
-            DELETE FROM
-                `tourist_track`
-            WHERE
-                `track_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-        ');
-    }
-
-
-    // Related Objects' Methods for TrackPoint
-    //-------------------------------------------------------------------
-
-    /**
-     * Gets all associated TrackPoints as an array of TrackPoint objects
-     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
-     * @return TrackPoint[]
-     * @throws Caller
-     */
-    public function getTrackPointArray($objOptionalClauses = null)
-    {
-        if ((is_null($this->intId)))
-            return array();
-
-        try {
-            return TrackPoint::LoadArrayByTrackId($this->intId, $objOptionalClauses);
-        } catch (Caller $objExc) {
-            $objExc->incrementOffset();
-            throw $objExc;
-        }
-    }
-
-    /**
-     * Counts all associated TrackPoints
-     * @return int
-    */
-    public function countTrackPoints()
-    {
-        if ((is_null($this->intId)))
-            return 0;
-
-        return TrackPoint::CountByTrackId($this->intId);
-    }
-
-    /**
-     * Associates a TrackPoint
-     * @param TrackPoint $objTrackPoint
-     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
-     * @return void
-    */
-    public function associateTrackPoint(TrackPoint $objTrackPoint)
-    {
-        if ((is_null($this->intId)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTrackPoint on this unsaved Track.');
-        if ((is_null($objTrackPoint->Id)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTrackPoint on this Track with an unsaved TrackPoint.');
-
-        // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
-
-        // Perform the SQL Query
-        $objDatabase->NonQuery('
-            UPDATE
-                `track_point`
-            SET
-                `track_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-            WHERE
-                `id` = ' . $objDatabase->SqlVariable($objTrackPoint->Id) . '
-        ');
-    }
-
-    /**
-     * Unassociates a TrackPoint
-     * @param TrackPoint $objTrackPoint
-     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
-     * @return void
-    */
-    public function unassociateTrackPoint(TrackPoint $objTrackPoint)
-    {
-        if ((is_null($this->intId)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTrackPoint on this unsaved Track.');
-        if ((is_null($objTrackPoint->Id)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTrackPoint on this Track with an unsaved TrackPoint.');
-
-        // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
-
-        // Perform the SQL Query
-        $objDatabase->NonQuery('
-            UPDATE
-                `track_point`
-            SET
-                `track_id` = null
-            WHERE
-                `id` = ' . $objDatabase->SqlVariable($objTrackPoint->Id) . ' AND
-                `track_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-        ');
-    }
-
-    /**
-     * Unassociates all TrackPoints
-     * @return void
-    */
-    public function unassociateAllTrackPoints()
-    {
-        if ((is_null($this->intId)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTrackPoint on this unsaved Track.');
-
-        // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
-
-        // Perform the SQL Query
-        $objDatabase->NonQuery('
-            UPDATE
-                `track_point`
-            SET
-                `track_id` = null
-            WHERE
-                `track_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-        ');
-    }
-
-    /**
-     * Deletes an associated TrackPoint
-     * @param TrackPoint $objTrackPoint
-     * @return void
-    */
-    public function deleteAssociatedTrackPoint(TrackPoint $objTrackPoint)
-    {
-        if ((is_null($this->intId)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTrackPoint on this unsaved Track.');
-        if ((is_null($objTrackPoint->Id)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTrackPoint on this Track with an unsaved TrackPoint.');
-
-        // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
-
-        // Perform the SQL Query
-        $objDatabase->NonQuery('
-            DELETE FROM
-                `track_point`
-            WHERE
-                `id` = ' . $objDatabase->SqlVariable($objTrackPoint->Id) . ' AND
-                `track_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-        ');
-    }
-
-    /**
-     * Deletes all associated TrackPoints
-     * @return void
-    */
-    public function deleteAllTrackPoints()
-    {
-        if ((is_null($this->intId)))
-            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTrackPoint on this unsaved Track.');
-
-        // Get the Database Object for this Class
-        $objDatabase = Track::GetDatabase();
-
-        // Perform the SQL Query
-        $objDatabase->NonQuery('
-            DELETE FROM
-                `track_point`
-            WHERE
-                `track_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-        ');
-    }
-
-
     
     ///////////////////////////////
     // METHODS TO EXTRACT INFO ABOUT THE CLASS
@@ -1440,7 +1277,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
      */
     public static function getTableName()
     {
-        return "track";
+        return "tourist_track";
     }
 
     /**
@@ -1466,11 +1303,11 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
     /**
      * Return the base node corresponding to this table.
-     * @return NodeTrack
+     * @return NodeTouristTrack
      */
     public static function baseNode()
     {
-        return QQN::Track();
+        return QQN::TouristTrack();
     }
 
     
@@ -1480,9 +1317,10 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
     public static function getSoapComplexTypeXml()
     {
-        $strToReturn = '<complexType name="Track"><sequence>';
+        $strToReturn = '<complexType name="TouristTrack"><sequence>';
         $strToReturn .= '<element name="Id" type="xsd:int"/>';
-        $strToReturn .= '<element name="Name" type="xsd:string"/>';
+        $strToReturn .= '<element name="Tourist" type="xsd1:Tourist"/>';
+        $strToReturn .= '<element name="Track" type="xsd1:Track"/>';
         $strToReturn .= '<element name="__blnRestored" type="xsd:boolean"/>';
         $strToReturn .= '</sequence></complexType>';
         return $strToReturn;
@@ -1490,8 +1328,10 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
     public static function alterSoapComplexTypeArray(&$strComplexTypeArray)
     {
-        if (!array_key_exists('Track', $strComplexTypeArray)) {
-            $strComplexTypeArray['Track'] = Track::GetSoapComplexTypeXml();
+        if (!array_key_exists('TouristTrack', $strComplexTypeArray)) {
+            $strComplexTypeArray['TouristTrack'] = TouristTrack::GetSoapComplexTypeXml();
+            Tourist::AlterSoapComplexTypeArray($strComplexTypeArray);
+            Track::AlterSoapComplexTypeArray($strComplexTypeArray);
         }
     }
 
@@ -1500,18 +1340,22 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
         $objArrayToReturn = array();
 
         foreach ($objSoapArray as $objSoapObject)
-            array_push($objArrayToReturn, Track::GetObjectFromSoapObject($objSoapObject));
+            array_push($objArrayToReturn, TouristTrack::GetObjectFromSoapObject($objSoapObject));
 
         return $objArrayToReturn;
     }
 
     public static function getObjectFromSoapObject($objSoapObject)
     {
-        $objToReturn = new Track();
+        $objToReturn = new TouristTrack();
         if (property_exists($objSoapObject, 'Id'))
             $objToReturn->intId = $objSoapObject->Id;
-        if (property_exists($objSoapObject, 'Name'))
-            $objToReturn->strName = $objSoapObject->Name;
+        if ((property_exists($objSoapObject, 'Tourist')) &&
+            ($objSoapObject->Tourist))
+            $objToReturn->Tourist = Tourist::GetObjectFromSoapObject($objSoapObject->Tourist);
+        if ((property_exists($objSoapObject, 'Track')) &&
+            ($objSoapObject->Track))
+            $objToReturn->Track = Track::GetObjectFromSoapObject($objSoapObject->Track);
         if (property_exists($objSoapObject, '__blnRestored'))
             $objToReturn->__blnRestored = $objSoapObject->__blnRestored;
         return $objToReturn;
@@ -1525,13 +1369,21 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
         $objArrayToReturn = array();
 
         foreach ($objArray as $objObject)
-            array_push($objArrayToReturn, Track::GetSoapObjectFromObject($objObject, true));
+            array_push($objArrayToReturn, TouristTrack::GetSoapObjectFromObject($objObject, true));
 
         return unserialize(serialize($objArrayToReturn));
     }
 
     public static function getSoapObjectFromObject($objObject, $blnBindRelatedObjects)
     {
+        if ($objObject->objTourist)
+            $objObject->objTourist = Tourist::GetSoapObjectFromObject($objObject->objTourist, false);
+        else if (!$blnBindRelatedObjects)
+            $objObject->intTouristId = null;
+        if ($objObject->objTrack)
+            $objObject->objTrack = Track::GetSoapObjectFromObject($objObject->objTrack, false);
+        else if (!$blnBindRelatedObjects)
+            $objObject->intTrackId = null;
         return $objObject;
     }
 
@@ -1546,8 +1398,11 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
         if (isset($this->__blnValid[self::ID_FIELD])) {
             $iArray['Id'] = $this->intId;
         }
-        if (isset($this->__blnValid[self::NAME_FIELD])) {
-            $iArray['Name'] = $this->strName;
+        if (isset($this->__blnValid[self::TOURIST_ID_FIELD])) {
+            $iArray['TouristId'] = $this->intTouristId;
+        }
+        if (isset($this->__blnValid[self::TRACK_ID_FIELD])) {
+            $iArray['TrackId'] = $this->intTrackId;
         }
         return new ArrayIterator($iArray);
     }
@@ -1583,7 +1438,7 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
      * fields are valid, and QQ::Expand to control embedded objects.
      * WARNING: If an object is found in short-term cache, it will be used instead of the queried object and may
      * contain data fields that were fetched earlier. To really control what fields exist in this object, preceed
-     * any query calls (like Load or QueryArray), with a call to Track::ClearCache()
+     * any query calls (like Load or QueryArray), with a call to TouristTrack::ClearCache()
      *
      * @return array An array that is json serializable
      */
@@ -1593,18 +1448,15 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
         if (isset($this->__blnValid[self::ID_FIELD])) {
             $a['id'] = $this->intId;
         }
-        if (isset($this->__blnValid[self::NAME_FIELD])) {
-            $a['name'] = $this->strName;
+        if (isset($this->objTourist)) {
+            $a['tourist'] = $this->objTourist;
+        } elseif (isset($this->__blnValid[self::TOURIST_ID_FIELD])) {
+            $a['tourist_id'] = $this->intTouristId;
         }
-        if (isset($this->_objTouristTrack)) {
-            $a['tourist_track'] = $this->_objTouristTrack;
-        } elseif (isset($this->_objTouristTrackArray)) {
-            $a['tourist_track'] = $this->_objTouristTrackArray;
-        }
-        if (isset($this->_objTrackPoint)) {
-            $a['track_point'] = $this->_objTrackPoint;
-        } elseif (isset($this->_objTrackPointArray)) {
-            $a['track_point'] = $this->_objTrackPointArray;
+        if (isset($this->objTrack)) {
+            $a['track'] = $this->objTrack;
+        } elseif (isset($this->__blnValid[self::TRACK_ID_FIELD])) {
+            $a['track_id'] = $this->intTrackId;
         }
         return $a;
     }
@@ -1623,15 +1475,16 @@ abstract class TrackGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
 /**
  * @property-read Node\Column $Id
- * @property-read Node\Column $Name
- * @property-read ReverseReferenceNodeTouristTrack $TouristTrack
- * @property-read ReverseReferenceNodeTrackPoint $TrackPoint
+ * @property-read Node\Column $TouristId
+ * @property-read NodeTourist $Tourist
+ * @property-read Node\Column $TrackId
+ * @property-read NodeTrack $Track
  * @property-read Node\Column $_PrimaryKeyNode
  **/
-class NodeTrack extends Node\Table {
-    protected $strTableName = 'track';
+class NodeTouristTrack extends Node\Table {
+    protected $strTableName = 'tourist_track';
     protected $strPrimaryKey = 'id';
-    protected $strClassName = 'Track';
+    protected $strClassName = 'TouristTrack';
 
     /**
     * @return array
@@ -1639,7 +1492,8 @@ class NodeTrack extends Node\Table {
     public function fields() {
         return [
             "id",
-            "name",
+            "tourist_id",
+            "track_id",
         ];
     }
 
@@ -1670,12 +1524,14 @@ class NodeTrack extends Node\Table {
         switch ($strName) {
             case 'Id':
                 return new Node\Column('id', 'Id', 'Integer', $this);
-            case 'Name':
-                return new Node\Column('name', 'Name', 'VarChar', $this);
-            case 'TouristTrack':
-                return new ReverseReferenceNodeTouristTrack($this, 'touristtrack', \QCubed\Type::REVERSE_REFERENCE, 'track_id', 'TouristTrack');
-            case 'TrackPoint':
-                return new ReverseReferenceNodeTrackPoint($this, 'trackpoint', \QCubed\Type::REVERSE_REFERENCE, 'track_id', 'TrackPoint');
+            case 'TouristId':
+                return new Node\Column('tourist_id', 'TouristId', 'Integer', $this);
+            case 'Tourist':
+                return new NodeTourist('tourist_id', 'Tourist', 'Integer', $this);
+            case 'TrackId':
+                return new Node\Column('track_id', 'TrackId', 'Integer', $this);
+            case 'Track':
+                return new NodeTrack('track_id', 'Track', 'Integer', $this);
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);
@@ -1692,16 +1548,17 @@ class NodeTrack extends Node\Table {
 
 /**
  * @property-read Node\Column $Id
- * @property-read Node\Column $Name
- * @property-read ReverseReferenceNodeTouristTrack $TouristTrack
- * @property-read ReverseReferenceNodeTrackPoint $TrackPoint
+ * @property-read Node\Column $TouristId
+ * @property-read NodeTourist $Tourist
+ * @property-read Node\Column $TrackId
+ * @property-read NodeTrack $Track
 
  * @property-read Node\Column $_PrimaryKeyNode
  **/
-class ReverseReferenceNodeTrack extends Node\ReverseReference {
-    protected $strTableName = 'track';
+class ReverseReferenceNodeTouristTrack extends Node\ReverseReference {
+    protected $strTableName = 'tourist_track';
     protected $strPrimaryKey = 'id';
-    protected $strClassName = 'Track';
+    protected $strClassName = 'TouristTrack';
 
     /**
     * @return array
@@ -1709,7 +1566,8 @@ class ReverseReferenceNodeTrack extends Node\ReverseReference {
     public function fields() {
         return [
             "id",
-            "name",
+            "tourist_id",
+            "track_id",
         ];
     }
 
@@ -1732,12 +1590,14 @@ class ReverseReferenceNodeTrack extends Node\ReverseReference {
         switch ($strName) {
             case 'Id':
                 return new Node\Column('id', 'Id', 'Integer', $this);
-            case 'Name':
-                return new Node\Column('name', 'Name', 'VarChar', $this);
-            case 'TouristTrack':
-                return new ReverseReferenceNodeTouristTrack($this, 'touristtrack', \QCubed\Type::REVERSE_REFERENCE, 'track_id', 'TouristTrack');
-            case 'TrackPoint':
-                return new ReverseReferenceNodeTrackPoint($this, 'trackpoint', \QCubed\Type::REVERSE_REFERENCE, 'track_id', 'TrackPoint');
+            case 'TouristId':
+                return new Node\Column('tourist_id', 'TouristId', 'Integer', $this);
+            case 'Tourist':
+                return new NodeTourist('tourist_id', 'Tourist', 'Integer', $this);
+            case 'TrackId':
+                return new Node\Column('track_id', 'TrackId', 'Integer', $this);
+            case 'Track':
+                return new NodeTrack('track_id', 'Track', 'Integer', $this);
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);

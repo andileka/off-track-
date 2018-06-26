@@ -22,9 +22,9 @@
 		 * @return string a nicely formatted string representation of this object
 		 */
 		public function __toString() {
-			return (string) ($this->Lat . ','.$this->Long);
+			return (string) ($this->Long . ','.$this->Lat); //mapbox reverses them
 		}
-
+		
 		public static function Create($lat, $long, $height=null) {
 			$position = new Position();
 			$position->Lat = $lat;

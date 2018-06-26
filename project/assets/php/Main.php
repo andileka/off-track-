@@ -119,7 +119,7 @@ class Main extends \QCubed\Project\Control\FormBase {
 		
 		// Load class into the AppController
 		$this->pnlAppController			= new $strClassName($this);
-
+		$this->pnlAppController->addCssFile(__VIRTUAL_DIRECTORY__."/project/assets/css/datatables.css");
 		if(isset($_SESSION['LANGUAGE'])) {
 			$this->lang = $_SESSION['LANGUAGE'];
 		}

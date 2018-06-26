@@ -50,6 +50,8 @@ class EventListGen extends \QCubed\Project\Control\DataGrid
 	public $colType;
 	/** @var NodeColumn */
 	public $colDatetime;
+	/** @var NodeColumn */
+	public $colPosition;
 
 
 	/**
@@ -85,6 +87,7 @@ class EventListGen extends \QCubed\Project\Control\DataGrid
 		$this->colDevice = $this->createNodeColumn("Device", QQN::Event()->Device);
 		$this->colType = $this->createNodeColumn("Type", QQN::Event()->Type);
 		$this->colDatetime = $this->createNodeColumn("Datetime", QQN::Event()->Datetime);
+		$this->colPosition = $this->createNodeColumn("Position", QQN::Event()->Position);
 	}
 
    /**

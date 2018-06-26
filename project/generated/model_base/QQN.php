@@ -65,6 +65,12 @@
 			return new NodeTourist('tourist', null, null);
 		}
 		/**
+		 * @return NodeTouristTrack
+		 */
+		static public function touristTrack() {
+			return new NodeTouristTrack('tourist_track', null, null);
+		}
+		/**
 		 * @return NodeTrack
 		 */
 		static public function track() {

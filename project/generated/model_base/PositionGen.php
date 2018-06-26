@@ -34,6 +34,14 @@ use QCubed\Query\ModelTrait;
  * @property string $Lat the value of the lat column 
  * @property string $Long the value of the long column 
  * @property integer $Height the value of the height column 
+ * @property-read Event $_Event the value of the protected _objEvent (Read-Only) if set due to an expansion on the event.position_id reverse relationship
+ * @property-read Event $Event the value of the protected _objEvent (Read-Only) if set due to an expansion on the event.position_id reverse relationship
+ * @property-read Event[] $_EventArray the value of the protected _objEventArray (Read-Only) if set due to an ExpandAsArray on the event.position_id reverse relationship
+ * @property-read Event[] $EventArray the value of the protected _objEventArray (Read-Only) if set due to an ExpandAsArray on the event.position_id reverse relationship
+ * @property-read Tourist $_Tourist the value of the protected _objTourist (Read-Only) if set due to an expansion on the tourist.position_id reverse relationship
+ * @property-read Tourist $Tourist the value of the protected _objTourist (Read-Only) if set due to an expansion on the tourist.position_id reverse relationship
+ * @property-read Tourist[] $_TouristArray the value of the protected _objTouristArray (Read-Only) if set due to an ExpandAsArray on the tourist.position_id reverse relationship
+ * @property-read Tourist[] $TouristArray the value of the protected _objTouristArray (Read-Only) if set due to an ExpandAsArray on the tourist.position_id reverse relationship
  * @property-read TrackPoint $_TrackPoint the value of the protected _objTrackPoint (Read-Only) if set due to an expansion on the track_point.position_id reverse relationship
  * @property-read TrackPoint $TrackPoint the value of the protected _objTrackPoint (Read-Only) if set due to an expansion on the track_point.position_id reverse relationship
  * @property-read TrackPoint[] $_TrackPointArray the value of the protected _objTrackPointArray (Read-Only) if set due to an ExpandAsArray on the track_point.position_id reverse relationship
@@ -97,6 +105,38 @@ abstract class PositionGen extends \QCubed\ObjectBase implements IteratorAggrega
     const HEIGHT_DEFAULT = null;
     const HEIGHT_FIELD = 'height';
 
+
+    /**
+     * Protected member variable that stores a reference to a single Event object
+     * (of type Event), if this Position object was restored with
+     * an expansion on the event association table.
+     * @var Event _objEvent;
+     */
+    protected $_objEvent;
+
+    /**
+     * Protected member variable that stores a reference to an array of Event objects
+     * (of type Event[]), if this Position object was restored with
+     * an ExpandAsArray on the event association table.
+     * @var Event[] _objEventArray;
+     */
+    protected $_objEventArray = null;
+
+    /**
+     * Protected member variable that stores a reference to a single Tourist object
+     * (of type Tourist), if this Position object was restored with
+     * an expansion on the tourist association table.
+     * @var Tourist _objTourist;
+     */
+    protected $_objTourist;
+
+    /**
+     * Protected member variable that stores a reference to an array of Tourist objects
+     * (of type Tourist[]), if this Position object was restored with
+     * an ExpandAsArray on the tourist association table.
+     * @var Tourist[] _objTouristArray;
+     */
+    protected $_objTouristArray = null;
 
     /**
      * Protected member variable that stores a reference to a single TrackPoint object
@@ -490,6 +530,42 @@ abstract class PositionGen extends \QCubed\ObjectBase implements IteratorAggrega
 
 
 
+
+        // Check for Event Virtual Binding
+        $strAlias = $strAliasPrefix . 'event__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        $objExpansionNode = (empty($objExpansionAliasArray['event']) ? null : $objExpansionAliasArray['event']);
+        $blnExpanded = ($objExpansionNode && $objExpansionNode->ExpandAsArray);
+        if ($blnExpanded && null === $objToReturn->_objEventArray)
+            $objToReturn->_objEventArray = array();
+        if (isset ($strColumns[$strAliasName])) {
+            if ($blnExpanded) {
+                $objToReturn->_objEventArray[] = Event::instantiateDbRow($objDbRow, $strAliasPrefix . 'event__', $objExpansionNode, null, $strColumnAliasArray, false, 'position_id', $objToReturn);
+            } elseif (is_null($objToReturn->_objEvent)) {
+                $objToReturn->_objEvent = Event::instantiateDbRow($objDbRow, $strAliasPrefix . 'event__', $objExpansionNode, null, $strColumnAliasArray, false, 'position_id', $objToReturn);
+            }
+        }
+        elseif ($strParentExpansionKey === 'event' && $objExpansionParent) {
+            $objToReturn->_objEvent = $objExpansionParent;
+        }
+
+        // Check for Tourist Virtual Binding
+        $strAlias = $strAliasPrefix . 'tourist__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        $objExpansionNode = (empty($objExpansionAliasArray['tourist']) ? null : $objExpansionAliasArray['tourist']);
+        $blnExpanded = ($objExpansionNode && $objExpansionNode->ExpandAsArray);
+        if ($blnExpanded && null === $objToReturn->_objTouristArray)
+            $objToReturn->_objTouristArray = array();
+        if (isset ($strColumns[$strAliasName])) {
+            if ($blnExpanded) {
+                $objToReturn->_objTouristArray[] = Tourist::instantiateDbRow($objDbRow, $strAliasPrefix . 'tourist__', $objExpansionNode, null, $strColumnAliasArray, false, 'position_id', $objToReturn);
+            } elseif (is_null($objToReturn->_objTourist)) {
+                $objToReturn->_objTourist = Tourist::instantiateDbRow($objDbRow, $strAliasPrefix . 'tourist__', $objExpansionNode, null, $strColumnAliasArray, false, 'position_id', $objToReturn);
+            }
+        }
+        elseif ($strParentExpansionKey === 'tourist' && $objExpansionParent) {
+            $objToReturn->_objTourist = $objExpansionParent;
+        }
 
         // Check for TrackPoint Virtual Binding
         $strAlias = $strAliasPrefix . 'trackpoint__id';
@@ -992,6 +1068,10 @@ abstract class PositionGen extends \QCubed\ObjectBase implements IteratorAggrega
 
 
    		// Reverse references
+		$objCopy->_objEvent = null;
+		$objCopy->_objEventArray = null;
+		$objCopy->_objTourist = null;
+		$objCopy->_objTouristArray = null;
 		$objCopy->_objTrackPoint = null;
 		$objCopy->_objTrackPointArray = null;
 
@@ -1094,6 +1174,42 @@ abstract class PositionGen extends \QCubed\ObjectBase implements IteratorAggrega
             // (If restored via a "Many-to" expansion)
             ////////////////////////////
 
+            case 'Event':
+            case '_Event':
+                /**
+                 * Gets the value of the protected _objEvent (Read-Only)
+                 * if set due to an expansion on the event.position_id reverse relationship
+                 * @return Event
+                 */
+                return $this->_objEvent;
+
+            case 'EventArray':
+            case '_EventArray':
+                /**
+                 * Gets the value of the protected _objEventArray (Read-Only)
+                 * if set due to an ExpandAsArray on the event.position_id reverse relationship
+                 * @return Event[]
+                 */
+                return $this->_objEventArray;
+
+            case 'Tourist':
+            case '_Tourist':
+                /**
+                 * Gets the value of the protected _objTourist (Read-Only)
+                 * if set due to an expansion on the tourist.position_id reverse relationship
+                 * @return Tourist
+                 */
+                return $this->_objTourist;
+
+            case 'TouristArray':
+            case '_TouristArray':
+                /**
+                 * Gets the value of the protected _objTouristArray (Read-Only)
+                 * if set due to an ExpandAsArray on the tourist.position_id reverse relationship
+                 * @return Tourist[]
+                 */
+                return $this->_objTouristArray;
+
             case 'TrackPoint':
             case '_TrackPoint':
                 /**
@@ -1194,6 +1310,324 @@ abstract class PositionGen extends \QCubed\ObjectBase implements IteratorAggrega
     // ASSOCIATED OBJECTS' METHODS
     ///////////////////////////////
 
+
+
+    // Related Objects' Methods for Event
+    //-------------------------------------------------------------------
+
+    /**
+     * Gets all associated Events as an array of Event objects
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @return Event[]
+     * @throws Caller
+     */
+    public function getEventArray($objOptionalClauses = null)
+    {
+        if ((is_null($this->intId)))
+            return array();
+
+        try {
+            return Event::LoadArrayByPositionId($this->intId, $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Counts all associated Events
+     * @return int
+    */
+    public function countEvents()
+    {
+        if ((is_null($this->intId)))
+            return 0;
+
+        return Event::CountByPositionId($this->intId);
+    }
+
+    /**
+     * Associates a Event
+     * @param Event $objEvent
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function associateEvent(Event $objEvent)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateEvent on this unsaved Position.');
+        if ((is_null($objEvent->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateEvent on this Position with an unsaved Event.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Position::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `event`
+            SET
+                `position_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objEvent->Id) . '
+        ');
+    }
+
+    /**
+     * Unassociates a Event
+     * @param Event $objEvent
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function unassociateEvent(Event $objEvent)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateEvent on this unsaved Position.');
+        if ((is_null($objEvent->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateEvent on this Position with an unsaved Event.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Position::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `event`
+            SET
+                `position_id` = null
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objEvent->Id) . ' AND
+                `position_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Unassociates all Events
+     * @return void
+    */
+    public function unassociateAllEvents()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateEvent on this unsaved Position.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Position::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `event`
+            SET
+                `position_id` = null
+            WHERE
+                `position_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes an associated Event
+     * @param Event $objEvent
+     * @return void
+    */
+    public function deleteAssociatedEvent(Event $objEvent)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateEvent on this unsaved Position.');
+        if ((is_null($objEvent->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateEvent on this Position with an unsaved Event.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Position::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `event`
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objEvent->Id) . ' AND
+                `position_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes all associated Events
+     * @return void
+    */
+    public function deleteAllEvents()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateEvent on this unsaved Position.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Position::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `event`
+            WHERE
+                `position_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+
+    // Related Objects' Methods for Tourist
+    //-------------------------------------------------------------------
+
+    /**
+     * Gets all associated Tourists as an array of Tourist objects
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @return Tourist[]
+     * @throws Caller
+     */
+    public function getTouristArray($objOptionalClauses = null)
+    {
+        if ((is_null($this->intId)))
+            return array();
+
+        try {
+            return Tourist::LoadArrayByPositionId($this->intId, $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Counts all associated Tourists
+     * @return int
+    */
+    public function countTourists()
+    {
+        if ((is_null($this->intId)))
+            return 0;
+
+        return Tourist::CountByPositionId($this->intId);
+    }
+
+    /**
+     * Associates a Tourist
+     * @param Tourist $objTourist
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function associateTourist(Tourist $objTourist)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTourist on this unsaved Position.');
+        if ((is_null($objTourist->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTourist on this Position with an unsaved Tourist.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Position::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist`
+            SET
+                `position_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTourist->Id) . '
+        ');
+    }
+
+    /**
+     * Unassociates a Tourist
+     * @param Tourist $objTourist
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function unassociateTourist(Tourist $objTourist)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTourist on this unsaved Position.');
+        if ((is_null($objTourist->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTourist on this Position with an unsaved Tourist.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Position::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist`
+            SET
+                `position_id` = null
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTourist->Id) . ' AND
+                `position_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Unassociates all Tourists
+     * @return void
+    */
+    public function unassociateAllTourists()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTourist on this unsaved Position.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Position::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist`
+            SET
+                `position_id` = null
+            WHERE
+                `position_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes an associated Tourist
+     * @param Tourist $objTourist
+     * @return void
+    */
+    public function deleteAssociatedTourist(Tourist $objTourist)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTourist on this unsaved Position.');
+        if ((is_null($objTourist->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTourist on this Position with an unsaved Tourist.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Position::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `tourist`
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTourist->Id) . ' AND
+                `position_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes all associated Tourists
+     * @return void
+    */
+    public function deleteAllTourists()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTourist on this unsaved Position.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Position::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `tourist`
+            WHERE
+                `position_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
 
 
     // Related Objects' Methods for TrackPoint
@@ -1540,6 +1974,16 @@ abstract class PositionGen extends \QCubed\ObjectBase implements IteratorAggrega
         if (isset($this->__blnValid[self::HEIGHT_FIELD])) {
             $a['height'] = $this->intHeight;
         }
+        if (isset($this->_objEvent)) {
+            $a['event'] = $this->_objEvent;
+        } elseif (isset($this->_objEventArray)) {
+            $a['event'] = $this->_objEventArray;
+        }
+        if (isset($this->_objTourist)) {
+            $a['tourist'] = $this->_objTourist;
+        } elseif (isset($this->_objTouristArray)) {
+            $a['tourist'] = $this->_objTouristArray;
+        }
         if (isset($this->_objTrackPoint)) {
             $a['track_point'] = $this->_objTrackPoint;
         } elseif (isset($this->_objTrackPointArray)) {
@@ -1565,6 +2009,8 @@ abstract class PositionGen extends \QCubed\ObjectBase implements IteratorAggrega
  * @property-read Node\Column $Lat
  * @property-read Node\Column $Long
  * @property-read Node\Column $Height
+ * @property-read ReverseReferenceNodeEvent $Event
+ * @property-read ReverseReferenceNodeTourist $Tourist
  * @property-read ReverseReferenceNodeTrackPoint $TrackPoint
  * @property-read Node\Column $_PrimaryKeyNode
  **/
@@ -1618,6 +2064,10 @@ class NodePosition extends Node\Table {
                 return new Node\Column('long', 'Long', 'VarChar', $this);
             case 'Height':
                 return new Node\Column('height', 'Height', 'Integer', $this);
+            case 'Event':
+                return new ReverseReferenceNodeEvent($this, 'event', \QCubed\Type::REVERSE_REFERENCE, 'position_id', 'Event');
+            case 'Tourist':
+                return new ReverseReferenceNodeTourist($this, 'tourist', \QCubed\Type::REVERSE_REFERENCE, 'position_id', 'Tourist');
             case 'TrackPoint':
                 return new ReverseReferenceNodeTrackPoint($this, 'trackpoint', \QCubed\Type::REVERSE_REFERENCE, 'position_id', 'TrackPoint');
 
@@ -1639,6 +2089,8 @@ class NodePosition extends Node\Table {
  * @property-read Node\Column $Lat
  * @property-read Node\Column $Long
  * @property-read Node\Column $Height
+ * @property-read ReverseReferenceNodeEvent $Event
+ * @property-read ReverseReferenceNodeTourist $Tourist
  * @property-read ReverseReferenceNodeTrackPoint $TrackPoint
 
  * @property-read Node\Column $_PrimaryKeyNode
@@ -1685,6 +2137,10 @@ class ReverseReferenceNodePosition extends Node\ReverseReference {
                 return new Node\Column('long', 'Long', 'VarChar', $this);
             case 'Height':
                 return new Node\Column('height', 'Height', 'Integer', $this);
+            case 'Event':
+                return new ReverseReferenceNodeEvent($this, 'event', \QCubed\Type::REVERSE_REFERENCE, 'position_id', 'Event');
+            case 'Tourist':
+                return new ReverseReferenceNodeTourist($this, 'tourist', \QCubed\Type::REVERSE_REFERENCE, 'position_id', 'Tourist');
             case 'TrackPoint':
                 return new ReverseReferenceNodeTrackPoint($this, 'trackpoint', \QCubed\Type::REVERSE_REFERENCE, 'position_id', 'TrackPoint');
 

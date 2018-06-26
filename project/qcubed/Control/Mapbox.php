@@ -9,15 +9,15 @@ namespace QCubed\Project\Control;
 		 */
 		
 //		const TOKEN		= 'pk.eyJ1Ijoia3ZkdiIsImEiOiJjamMxb3EzZHYwMnp0MzBteDhhajNlZHg4In0.XW-KsA_JUK8BsRgV2XP2oQ';
-		const TOKEN		= 'pk.eyJ1IjoicmQxNjEyIiwiYSI6ImNqZXh4bGJwYzEycmsyeHBob3V3dzJwZmUifQ.76euX9Fd34oL-mnBHk8BGg';
+		const TOKEN		= 'pk.eyJ1IjoibWF0dGhpYXoiLCJhIjoiY2ppdm5ldGRoMTI5czNqbnp1dmRuaDJqeiJ9.A70E7Lk08FqXowUqEU45Dw';
 		const BASE_URL	= 'https://api.mapbox.com/';
 				
 		public function __construct($objParentControl) {
 			parent::__construct($objParentControl);
 			$this->AddCssClass("map");
-			$this->AddJavascriptFile("/project/assets/js/mapbox-gl.js");
-			$this->AddCssFile("/project/assets/css/mapbox-gl.css");
-			$this->AddJavascriptFile('/project/assets/js/qmapbox.js');
+			$this->AddJavascriptFile(__VIRTUAL_DIRECTORY__. "/project/assets/js/mapbox-gl.js");
+			$this->AddCssFile(__VIRTUAL_DIRECTORY__."/project/assets/css/mapbox-gl.css");
+			$this->AddJavascriptFile(__VIRTUAL_DIRECTORY__.'/project/assets/js/qmapbox.js');
 			
 			
 			\QCubed\Project\Application::executeJavaScript("mapbox.init('$this->ControlId', '".self::TOKEN."')");
@@ -46,6 +46,7 @@ namespace QCubed\Project\Control;
 		 * @param QMapBoxCoordinate[] $arrCoordinates
 		 */
 		public function Draw($arrCoordinates) {
+			error_log(json_encode($arrCoordinates));
 			\QCubed\Project\Application::executeJavaScript("mapbox.DrawMap(".json_encode($arrCoordinates).")");
 		}
 		/**

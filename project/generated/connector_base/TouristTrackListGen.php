@@ -13,9 +13,9 @@ use QCubed\Query\QQ;
 
 /**
  * This is the generated connector class for the List functionality
- * of the Tourist class.  This code-generated class
- * subclasses a Tourist class and can be used to display
- * a collection of Tourist objects.
+ * of the TouristTrack class.  This code-generated class
+ * subclasses a TouristTrack class and can be used to display
+ * a collection of TouristTrack objects.
  *
  * To take advantage of some (or all) of these control objects, you
  * must create an instance of this object in a QForm or QPanel.
@@ -27,7 +27,7 @@ use QCubed\Query\QQ;
  * @property QQClause 		$Clauses Any clauses to use during binding
  *
  */
-class TouristListGen extends \QCubed\Project\Control\DataGrid
+class TouristTrackListGen extends \QCubed\Project\Control\DataGrid
 {
 	/**
 	 * @var null|QQCondition	Condition to use to filter the list.
@@ -45,19 +45,9 @@ class TouristListGen extends \QCubed\Project\Control\DataGrid
 	/** @var NodeColumn */
 	public $colId;
 	/** @var NodeColumn */
-	public $colName;
+	public $colTourist;
 	/** @var NodeColumn */
-	public $colPassport;
-	/** @var NodeColumn */
-	public $colContactinfo;
-	/** @var NodeColumn */
-	public $colLanguage;
-	/** @var NodeColumn */
-	public $colCity;
-	/** @var NodeColumn */
-	public $colCountry;
-	/** @var NodeColumn */
-	public $colPosition;
+	public $colTrack;
 
 
 	/**
@@ -72,7 +62,7 @@ class TouristListGen extends \QCubed\Project\Control\DataGrid
 		parent::__construct($objParent, $strControlId);
 		$this->createPaginator();
 		$this->setDataBinder('bindData', $this);
-		$this->watch(QQN::Tourist());
+		$this->watch(QQN::TouristTrack());
 	}
 
 	/**
@@ -89,14 +79,9 @@ class TouristListGen extends \QCubed\Project\Control\DataGrid
 	 */
 	public function createColumns() 
 	{
-		$this->colId = $this->createNodeColumn("Id", QQN::Tourist()->Id);
-		$this->colName = $this->createNodeColumn("Name", QQN::Tourist()->Name);
-		$this->colPassport = $this->createNodeColumn("Passport", QQN::Tourist()->Passport);
-		$this->colContactinfo = $this->createNodeColumn("Contactinfo", QQN::Tourist()->Contactinfo);
-		$this->colLanguage = $this->createNodeColumn("Language", QQN::Tourist()->Language);
-		$this->colCity = $this->createNodeColumn("City", QQN::Tourist()->City);
-		$this->colCountry = $this->createNodeColumn("Country", QQN::Tourist()->Country);
-		$this->colPosition = $this->createNodeColumn("Position", QQN::Tourist()->Position);
+		$this->colId = $this->createNodeColumn("Id", QQN::TouristTrack()->Id);
+		$this->colTourist = $this->createNodeColumn("Tourist", QQN::TouristTrack()->Tourist);
+		$this->colTrack = $this->createNodeColumn("Track", QQN::TouristTrack()->Track);
 	}
 
    /**
@@ -121,7 +106,7 @@ class TouristListGen extends \QCubed\Project\Control\DataGrid
 		$objClauses = $this->getClauses($objAdditionalClauses);
 
 		if ($this->Paginator) {
-			$this->TotalItemCount = Tourist::queryCount($objCondition, $objClauses);
+			$this->TotalItemCount = TouristTrack::queryCount($objCondition, $objClauses);
 		}
 
 		// If a column is selected to be sorted, and if that column has a OrderByClause set on it, then let's add
@@ -135,7 +120,7 @@ class TouristListGen extends \QCubed\Project\Control\DataGrid
 			$objClauses[] = $objClause;
 		}
 
-		$this->DataSource = Tourist::queryArray($objCondition, $objClauses);
+		$this->DataSource = TouristTrack::queryArray($objCondition, $objClauses);
 	}
 
 	/**

@@ -44,6 +44,9 @@ class TouristEditPanelGen extends Panel
 	/** @var \QCubed\Project\Control\ListBox */
 	protected $lstCountry;
 
+	/** @var \QCubed\Project\Control\ListBox */
+	protected $lstPosition;
+
 
 	/**
 	 * @param FormBase|ControlBase $objParentObject
@@ -78,6 +81,7 @@ class TouristEditPanelGen extends Panel
 		$this->lstLanguage = $this->mctTourist->lstLanguage_Create();
 		$this->lstCity = $this->mctTourist->lstCity_Create();
 		$this->lstCountry = $this->mctTourist->lstCountry_Create();
+		$this->lstPosition = $this->mctTourist->lstPosition_Create();
 	}
 
 	/**

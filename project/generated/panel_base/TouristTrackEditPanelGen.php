@@ -6,37 +6,31 @@ use QCubed\Project\Control\FormBase;
 use QCubed\Exception\Caller;
 use \QCubed\Project\Application;
 
-require (QCUBED_PROJECT_MODELCONNECTOR_DIR . '/EventConnector.php');
+require (QCUBED_PROJECT_MODELCONNECTOR_DIR . '/TouristTrackConnector.php');
 
 /**
- * This is the base class for the the EventEditPanel class.  It uses the code-generated
- * EventModelConnector class, which has methods to help with
- * easily creating/defining controls to modify the fields of a Event columns.
+ * This is the base class for the the TouristTrackEditPanel class.  It uses the code-generated
+ * TouristTrackModelConnector class, which has methods to help with
+ * easily creating/defining controls to modify the fields of a TouristTrack columns.
  *
- * Implement your customizations in the EventEditPanel.php file, not here.
+ * Implement your customizations in the TouristTrackEditPanel.php file, not here.
  * This file is overwritten every time you do a code generation, so any changes you make here will be lost.
  */
-class EventEditPanelGen extends Panel
+class TouristTrackEditPanelGen extends Panel
 {
-	/** @var EventConnector */
-	public $mctEvent;
+	/** @var TouristTrackConnector */
+	public $mctTouristTrack;
 
-	// Controls for Event's Data Fields
+	// Controls for TouristTrack's Data Fields
 
 	/** @var \QCubed\Control\Label */
 	protected $lblId;
 
 	/** @var \QCubed\Project\Control\ListBox */
-	protected $lstDevice;
-
-	/** @var \QCubed\Project\Control\TextBox */
-	protected $txtType;
-
-	/** @var \QCubed\Control\DateTimePicker */
-	protected $calDatetime;
+	protected $lstTourist;
 
 	/** @var \QCubed\Project\Control\ListBox */
-	protected $lstPosition;
+	protected $lstTrack;
 
 
 	/**
@@ -54,29 +48,27 @@ class EventEditPanelGen extends Panel
 			throw $objExc;
 		}
 
-		// Construct the EventConnector
+		// Construct the TouristTrackConnector
 		// MAKE SURE we specify "$this" as the Connector's (and thus all subsequent controls') parent
-		$this->mctEvent = EventConnector::create($this);
+		$this->mctTouristTrack = TouristTrackConnector::create($this);
 
 		$this->createObjects();
 	}
 
 	/**
-	 * Call ModelConnector's methods to create QControls based on Event's data fields
+	 * Call ModelConnector's methods to create QControls based on TouristTrack's data fields
 	 **/
 	protected function createObjects() {
-		$this->lblId = $this->mctEvent->lblId_Create();
-		$this->lstDevice = $this->mctEvent->lstDevice_Create();
-		$this->txtType = $this->mctEvent->txtType_Create();
-		$this->calDatetime = $this->mctEvent->calDatetime_Create();
-		$this->lstPosition = $this->mctEvent->lstPosition_Create();
+		$this->lblId = $this->mctTouristTrack->lblId_Create();
+		$this->lstTourist = $this->mctTouristTrack->lstTourist_Create();
+		$this->lstTrack = $this->mctTouristTrack->lstTrack_Create();
 	}
 
 	/**
 	 * @param null|integer $intId
 	 **/
 	public function load ($intId = null) {
-		if (!$this->mctEvent->Load ($intId)) {
+		if (!$this->mctTouristTrack->Load ($intId)) {
 			Application::displayAlert(t('Could not load the record. Perhaps it was deleted? Try again.'));
 		}
 	}
@@ -88,16 +80,16 @@ class EventEditPanelGen extends Panel
      * @param boolean $blnReload
 	 **/
 	public function refresh ($blnReload = false) {
-        $this->mctEvent->refresh($blnReload);
+        $this->mctTouristTrack->refresh($blnReload);
 	}
 
 
 	public function save($blnForceUpdate = false) {
-		$this->mctEvent->saveEvent($blnForceUpdate);
+		$this->mctTouristTrack->saveTouristTrack($blnForceUpdate);
 	}
 
 	public function delete() {
-		$this->mctEvent->deleteEvent();
+		$this->mctTouristTrack->deleteTouristTrack();
 	}
 
 }

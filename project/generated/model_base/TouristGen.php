@@ -37,13 +37,19 @@ use QCubed\Query\ModelTrait;
  * @property integer $LanguageId the value of the language_id column 
  * @property integer $CityId the value of the city_id column 
  * @property integer $CountryId the value of the country_id column 
+ * @property integer $PositionId the value of the position_id column 
  * @property Language $Language the value of the Language object referenced by intLanguageId 
  * @property City $City the value of the City object referenced by intCityId 
  * @property Country $Country the value of the Country object referenced by intCountryId 
+ * @property Position $Position the value of the Position object referenced by intPositionId 
  * @property-read DeviceTourist $_DeviceTourist the value of the protected _objDeviceTourist (Read-Only) if set due to an expansion on the device_tourist.tourist_id reverse relationship
  * @property-read DeviceTourist $DeviceTourist the value of the protected _objDeviceTourist (Read-Only) if set due to an expansion on the device_tourist.tourist_id reverse relationship
  * @property-read DeviceTourist[] $_DeviceTouristArray the value of the protected _objDeviceTouristArray (Read-Only) if set due to an ExpandAsArray on the device_tourist.tourist_id reverse relationship
  * @property-read DeviceTourist[] $DeviceTouristArray the value of the protected _objDeviceTouristArray (Read-Only) if set due to an ExpandAsArray on the device_tourist.tourist_id reverse relationship
+ * @property-read TouristTrack $_TouristTrack the value of the protected _objTouristTrack (Read-Only) if set due to an expansion on the tourist_track.tourist_id reverse relationship
+ * @property-read TouristTrack $TouristTrack the value of the protected _objTouristTrack (Read-Only) if set due to an expansion on the tourist_track.tourist_id reverse relationship
+ * @property-read TouristTrack[] $_TouristTrackArray the value of the protected _objTouristTrackArray (Read-Only) if set due to an ExpandAsArray on the tourist_track.tourist_id reverse relationship
+ * @property-read TouristTrack[] $TouristTrackArray the value of the protected _objTouristTrackArray (Read-Only) if set due to an ExpandAsArray on the tourist_track.tourist_id reverse relationship
  * @property-read boolean $__Restored whether or not this object was restored from the database (as opposed to created new)
  */
 abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregate, JsonSerializable {
@@ -137,6 +143,16 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 
 
     /**
+     * Protected member variable that maps to the database column tourist.position_id
+     * @var integer intPositionId
+     */
+    private $intPositionId;
+
+    const POSITION_ID_DEFAULT = null;
+    const POSITION_ID_FIELD = 'position_id';
+
+
+    /**
      * Protected member variable that stores a reference to a single DeviceTourist object
      * (of type DeviceTourist), if this Tourist object was restored with
      * an expansion on the device_tourist association table.
@@ -151,6 +167,22 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
      * @var DeviceTourist[] _objDeviceTouristArray;
      */
     protected $_objDeviceTouristArray = null;
+
+    /**
+     * Protected member variable that stores a reference to a single TouristTrack object
+     * (of type TouristTrack), if this Tourist object was restored with
+     * an expansion on the tourist_track association table.
+     * @var TouristTrack _objTouristTrack;
+     */
+    protected $_objTouristTrack;
+
+    /**
+     * Protected member variable that stores a reference to an array of TouristTrack objects
+     * (of type TouristTrack[]), if this Tourist object was restored with
+     * an ExpandAsArray on the tourist_track association table.
+     * @var TouristTrack[] _objTouristTrackArray;
+     */
+    protected $_objTouristTrackArray = null;
 
     /**
      * Protected array of virtual attributes for this object (e.g. extra/other calculated and/or non-object bound
@@ -215,6 +247,16 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
      */
     protected $objCountry;
 
+    /**
+     * Protected member variable that contains the object pointed by the reference
+     * in the database column tourist.position_id.
+     *
+     * NOTE: Always use the Position property getter to correctly retrieve this Position object.
+     * (Because this class implements late binding, this variable reference MAY be null.)
+     * @var Position objPosition
+     */
+    protected $objPosition;
+
 
 
     /**
@@ -245,6 +287,8 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         $this->__blnValid[self::CITY_ID_FIELD] = true;
         $this->intCountryId = Tourist::COUNTRY_ID_DEFAULT;
         $this->__blnValid[self::COUNTRY_ID_FIELD] = true;
+        $this->intPositionId = Tourist::POSITION_ID_DEFAULT;
+        $this->__blnValid[self::POSITION_ID_FIELD] = true;
     }
 
    /**
@@ -561,6 +605,19 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
             else {
                 $blnNoCache = true;
             }
+            $strAlias = $strAliasPrefix . 'position_id';
+            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+            if (isset ($strColumnKeys[$strAliasName])) {
+                $mixVal = $strColumns[$strAliasName];
+                if ($mixVal !== null) {
+                    $mixVal = (integer)$mixVal;
+                }
+                $objToReturn->intPositionId = $mixVal;
+                $objToReturn->__blnValid[self::POSITION_ID_FIELD] = true;
+            }
+            else {
+                $blnNoCache = true;
+            }
 
             assert ($key === null || $objToReturn->PrimaryKey() == $key);
 
@@ -631,6 +688,17 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
             $objToReturn->objCountry = $objExpansionParent;
         }
 
+        // Check for Position Early Binding
+        $strAlias = $strAliasPrefix . 'position_id__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        if (isset ($strColumns[$strAliasName])) {
+            $objExpansionNode = (empty($objExpansionAliasArray['position_id']) ? null : $objExpansionAliasArray['position_id']);
+            $objToReturn->objPosition = Position::instantiateDbRow($objDbRow, $strAliasPrefix . 'position_id__', $objExpansionNode, null, $strColumnAliasArray, false, 'tourist', $objToReturn);
+        }
+        elseif ($strParentExpansionKey === 'position_id' && $objExpansionParent) {
+            $objToReturn->objPosition = $objExpansionParent;
+        }
+
 
 
 
@@ -650,6 +718,24 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         }
         elseif ($strParentExpansionKey === 'devicetourist' && $objExpansionParent) {
             $objToReturn->_objDeviceTourist = $objExpansionParent;
+        }
+
+        // Check for TouristTrack Virtual Binding
+        $strAlias = $strAliasPrefix . 'touristtrack__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        $objExpansionNode = (empty($objExpansionAliasArray['touristtrack']) ? null : $objExpansionAliasArray['touristtrack']);
+        $blnExpanded = ($objExpansionNode && $objExpansionNode->ExpandAsArray);
+        if ($blnExpanded && null === $objToReturn->_objTouristTrackArray)
+            $objToReturn->_objTouristTrackArray = array();
+        if (isset ($strColumns[$strAliasName])) {
+            if ($blnExpanded) {
+                $objToReturn->_objTouristTrackArray[] = TouristTrack::instantiateDbRow($objDbRow, $strAliasPrefix . 'touristtrack__', $objExpansionNode, null, $strColumnAliasArray, false, 'tourist_id', $objToReturn);
+            } elseif (is_null($objToReturn->_objTouristTrack)) {
+                $objToReturn->_objTouristTrack = TouristTrack::instantiateDbRow($objDbRow, $strAliasPrefix . 'touristtrack__', $objExpansionNode, null, $strColumnAliasArray, false, 'tourist_id', $objToReturn);
+            }
+        }
+        elseif ($strParentExpansionKey === 'touristtrack' && $objExpansionParent) {
+            $objToReturn->_objTouristTrack = $objExpansionParent;
         }
 
         return $objToReturn;
@@ -846,6 +932,41 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         );
     }
 
+    /**
+     * Load an array of Tourist objects,
+     * by PositionId Index(es)
+     * @param integer $intPositionId
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @throws Caller
+     * @return Tourist[]
+    */
+    public static function loadArrayByPositionId($intPositionId, $objOptionalClauses = null)
+    {
+        // Call Tourist::QueryArray to perform the LoadArrayByPositionId query
+        try {
+            return Tourist::QueryArray(
+                QQ::Equal(QQN::Tourist()->PositionId, $intPositionId),
+                $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Count Tourists
+     * by PositionId Index(es)
+     * @param integer $intPositionId
+     * @return int
+    */
+    public static function countByPositionId($intPositionId)
+    {
+        // Call Tourist::QueryCount to perform the CountByPositionId query
+        return Tourist::QueryCount(
+            QQ::Equal(QQN::Tourist()->PositionId, $intPositionId)
+        );
+    }
+
 
     ////////////////////////////////////////////////////
     // INDEX-BASED LOAD METHODS (Array via Many to Many)
@@ -904,14 +1025,16 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 							`contactinfo`,
 							`language_id`,
 							`city_id`,
-							`country_id`
+							`country_id`,
+							`position_id`
 						) VALUES (
 							' . $objDatabase->SqlVariable($this->strName) . ',
 							' . $objDatabase->SqlVariable($this->strPassport) . ',
 							' . $objDatabase->SqlVariable($this->strContactinfo) . ',
 							' . $objDatabase->SqlVariable($this->intLanguageId) . ',
 							' . $objDatabase->SqlVariable($this->intCityId) . ',
-							' . $objDatabase->SqlVariable($this->intCountryId) . '
+							' . $objDatabase->SqlVariable($this->intCountryId) . ',
+							' . $objDatabase->SqlVariable($this->intPositionId) . '
 						)
         ');
         // Update Identity column and return its value
@@ -988,6 +1111,11 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 		if (isset($this->__blnDirty[self::COUNTRY_ID_FIELD])) {
 			$strCol = '`country_id`';
 			$strValue = $objDatabase->sqlVariable($this->intCountryId);
+			$values[] = $strCol . ' = ' . $strValue;
+		}
+		if (isset($this->__blnDirty[self::POSITION_ID_FIELD])) {
+			$strCol = '`position_id`';
+			$strValue = $objDatabase->sqlVariable($this->intPositionId);
 			$values[] = $strCol . ' = ' . $strValue;
 		}
 		if ($values) {
@@ -1109,6 +1237,11 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 			$this->intCountryId = $objReloaded->intCountryId;
 			$this->objCountry = $objReloaded->objCountry;
 			$this->__blnValid[self::COUNTRY_ID_FIELD] = true;
+		}
+		if (isset($objReloaded->__blnValid[self::POSITION_ID_FIELD])) {
+			$this->intPositionId = $objReloaded->intPositionId;
+			$this->objPosition = $objReloaded->objPosition;
+			$this->__blnValid[self::POSITION_ID_FIELD] = true;
 		}
 	}
     ////////////////////
@@ -1498,6 +1631,83 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         return $this;
     }
 
+   /**
+	* Gets the value of intPositionId 
+	* @throws Caller
+	* @return integer
+	*/
+	public function getPositionId()
+    {
+		if ($this->__blnRestored && empty($this->__blnValid[self::POSITION_ID_FIELD])) {
+			throw new Caller("PositionId was not selected in the most recent query and is not valid.");
+		}
+		return $this->intPositionId;
+	}
+
+
+    /**
+     * Gets the value of the Position object referenced by intPositionId 
+     * If the object is not loaded, will load the object (caching it) before returning it.
+     * @throws Caller
+     * @return Position
+     */
+     public function getPosition()
+     {
+ 		if ($this->__blnRestored && empty($this->__blnValid[self::POSITION_ID_FIELD])) {
+			throw new Caller("PositionId was not selected in the most recent query and is not valid.");
+		}
+        if ((!$this->objPosition) && (!is_null($this->intPositionId))) {
+            $this->objPosition = Position::Load($this->intPositionId);
+        }
+        return $this->objPosition;
+     }
+
+
+
+   /**
+	* Sets the value of intPositionId 
+	* Returns $this to allow chaining of setters.
+	* @param integer|null $intPositionId
+    * @throws Caller
+	* @return Tourist
+	*/
+	public function setPositionId($intPositionId)
+    {
+		$intPositionId = Type::Cast($intPositionId, QCubed\Type::INTEGER);
+
+		if ($this->intPositionId !== $intPositionId) {
+			$this->objPosition = null; // remove the associated object
+			$this->intPositionId = $intPositionId;
+			$this->__blnDirty[self::POSITION_ID_FIELD] = true;
+		}
+		$this->__blnValid[self::POSITION_ID_FIELD] = true;
+		return $this; // allows chaining
+	}
+
+    /**
+     * Sets the value of the Position object referenced by intPositionId 
+     * @param null|Position $objPosition
+     * @throws Caller
+     * @return Tourist
+     */
+    public function setPosition($objPosition) {
+        if (is_null($objPosition)) {
+            $this->setPositionId(null);
+        } else {
+            $objPosition = Type::Cast($objPosition, 'Position');
+
+            // Make sure its a SAVED Position object
+            if (is_null($objPosition->Id)) {
+                throw new Caller('Unable to set an unsaved Position for this Tourist');
+            }
+
+            // Update Local Member Variables
+            $this->setPositionId($objPosition->getId());
+            $this->objPosition = $objPosition;
+        }
+        return $this;
+    }
+
 
     /**
     * Copying an object creates a copy of the object with all external references nulled and null primary keys in
@@ -1521,6 +1731,8 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
    		// Reverse references
 		$objCopy->_objDeviceTourist = null;
 		$objCopy->_objDeviceTouristArray = null;
+		$objCopy->_objTouristTrack = null;
+		$objCopy->_objTouristTrackArray = null;
 
 		return $objCopy;
 	}
@@ -1638,6 +1850,24 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
                  * @return DeviceTourist[]
                  */
                 return $this->_objDeviceTouristArray;
+
+            case 'TouristTrack':
+            case '_TouristTrack':
+                /**
+                 * Gets the value of the protected _objTouristTrack (Read-Only)
+                 * if set due to an expansion on the tourist_track.tourist_id reverse relationship
+                 * @return TouristTrack
+                 */
+                return $this->_objTouristTrack;
+
+            case 'TouristTrackArray':
+            case '_TouristTrackArray':
+                /**
+                 * Gets the value of the protected _objTouristTrackArray (Read-Only)
+                 * if set due to an ExpandAsArray on the tourist_track.tourist_id reverse relationship
+                 * @return TouristTrack[]
+                 */
+                return $this->_objTouristTrackArray;
 
 
             case '__Restored':
@@ -1882,6 +2112,165 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
     }
 
 
+    // Related Objects' Methods for TouristTrack
+    //-------------------------------------------------------------------
+
+    /**
+     * Gets all associated TouristTracks as an array of TouristTrack objects
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @return TouristTrack[]
+     * @throws Caller
+     */
+    public function getTouristTrackArray($objOptionalClauses = null)
+    {
+        if ((is_null($this->intId)))
+            return array();
+
+        try {
+            return TouristTrack::LoadArrayByTouristId($this->intId, $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Counts all associated TouristTracks
+     * @return int
+    */
+    public function countTouristTracks()
+    {
+        if ((is_null($this->intId)))
+            return 0;
+
+        return TouristTrack::CountByTouristId($this->intId);
+    }
+
+    /**
+     * Associates a TouristTrack
+     * @param TouristTrack $objTouristTrack
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function associateTouristTrack(TouristTrack $objTouristTrack)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTouristTrack on this unsaved Tourist.');
+        if ((is_null($objTouristTrack->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTouristTrack on this Tourist with an unsaved TouristTrack.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Tourist::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist_track`
+            SET
+                `tourist_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTouristTrack->Id) . '
+        ');
+    }
+
+    /**
+     * Unassociates a TouristTrack
+     * @param TouristTrack $objTouristTrack
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function unassociateTouristTrack(TouristTrack $objTouristTrack)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this unsaved Tourist.');
+        if ((is_null($objTouristTrack->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this Tourist with an unsaved TouristTrack.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Tourist::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist_track`
+            SET
+                `tourist_id` = null
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTouristTrack->Id) . ' AND
+                `tourist_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Unassociates all TouristTracks
+     * @return void
+    */
+    public function unassociateAllTouristTracks()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this unsaved Tourist.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Tourist::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist_track`
+            SET
+                `tourist_id` = null
+            WHERE
+                `tourist_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes an associated TouristTrack
+     * @param TouristTrack $objTouristTrack
+     * @return void
+    */
+    public function deleteAssociatedTouristTrack(TouristTrack $objTouristTrack)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this unsaved Tourist.');
+        if ((is_null($objTouristTrack->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this Tourist with an unsaved TouristTrack.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Tourist::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `tourist_track`
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTouristTrack->Id) . ' AND
+                `tourist_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes all associated TouristTracks
+     * @return void
+    */
+    public function deleteAllTouristTracks()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristTrack on this unsaved Tourist.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Tourist::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `tourist_track`
+            WHERE
+                `tourist_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+
     
     ///////////////////////////////
     // METHODS TO EXTRACT INFO ABOUT THE CLASS
@@ -1941,6 +2330,7 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         $strToReturn .= '<element name="Language" type="xsd1:Language"/>';
         $strToReturn .= '<element name="City" type="xsd1:City"/>';
         $strToReturn .= '<element name="Country" type="xsd1:Country"/>';
+        $strToReturn .= '<element name="Position" type="xsd1:Position"/>';
         $strToReturn .= '<element name="__blnRestored" type="xsd:boolean"/>';
         $strToReturn .= '</sequence></complexType>';
         return $strToReturn;
@@ -1953,6 +2343,7 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
             Language::AlterSoapComplexTypeArray($strComplexTypeArray);
             City::AlterSoapComplexTypeArray($strComplexTypeArray);
             Country::AlterSoapComplexTypeArray($strComplexTypeArray);
+            Position::AlterSoapComplexTypeArray($strComplexTypeArray);
         }
     }
 
@@ -1986,6 +2377,9 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         if ((property_exists($objSoapObject, 'Country')) &&
             ($objSoapObject->Country))
             $objToReturn->Country = Country::GetObjectFromSoapObject($objSoapObject->Country);
+        if ((property_exists($objSoapObject, 'Position')) &&
+            ($objSoapObject->Position))
+            $objToReturn->Position = Position::GetObjectFromSoapObject($objSoapObject->Position);
         if (property_exists($objSoapObject, '__blnRestored'))
             $objToReturn->__blnRestored = $objSoapObject->__blnRestored;
         return $objToReturn;
@@ -2018,6 +2412,10 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
             $objObject->objCountry = Country::GetSoapObjectFromObject($objObject->objCountry, false);
         else if (!$blnBindRelatedObjects)
             $objObject->intCountryId = null;
+        if ($objObject->objPosition)
+            $objObject->objPosition = Position::GetSoapObjectFromObject($objObject->objPosition, false);
+        else if (!$blnBindRelatedObjects)
+            $objObject->intPositionId = null;
         return $objObject;
     }
 
@@ -2049,6 +2447,9 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         }
         if (isset($this->__blnValid[self::COUNTRY_ID_FIELD])) {
             $iArray['CountryId'] = $this->intCountryId;
+        }
+        if (isset($this->__blnValid[self::POSITION_ID_FIELD])) {
+            $iArray['PositionId'] = $this->intPositionId;
         }
         return new ArrayIterator($iArray);
     }
@@ -2118,10 +2519,20 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         } elseif (isset($this->__blnValid[self::COUNTRY_ID_FIELD])) {
             $a['country_id'] = $this->intCountryId;
         }
+        if (isset($this->objPosition)) {
+            $a['position'] = $this->objPosition;
+        } elseif (isset($this->__blnValid[self::POSITION_ID_FIELD])) {
+            $a['position_id'] = $this->intPositionId;
+        }
         if (isset($this->_objDeviceTourist)) {
             $a['device_tourist'] = $this->_objDeviceTourist;
         } elseif (isset($this->_objDeviceTouristArray)) {
             $a['device_tourist'] = $this->_objDeviceTouristArray;
+        }
+        if (isset($this->_objTouristTrack)) {
+            $a['tourist_track'] = $this->_objTouristTrack;
+        } elseif (isset($this->_objTouristTrackArray)) {
+            $a['tourist_track'] = $this->_objTouristTrackArray;
         }
         return $a;
     }
@@ -2149,7 +2560,10 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
  * @property-read NodeCity $City
  * @property-read Node\Column $CountryId
  * @property-read NodeCountry $Country
+ * @property-read Node\Column $PositionId
+ * @property-read NodePosition $Position
  * @property-read ReverseReferenceNodeDeviceTourist $DeviceTourist
+ * @property-read ReverseReferenceNodeTouristTrack $TouristTrack
  * @property-read Node\Column $_PrimaryKeyNode
  **/
 class NodeTourist extends Node\Table {
@@ -2169,6 +2583,7 @@ class NodeTourist extends Node\Table {
             "language_id",
             "city_id",
             "country_id",
+            "position_id",
         ];
     }
 
@@ -2217,8 +2632,14 @@ class NodeTourist extends Node\Table {
                 return new Node\Column('country_id', 'CountryId', 'Integer', $this);
             case 'Country':
                 return new NodeCountry('country_id', 'Country', 'Integer', $this);
+            case 'PositionId':
+                return new Node\Column('position_id', 'PositionId', 'Integer', $this);
+            case 'Position':
+                return new NodePosition('position_id', 'Position', 'Integer', $this);
             case 'DeviceTourist':
                 return new ReverseReferenceNodeDeviceTourist($this, 'devicetourist', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'DeviceTourist');
+            case 'TouristTrack':
+                return new ReverseReferenceNodeTouristTrack($this, 'touristtrack', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'TouristTrack');
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);
@@ -2244,7 +2665,10 @@ class NodeTourist extends Node\Table {
  * @property-read NodeCity $City
  * @property-read Node\Column $CountryId
  * @property-read NodeCountry $Country
+ * @property-read Node\Column $PositionId
+ * @property-read NodePosition $Position
  * @property-read ReverseReferenceNodeDeviceTourist $DeviceTourist
+ * @property-read ReverseReferenceNodeTouristTrack $TouristTrack
 
  * @property-read Node\Column $_PrimaryKeyNode
  **/
@@ -2265,6 +2689,7 @@ class ReverseReferenceNodeTourist extends Node\ReverseReference {
             "language_id",
             "city_id",
             "country_id",
+            "position_id",
         ];
     }
 
@@ -2305,8 +2730,14 @@ class ReverseReferenceNodeTourist extends Node\ReverseReference {
                 return new Node\Column('country_id', 'CountryId', 'Integer', $this);
             case 'Country':
                 return new NodeCountry('country_id', 'Country', 'Integer', $this);
+            case 'PositionId':
+                return new Node\Column('position_id', 'PositionId', 'Integer', $this);
+            case 'Position':
+                return new NodePosition('position_id', 'Position', 'Integer', $this);
             case 'DeviceTourist':
                 return new ReverseReferenceNodeDeviceTourist($this, 'devicetourist', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'DeviceTourist');
+            case 'TouristTrack':
+                return new ReverseReferenceNodeTouristTrack($this, 'touristtrack', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'TouristTrack');
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);

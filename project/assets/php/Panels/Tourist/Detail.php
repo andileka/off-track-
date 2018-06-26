@@ -40,9 +40,10 @@ class Detail extends \QCubed\Project\Control\Editor {
 			return; 
 		}
 		$this->objTourist								= $objTourist;
-
-		$this->lstCity->SelectedValue					= $objTourist->CityId;
 		$this->lstCountry->SelectedValue				= $objTourist->CountryId;
+		$this->lstCountry_Changed();
+		
+		$this->lstCity->SelectedValue					= $objTourist->CityId;
 		$this->lstLanguage->SelectedValue				= $objTourist->LanguageId;
 		$this->txtName->Text							= $this->objTourist->Name;
 		
