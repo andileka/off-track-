@@ -24,18 +24,6 @@ namespace QCubed\Project\Control;
 			
 			
 		}
-
-		public function setMapLayerSettings($strType=null){
-			switch($strType){
-				case "Marker":
-					$ArrSettings = array('markers','symbol','geojson','FeatureCollection');
-					break;
-				default: 
-					$ArrSettings = array('route','line','geojson','Feature');
-					break;
-			}
-			\QCubed\Project\Application::executeJavaScript("mapbox.setMapLayerSettings(".json_encode($ArrSettings).")");
-		}
 		
 		public static function GetRandomHexColor(){
 			return str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
@@ -46,14 +34,13 @@ namespace QCubed\Project\Control;
 		 * @param QMapBoxCoordinate[] $arrCoordinates
 		 */
 		public function Draw($arrCoordinates) {
-			error_log(json_encode($arrCoordinates));
 			\QCubed\Project\Application::executeJavaScript("mapbox.DrawMap(".json_encode($arrCoordinates).")");
 		}
 		/**
 		 * 
 		 * @param QMapBoxCoordinate[] $arrCoordinates
 		 */
-		public function DrawMapWithPins($arrCoordinates,$arrAppointments) {
+		public function DrawMapWithPins($arrCoordinates,$arrTourists) {
 			\QCubed\Project\Application::executeJavaScript("$('#".$this->ControlId."_ctl').append('<nav id=menu></nav>')");
 			\QCubed\Project\Application::executeJavaScript("mapbox.AddCoordinates(".json_encode($arrCoordinates).")");
 			
@@ -61,7 +48,7 @@ namespace QCubed\Project\Control;
 			$x=0;
 			$arrExpert;
 			
-			foreach($arrAppointments["Appointments"] as $appointment){
+			foreach($arrTourists as $objTourist){
 				$arrExpert[$arrAppointments["Appointments"][$x]->Expert->User->Firstname][] = $arrAppointments["Appointments"][$x]->Place->Coordinates;
 				$x++;
 			}

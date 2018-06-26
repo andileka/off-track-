@@ -130,12 +130,12 @@ class Map extends \QCubed\Control\Panel {
 		$this->mpbox				= new \QCubed\Project\Control\Mapbox($this->navPlanning);
 		$this->mpbox->Name			= tr("Mapview");
 
-		$strType					= null;
+		$strType					= 'Marker';
 
 		$arrCoordinates = array_map(function(\Tourist $objTourist) {
 			return (string)$objTourist->Position;
 		}, $arrTourists); //ff adressen omzetten naar coordinates
-		$this->mpbox->setMapLayerSettings($strType);
+		
 		$this->mpbox->Draw($arrCoordinates);
 		
 	}

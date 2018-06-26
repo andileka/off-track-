@@ -111,9 +111,9 @@ class Navigator extends \QCubed\Control\Panel {
 	}
 	
 	private function SetSubNav() {
-		
+		$navbarItems = [];
+
 		if(isset($_GET['c'])){
-			$navbarItems = "";
 			switch($_GET['c']){
 				case "maintenance":
 					$navbarItems['maintenance'] = $this->navItems['maintenance'];
@@ -124,26 +124,26 @@ class Navigator extends \QCubed\Control\Panel {
 			}
 		}
 		foreach($navbarItems as $key => $item){			
-				$subnav = array();
-				if (count($item) > 0) {
-					$subnav[] = '<ul class="nav navbar-nav navbar-left">';
-					foreach($item as $keyDropdown => $subitem) {
-						if(is_array($subitem)){
-							$subnav[] = '<li class="dropdown">
-										<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.ucfirst(tr($keyDropdown)).'<span class="caret"></span></a>
-										<ul class="dropdown-menu" role="menu">';
-							foreach($subitem as $itemkey => $Dropdown){
-								$subnav[] = '<li role="presentation"' . ($this->action === $Dropdown ? ' class="active"' : '') . '><a href="index.php?c=' . $key . '&a=' . $Dropdown  . '">' . ucfirst(tr($Dropdown)) . '</a></li>';
-							}
-							$subnav[] = '</ul></li>';
-						}else{
-							$subnav[] = '<li role="presentation"' . ($this->action === $subitem ? ' class="active"' : '') . '><a href="index.php?c=' . $key . '&a=' . $subitem  . '">' . ucfirst(tr($subitem)) . '</a></li>';
+			$subnav = array();
+			if (count($item) > 0) {
+				$subnav[] = '<ul class="nav navbar-nav navbar-left">';
+				foreach($item as $keyDropdown => $subitem) {
+					if(is_array($subitem)){
+						$subnav[] = '<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.ucfirst(tr($keyDropdown)).'<span class="caret"></span></a>
+									<ul class="dropdown-menu" role="menu">';
+						foreach($subitem as $itemkey => $Dropdown){
+							$subnav[] = '<li role="presentation"' . ($this->action === $Dropdown ? ' class="active"' : '') . '><a href="index.php?c=' . $key . '&a=' . $Dropdown  . '">' . ucfirst(tr($Dropdown)) . '</a></li>';
 						}
+						$subnav[] = '</ul></li>';
+					}else{
+						$subnav[] = '<li role="presentation"' . ($this->action === $subitem ? ' class="active"' : '') . '><a href="index.php?c=' . $key . '&a=' . $subitem  . '">' . ucfirst(tr($subitem)) . '</a></li>';
 					}
-					$subnav[] = '</ul>';
-					$this->subNav[] = sprintf('<div role="tabpanel" class="tab-pane%s" id="subnav-%s">%s</div>', 
-					($this->ctrl === $key ? ' active' : ''), $key, implode('', $subnav));
 				}
+				$subnav[] = '</ul>';
+				$this->subNav[] = sprintf('<div role="tabpanel" class="tab-pane%s" id="subnav-%s">%s</div>',
+				($this->ctrl === $key ? ' active' : ''), $key, implode('', $subnav));
+			}
 		}
 	}
 }

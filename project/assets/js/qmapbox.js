@@ -1,115 +1,78 @@
 var mapbox = function () {
 	var arrCoordinates;
-	var text;
 	var token;
-	var tempCoordinates;
 	var map;
 	var containerId;
 	var arrLayers = [];
 	var toggleableLayerIds = [];
-
-	function GetRequest() {
-		return 'https://api.mapbox.com/directions/v5/mapbox/driving/' + arrCoordinates.join(";") + '.json?language=nl&steps=false&geometries=geojson&access_token=' + mapboxgl.accessToken;
-	}
-
+	var default_style='mapbox://styles/matthiaz/cjivp4t9a8v422sqg0pqvsqbc';
+	
 	function GenerateRandomString() {
 		/* random string generator */
 		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		return possible.charAt(Math.floor(Math.random() * possible.length))
-	}
-
-	function setMapLayerSettings(data) {
-		var route = data.routes[0].geometry;
-		map.addLayer({
-			id: 'route',
-			type: 'line',
-			source: {
-				type: 'geojson',
-				data: {
-					type: 'Feature',
-					geometry: route
-				}
-			},
-			paint: {
-				'line-width': 1,
-			}
-		});
+		return possible.charAt(Math.floor(Math.random() * possible.length));
 	}
 
 	function DrawMap() {
 		mapboxgl.accessToken = token;
-		map = new mapboxgl.Map({
+		var features= new Array();
+		for(var i=0;i<arrCoordinates.length;i++) {
+			features.push({
+				 "type": "Feature",
+				 "geometry": {
+				 "type": "Point",
+				 "coordinates": arrCoordinates[i]
+				},
+				 "properties": {
+					 "title": "<a href='?c=tourist&a=edit&id=1'>Matthias Van Woensel</a>",
+					 "description": "Last check in 14:00<br/>"
+				 }
+			 });
+		}
+		var geojson = {
+			"type": "FeatureCollection",
+			"features": features
+		};
+
+		var map = new mapboxgl.Map({
 			container: containerId,
-			style: 'mapbox://styles/mapbox/streets-v10',
+			style: default_style,
 			center: arrCoordinates[0],
 			zoom: 10
 		});
 
-		/* ARRAY COORDINATES */
-		var directionsRequest = GetRequest();
+		// add markers to map
+		geojson.features.forEach(function(marker) {
 
-		$.ajax({
-			method: 'GET',
-			url: directionsRequest,
-		}).done(function (data) {
-			setMapLayerSettings(data);
-			for (var i = 0; i <= arrCoordinates.length; i++) {
-				/* change text id if not first or last element of array */
-				if (i == 0) {
-					text = "start"
-				} else if (i == arrCoordinates.length - 1) {
-					text = "end"
-				} else {
-					text = GenerateRandomString();
-				}
-				map.addLayer({
-					id: text,
-					type: 'circle',
-					source: {
-						type: 'geojson',
-						data: {
-							type: 'Feature',
-							geometry: {
-								type: 'Point',
-								coordinates: arrCoordinates[i]
-							}
-						}
-					}
-				});
-			}
+			// create a HTML element for each feature
+			var el = document.createElement('div');
+			el.className = 'marker';
 
+			// make a marker for each feature and add it to the map
+			new mapboxgl.Marker(el)
+				.setLngLat(marker.geometry.coordinates)
+				.setPopup(new mapboxgl.Popup({offset: 25}) // add popups
+					.setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+				.addTo(map);
 		});
+		
 	}
+	
 	return {
 		init: function (strContainer, api_token) {
 			containerId = strContainer;
-			token = api_token
+			token = api_token;
 		},
 		// SetAPI : function(api_token){token = api_token},
 		DrawMap: function (arr) {
-			tempCoordinates = [];
-			for (var i = 0; i < arr.length; i++) {
-				tempCoordinates.push(arr[i].split(","));
-			}
-			/* ADD TO SCOPE */
-			arrCoordinates = tempCoordinates;
+			mapbox.AddCoordinates(arr);
 			DrawMap();
 		},
 		AddCoordinates: function (arr) {
-			/* WE ONLY USE THIS FOR DIRECTIONS */
-			tempCoordinates = [];
+			arrCoordinates = [];
 			for (var i = 0; i < arr.length; i++) {
-				tempCoordinates.push(arr[i].split(","));
+				arrCoordinates.push(arr[i].split(","));
 			}
-			/* ADD TO SCOPE */
-			arrCoordinates = tempCoordinates;
-			/* Init Map */
-
-
-		},
-		setMapLayerSettings: function (arrSettings) {
-			Settings = arrSettings;
-
 		},
 		AddPinsOnMap: function (arr = []) {
 			console.log(arr);
@@ -156,7 +119,7 @@ var mapbox = function () {
 			mapboxgl.accessToken = token;
 			map = new mapboxgl.Map({
 				container: containerId,
-				style: 'mapbox://styles/mapbox/streets-v10',
+				style: default_style,
 				center: arrCoordinates[0],
 				zoom: 10
 			});

@@ -4,7 +4,7 @@
   <!-- mini logo for sidebar mini 50x50 pixels -->
   <span class="logo-mini"></span>
   <!-- logo for regular state and mobile devices -->
-  <span class="logo-lg"><b>Off Track</b></span>
+  <span class="logo-lg"></span>
 </a>
 <style>
 	.selectpicker{

@@ -39,7 +39,7 @@ class Main extends \QCubed\Project\Control\FormBase {
 
 	public $loggedout;
     public $lang = 'nl';
-	public $ClassBody = "skin-blue";
+	public $ClassBody = "skin-black-light";
 	/**
 	 * @desc construct function mainly serves to map GET parameters to the correct controller/action
 	 */

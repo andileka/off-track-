@@ -108,11 +108,11 @@ label.search-field::after {
 .left{ float:left !important; margin-bottom:15px;}
 .right{ float:right !important; margin-bottom:15px;}
 .add-button{margin-top:33px;}
-li a.booking{
+li a.tourist{
 	background:#3c8dbc !important;
 }
-li a.booking:before{
-	content: "\f274";
+li a.tourist:before{
+	content: "\f554";
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
@@ -473,4 +473,29 @@ label{
 sup{color:red;}
 .colorpicker::after,.colorpicker::before{
 	display:none !important;
+}
+
+#map { position:absolute; top:0; bottom:0; width:100%; }
+.marker {
+	background-image: url('../images/logo_round.png');
+	background-size: cover;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	cursor: pointer;
+}
+.mapboxgl-popup {
+	max-width: 200px;
+}
+.mapboxgl-popup-content {
+	text-align: center;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.logo-lg {
+	background-image: url('../images/logo.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 100%;
+	height: 100%;
 }
