@@ -1,6 +1,15 @@
 <?php
-define ('__DOCROOT__', '/srv/www/himalayasystems/hikify');
-define ('__VIRTUAL_DIRECTORY__', '/hikify');
+
+if($_SERVER['SERVER_NAME']=='localhost') {
+	define ('__DOCROOT__', '/srv/www/himalayasystems/hikify');
+	define ('__VIRTUAL_DIRECTORY__', '/hikify');
+	define('SERVER_INSTANCE', 'dev');
+} else {
+	define ('__DOCROOT__', '/subsites/sigfox.insypro.com');
+	define ('__VIRTUAL_DIRECTORY__', '');
+	define('SERVER_INSTANCE', 'prod');
+
+}
 define ('__SUBDIRECTORY__', '');
 
 /*
@@ -11,7 +20,7 @@ define ('__PROJECT__', __DOCROOT__ . __SUBDIRECTORY__ . '/project');
 define ('__INCLUDES__', __PROJECT__ . '/includes');
 define ('__QCUBED__', __INCLUDES__); // on the way to deprecation
 
-define('SERVER_INSTANCE', 'dev');
+
 
 switch (SERVER_INSTANCE) {
     case 'dev':
