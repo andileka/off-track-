@@ -41,6 +41,17 @@
 			return $listbox;
 		}
 
+		public function MoveTo($lat, $long) {
+			$devicetourist = DeviceTourist::loadArrayByTouristId($this->Id);
+			if(!count($devicetourist)) {
+				return;
+			}
+			
+			$event = \Event::CreateForDeviceId($devicetourist[0]->DeviceId, 'location check in',$lat, $long);
+
+			$this->SaveCurrentPosition($event->Position);
+		}
+
 		public function SaveCurrentPosition(Position $objPosition) {
 			$this->Position = $objPosition;
 			$this->Save();

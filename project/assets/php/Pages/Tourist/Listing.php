@@ -33,8 +33,7 @@ class Listing extends \QCubed\Control\Panel {
 
 		$this->strTemplate			= __TEMPLATES__ .  '/pages/tourist/listing.tpl.php';
 		$this->addJavascriptFile(__BOOTSTRAP_ADMINLTE_BOWER_COMPONENTS__."/datatables.net/js/jquery.dataTables.min.js");
-		$this->addCssFile("/project/assets/css/datatables.css");
-
+		
 		\QCubed\Project\Application::executeJavaScript("
 				$(function () {
 					$('.table').DataTable({

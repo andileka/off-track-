@@ -14,7 +14,9 @@ class Edit extends \QCubed\Control\Panel {
 	 * @var \Hikify\Panels\Tourist\Detail
 	 */
 	public $pnlTourist;
-
+	public $pnlEvents;
+	public $pnlMap;
+			
 	public $btnSave;
 	
 	public function __construct($objParentObject, $strControlId = null) {
@@ -31,13 +33,19 @@ class Edit extends \QCubed\Control\Panel {
 	}
 
 	private function Build() {
+		$objTourist				= \Tourist::loadById($_GET['id']);
 		$this->lblTemp			= new \QCubed\Control\Label($this);
 		$this->lblTemp->Text	= tr("Edit");
 
 		$this->pnlTourist		= new \Hikify\Panels\Tourist\Detail($this);
-		$this->pnlTourist->SetTourist(\Tourist::loadById($_GET['id']));
+		$this->pnlTourist->SetTourist($objTourist);
 
 		$this->btnSave			= \QCubed\Project\Jqui\Button::GetSaveButton($this,'Save');
+
+
+		
+		$this->pnlEvents		= new \Hikify\Panels\Tourist\Event($this);
+		$this->pnlEvents->SetTourist($objTourist);
 	}
 
 	
