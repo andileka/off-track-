@@ -112,12 +112,11 @@ li a.tourist{
 	background:#3c8dbc !important;
 }
 li a.tourist:before{
-	content: "\f554";
+	content: "\f183";
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
     text-decoration: inherit;
-    color: #FFF;
     font-size: 18px;
     padding-right: 0.5em;
 }
@@ -127,7 +126,6 @@ li a.planning:before{
     font-style: normal;
     font-weight: normal;
     text-decoration: inherit;
-    color: #FFF;
     font-size: 18px;
     padding-right: 0.5em;
 }
@@ -137,7 +135,6 @@ li a.job:before{
     font-style: normal;
     font-weight: normal;
     text-decoration: inherit;
-    color: #FFF;
     font-size: 18px;
     padding-right: 0.5em;
 }
@@ -148,7 +145,6 @@ li a.maintenance:before{
     font-style: normal;
     font-weight: normal;
     text-decoration: inherit;
-    color: #FFF;
     font-size: 18px;
     padding-right: 0.5em;
 }
