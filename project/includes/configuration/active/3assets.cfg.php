@@ -43,8 +43,8 @@ define ('QCUBED_CSS', QCUBED_CSS_URL . '/qcubed.css');
 
 // Minified versions
 //define ('QCUBED_JQUERY_JS', 'https://code.jquery.com/jquery-1.12.4.min.js');
-//define ('QCUBED_JQUERY_JS', 'https://code.jquery.com/jquery-3.2.1.min.js');
-//define ('QCUBED_JQUI_JS', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js');
+define ('QCUBED_JQUERY_JS', 'https://code.jquery.com/jquery-3.2.1.min.js');
+define ('QCUBED_JQUI_JS', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js');
 
 
 // The original, non-minified jQuery for debugging purposes.
@@ -54,8 +54,8 @@ define ('QCUBED_CSS', QCUBED_CSS_URL . '/qcubed.css');
 
 // The local versions. Useful for doing development when you don't have internet connectivity
 //define ('QCUBED_JQUERY_JS', QCUBED_JS_URL . '/jquery.js');
-define ('QCUBED_JQUERY_JS', QCUBED_JS_URL . '/jquery3.js');
-define ('QCUBED_JQUI_JS', QCUBED_JS_URL . '/jquery-ui.js');
+//define ('QCUBED_JQUERY_JS', QCUBED_JS_URL . '/jquery3.js');
+//define ('QCUBED_JQUI_JS', QCUBED_JS_URL . '/jquery-ui.js');
 
 
 
