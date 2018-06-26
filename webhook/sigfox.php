@@ -3,10 +3,13 @@ class SigfoxParser {
 		
 	public static function processInput() {
 		self::requireqcubed();
-		Log::MakeEntry("SIGFOX", "connecting");
 
-		$_SESSION['USER'] = 1;		
-		Log::MakeEntry("SIGFOX", print_r($_POST,true));
+		Log::MakeEntry("SIGFOX1", "Connecting");
+		
+		$_SESSION['USER'] = 1;
+		$rawdata					= file_get_contents('php://input');
+		Log::MakeEntry("SIGFOX2", $rawdata);
+		Log::MakeEntry("SIGFOX3", print_r($_POST,true));
 
 		/*
 		 * Array
@@ -20,9 +23,13 @@ class SigfoxParser {
 )
 
 		 */
+		if(!isset($_POST['device'])) {
+			Log::MakeEntry("SIGFOX4", "post variable device not found");
+			return;
+		}
 		$device = \Device::querySingle(QCubed\Query\QQ::equal(QQN::device()->Serial, $_POST['device']));
 		if(!$device) {
-			Log::MakeEntry("SIGFOX", "device " . $_POST['device'] . ' not found');
+			Log::MakeEntry("SIGFOX5", "device " . $_POST['device'] . ' not found');
 			return;
 		}
 
@@ -42,7 +49,7 @@ class SigfoxParser {
 			
 			
 		} else {
-			Log::MakeEntry("SIGFOX", "unexpected data " . $_POST['data']);
+			Log::MakeEntry("SIGFOX6", "unexpected data " . $_POST['data']);
 		}
 	}
 	
