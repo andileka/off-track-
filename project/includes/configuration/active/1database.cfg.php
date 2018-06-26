@@ -60,6 +60,16 @@
 	case 'test':
 	case 'stage':
 	case 'prod':
+		define('DB_CONNECTION_1', serialize(array(
+			'adapter' => 'Mysqli5',
+			'server' => 'ID244838_sigfox.db.webhosting.be',
+			'port' => null,
+			'database' => 'ID244838_sigfox',
+			'username' => 'ID244838_sigfox',
+			//	'profiling' => true,
+			'profiling' => false,
+			'password' => 'sigfoxwebsite2014'
+		)));
 	break;
 }
 
