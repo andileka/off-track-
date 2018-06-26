@@ -5,7 +5,7 @@ if($_SERVER['SERVER_NAME']=='localhost') {
 	define ('__VIRTUAL_DIRECTORY__', '/hikify');
 	define('SERVER_INSTANCE', 'dev');
 } else {
-	define ('__DOCROOT__', '/subsites/sigfox.insypro.com');
+	define ('__DOCROOT__', '/data/sites/web/insyprocom/subsites/sigfox.insypro.com');
 	define ('__VIRTUAL_DIRECTORY__', '');
 	define('SERVER_INSTANCE', 'prod');
 
@@ -98,7 +98,7 @@ switch (SERVER_INSTANCE) {
 		// Before QCubed can do anything, it needs to know the URL to use for development purposes. This would be a local
 		// url on your development computer. The prefix below is only used within this config file to help with the url
 		// pointers below. It would be whatever needs to go after "http:/" and before the "/vendor" or "/project" directory
-		define ('QCUBED_URL_PREFIX', '/hikify');
+		define ('QCUBED_URL_PREFIX', '');
 
         // The files need to be in DOC_ROOT, or somehow (perhaps a rewrite rule), be browser accessible.
         // Default values point inside of the project and QCubed base directories. A production environment should
