@@ -21,7 +21,8 @@ class Navigator extends \QCubed\Control\Panel {
 	public $lstLanguage;
 	public $params		= array(); // to pass parameters from parent
 	public $navItems   = array(
-		'tourist'		=> array('listing','find_me'),
+		'main'			=> array('map'),
+		'tourist'		=> array('listing','find-me'),
 		'planning'		=> array(),
 		'maintenance'	=> array(
 			'device' => array('device'),
@@ -95,8 +96,8 @@ class Navigator extends \QCubed\Control\Panel {
 	
 	private function SetItemsLeft(){
 		foreach($this->navItems as $key => $item){
-			if($key == "booking"){
-				$this->itemsLeft[] = sprintf('<li%s><a href="index.php?c=%s" aria-controls="subnav-%s" data-target="#subnav-%s"  class="'.$key.'">'.tr('Book now').'</a></li>', 
+			if($key == "main"){
+				$this->itemsLeft[] = sprintf('<li%s><a href="index.php?c=%s&a=map" aria-controls="subnav-%s" data-target="#subnav-%s" class="'.$key.'">%s</a></li>',
 				($this->ctrl === $key ? ' class="active"' : ''), $key, $key, $key, ucfirst(tr($key)));
 			}else{
 				$this->itemsLeft[] = sprintf('<li%s><a href="index.php?c=%s&a=listing" aria-controls="subnav-%s" data-target="#subnav-%s" class="'.$key.'">%s</a></li>', 
