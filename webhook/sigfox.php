@@ -3,42 +3,52 @@ class SigfoxParser {
 		
 	public static function processInput() {
 		self::requireqcubed();
+		Log::MakeEntry("SIGFOX", "connecting");
 
 		$_SESSION['USER'] = 1;		
-		$rawdata					= file_get_contents('php://input');
-		if($rawdata) {
-			Log::MakeEntry("SIGFOX", null, $rawdata);
-		}
-		$result = array();
-		parse_str ( $rawdata, $result);
-		
-		
-		$hexdata = $result['rawData'];
-		
-		$string = hex2bin($hexdata);
-		if($string) {
-			Log::MakeEntry("SIGFOX", null, $string);
-		}
-		
-	}
+		Log::MakeEntry("SIGFOX", print_r($_POST,true));
 
-	private static function log($what) {
-		//return;
-		$path = "/mnt/backups/storage/tmp/parts.log";
-		if(file_exists($path) && is_writable($path)){
-			// first time -> create *.log file
-			if(!file_exists($path)){
-				touch($path);
+		/*
+		 * Array
+(
+    [device] => {device}
+    [time] => {time}
+    [data] => {data}
+    [lat] => {lat}
+    [long] => {lng}
+    [Sequence_Number] => {seqNumber}
+)
+
+		 */
+		$device = \Device::querySingle(QCubed\Query\QQ::equal(QQN::device()->Serial, $_POST['device']));
+		if(!$device) {
+			Log::MakeEntry("SIGFOX", "device " . $_POST['device'] . ' not found');
+			return;
+		}
+
+
+
+
+
+		
+		if($_POST['data']=="12") {
+			$devicetourist = DeviceTourist::loadArrayByDeviceId($device->Id, QCubed\Query\QQ::expand(QQN::deviceTourist()->Tourist));
+			if(!count($devicetourist)) {
+				return;
 			}
 
-			$log = fopen($path, 'a');
-			fwrite($log, date('Y-m-d H:i') . "\t". $what . "\n");
-			fclose($log);
+			$event = \Event::CreateForDeviceId($device->Id, "button pressed", $_POST['lat'], $_POST['long']);
+			$devicetourist[0]->Tourist->SaveCurrentPosition($event->Position);
+			
+			
+		} else {
+			Log::MakeEntry("SIGFOX", "unexpected data " . $_POST['data']);
 		}
 	}
 	
 	private static function requireqcubed(){
-		require_once '../qcubed/includes/prepend.inc.php';
+		//require_once '../qcubed/includes/prepend.inc.php';
+		require('../project/includes/configuration/prepend.inc.php');
 	}
 }
 SigfoxParser::processInput();
