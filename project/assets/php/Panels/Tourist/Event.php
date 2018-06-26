@@ -61,7 +61,7 @@ class Event extends \QCubed\Project\Control\Editor {
 		if(!count($arrEvents)) {
 			return;
 		}
-		error_log('Drawing map for ' . count($arrEvents) . ' events');
+
 		$this->mpbox				= new \QCubed\Project\Control\Mapbox($this);
 		$this->mpbox->Name			= tr("Mapview");
 
