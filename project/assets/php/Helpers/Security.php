@@ -79,10 +79,7 @@ class Security {
 	}
 	
 	private static function CheckLoginDetails($strEmail, $strPassword) {
-		$_SERVER['DEBUG'][] = ($strEmail);
-		$_SERVER['DEBUG'][] = ($strPassword);
 		if( $strEmail != '' && $strPassword != '' && ($user		= \User::LoadByEmail($strEmail))){
-			$_SERVER['DEBUG'][] = ('hooray' .  $user);
 			if($user->Password == sha1($strPassword.$user->Salt)) {
 				return $user;//all is well
 			}
@@ -101,7 +98,6 @@ class Security {
 		session_regenerate_id();
 
 		$_SESSION['USER']		= $user->Id;
-		$_SESSION['USERGROUP']	= $user->PermissionGroupId;
 		$_SESSION['COUNTRY']	= 'BE';
 	}
 
