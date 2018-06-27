@@ -23,12 +23,13 @@
 		*/
 	   public function createColumns()
 	   {
-		   $this->colId = $this->createNodeColumn("Id", QQN::Tourist()->Id);
+		   //$this->colId = $this->createNodeColumn("Id", QQN::Tourist()->Id);
 		   $this->colName = $this->createNodeColumn("Name", QQN::Tourist()->Name);
-		   $this->colPassport = $this->createNodeColumn("Passport", QQN::Tourist()->Passport);
-		   $this->colContactinfo = $this->createNodeColumn("Contactinfo", QQN::Tourist()->Contactinfo);
+		   $this->colNickname = $this->createNodeColumn("Name", QQN::Tourist()->Nickname);
+		   //$this->colPassport = $this->createNodeColumn("Passport", QQN::Tourist()->Passport);
+		   //$this->colContactinfo = $this->createNodeColumn("Contactinfo", QQN::Tourist()->Contactinfo);
 		   $this->colLanguage = $this->createNodeColumn("Language", QQN::Tourist()->Language);
-		   $this->colCity = $this->createNodeColumn("City", QQN::Tourist()->City);
+		   //$this->colCity = $this->createNodeColumn("City", QQN::Tourist()->City);
 		   $this->colCountry = $this->createNodeColumn("Country", QQN::Tourist()->Country);
 
 			
