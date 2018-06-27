@@ -4,7 +4,11 @@
 			<div class="form-group">
 				<label class=""><?= tr("Language") ?><sup>*</sup></label><?=$_CONTROL->lstLanguage->RenderFormGroup();?>
 			</div>
-
+		</div>
+		<div class="col-sm-12 col-md-6">
+			<div class="form-group">
+				<label class=""><?= tr("Status") ?><sup>*</sup></label><?=$_CONTROL->lstStatus->RenderFormGroup();?>
+			</div>
 		</div>
 	</div>
 

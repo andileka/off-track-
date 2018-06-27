@@ -16,3 +16,4 @@
 <?= _r($this->lstCountry); ?>
 <?= _r($this->lstPosition); ?>
 <?= _r($this->txtStatus); ?>
+<?= _r($this->txtNickname); ?>

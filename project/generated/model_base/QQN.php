@@ -59,10 +59,22 @@
 			return new NodePosition('position', null, null);
 		}
 		/**
+		 * @return NodeQuestion
+		 */
+		static public function question() {
+			return new NodeQuestion('question', null, null);
+		}
+		/**
 		 * @return NodeTourist
 		 */
 		static public function tourist() {
 			return new NodeTourist('tourist', null, null);
+		}
+		/**
+		 * @return NodeTouristAnswer
+		 */
+		static public function touristAnswer() {
+			return new NodeTouristAnswer('tourist_answer', null, null);
 		}
 		/**
 		 * @return NodeTouristTrack

@@ -50,6 +50,9 @@ class TouristEditPanelGen extends Panel
 	/** @var \QCubed\Project\Control\TextBox */
 	protected $txtStatus;
 
+	/** @var \QCubed\Project\Control\TextBox */
+	protected $txtNickname;
+
 
 	/**
 	 * @param FormBase|ControlBase $objParentObject
@@ -86,6 +89,7 @@ class TouristEditPanelGen extends Panel
 		$this->lstCountry = $this->mctTourist->lstCountry_Create();
 		$this->lstPosition = $this->mctTourist->lstPosition_Create();
 		$this->txtStatus = $this->mctTourist->txtStatus_Create();
+		$this->txtNickname = $this->mctTourist->txtNickname_Create();
 	}
 
 	/**

@@ -39,12 +39,49 @@
 		public static function GetListBox($objParentObject, $strControlId=null) {
 			$arrCities				= Tourist::LoadAll(\QCubed\Query\QQ::OrderBy(QQN::tourist()->Name));
 			$listbox				= new \QCubed\Project\Control\ListBox($objParentObject, $strControlId);
-			
+
 			foreach($arrCities as $objTourist) {
 				$listbox->AddItem((string)$objTourist, $objTourist->Id, true);
 			}
 			return $listbox;
 		}
+
+		/**
+		 *
+		 * @param \QCubed\Project\Control\ControlBase $objParentObject
+		 * @param string $strControlId
+		 * @return \QCubed\Project\Control\ListBox
+		 */
+		public static function GetNicknameListBox($objParentObject, $strControlId=null) {
+			$arrAnimals				= array('Kangaroo', 'Koala', 'Rat', 'Badger', 'Pelican', 'Snail', 'Lion');
+			sort($arrAnimals);
+
+			$listbox				= new \QCubed\Project\Control\ListBox($objParentObject, $strControlId);
+
+			foreach($arrAnimals as $strAnimal) {
+				$listbox->AddItem(ucfirst($strAnimal), $strAnimal);
+			}
+			return $listbox;
+		}
+
+		/**
+		 *
+		 * @param \QCubed\Project\Control\ControlBase $objParentObject
+		 * @param string $strControlId
+		 * @return \QCubed\Project\Control\ListBox
+		 */
+		public static function GetStatusListBox($objParentObject, $strControlId=null) {
+			$arrStatus				= array(self::SAFE,self::REQUESTED_HELP,self::ACKNOWLEDGE_HELP_REQUEST,self::RESCUE_ON_THE_WAY);
+
+			$listbox				= new \QCubed\Project\Control\ListBox($objParentObject, $strControlId);
+
+			foreach($arrStatus as $strStatus) {
+				$listitem = new QCubed\Control\ListItem(ucfirst($strStatus), $strStatus);
+				$listbox->addItem($listitem);
+			}
+			return $listbox;
+		}
+
 
 		public function save($blnForceInsert = false, $blnForceUpdate = false) {
 			if(!$this->Status) {

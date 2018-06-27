@@ -44,7 +44,10 @@
 		}
 
 		public function renderDevice(Tourist $objTourist) {
-			return (string)$objTourist->DeviceTourist->Device;
+			$devicetourist = $objTourist->DeviceTourist;
+			if($devicetourist) {
+				return (string)$devicetourist->Device;
+			}
 		}
 
 	   

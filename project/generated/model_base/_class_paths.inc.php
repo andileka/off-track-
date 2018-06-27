@@ -64,12 +64,26 @@ $a['reversereferencenodeposition'] = QCUBED_PROJECT_MODEL_DIR . '/Position.php';
 $a['positionconnector'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/PositionConnector.php';
 $a['positionlist'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/PositionList.php';
 
+// ClassPaths for the Question class
+$a['question'] = QCUBED_PROJECT_MODEL_DIR . '/Question.php';
+$a['nodequestion'] = QCUBED_PROJECT_MODEL_DIR . '/Question.php';
+$a['reversereferencenodequestion'] = QCUBED_PROJECT_MODEL_DIR . '/Question.php';
+$a['questionconnector'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/QuestionConnector.php';
+$a['questionlist'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/QuestionList.php';
+
 // ClassPaths for the Tourist class
 $a['tourist'] = QCUBED_PROJECT_MODEL_DIR . '/Tourist.php';
 $a['nodetourist'] = QCUBED_PROJECT_MODEL_DIR . '/Tourist.php';
 $a['reversereferencenodetourist'] = QCUBED_PROJECT_MODEL_DIR . '/Tourist.php';
 $a['touristconnector'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/TouristConnector.php';
 $a['touristlist'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/TouristList.php';
+
+// ClassPaths for the TouristAnswer class
+$a['touristanswer'] = QCUBED_PROJECT_MODEL_DIR . '/TouristAnswer.php';
+$a['nodetouristanswer'] = QCUBED_PROJECT_MODEL_DIR . '/TouristAnswer.php';
+$a['reversereferencenodetouristanswer'] = QCUBED_PROJECT_MODEL_DIR . '/TouristAnswer.php';
+$a['touristanswerconnector'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/TouristAnswerConnector.php';
+$a['touristanswerlist'] = QCUBED_PROJECT_MODELCONNECTOR_DIR . '/TouristAnswerList.php';
 
 // ClassPaths for the TouristTrack class
 $a['touristtrack'] = QCUBED_PROJECT_MODEL_DIR . '/TouristTrack.php';

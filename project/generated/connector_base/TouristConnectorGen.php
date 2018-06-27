@@ -47,6 +47,8 @@ use QCubed\Query\Clause\ClauseInterface as QQClause;
  * @property-read QCubed\\Control\\Label $PositionIdLabel
  * @property QCubed\Project\Control\TextBox $StatusControl
  * @property-read QCubed\\Control\\Label $StatusLabel
+ * @property QCubed\Project\Control\TextBox $NicknameControl
+ * @property-read QCubed\\Control\\Label $NicknameLabel
  * @property-read string $TitleVerb a verb indicating whether or not this is being edited or created
  * @property-read boolean $EditMode a boolean indicating whether or not this is being edited or created
  */
@@ -249,6 +251,19 @@ class TouristConnectorGen extends \QCubed\ObjectBase
      * @access protected
      */
     protected $lblStatus;
+
+    /**
+     * @var QCubed\Project\Control\TextBox
+
+     * @access protected
+     */
+    protected $txtNickname;
+
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblNickname;
 
 
 
@@ -754,6 +769,39 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 
 
 
+		/**
+		 * Create and setup a QCubed\Project\Control\TextBox txtNickname
+		 * @param string $strControlId optional ControlId to use
+		 * @return QCubed\Project\Control\TextBox
+		 */
+		public function txtNickname_Create($strControlId = null) {
+			$this->txtNickname = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
+			$this->txtNickname->Name = t('Nickname');
+			$this->txtNickname->MaxLength = Tourist::NicknameMaxLength;
+			$this->txtNickname->PreferredRenderMethod = 'RenderWithName';
+        $this->txtNickname->LinkedNode = QQN::Tourist()->Nickname;
+			$this->txtNickname->Text = $this->objTourist->Nickname;
+			return $this->txtNickname;
+		}
+
+    /**
+     * Create and setup QCubed\Control\Label lblNickname
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblNickname_Create($strControlId = null) 
+    {
+        $this->lblNickname = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblNickname->Name = t('Nickname');
+        $this->lblNickname->PreferredRenderMethod = 'RenderWithName';
+        $this->lblNickname->LinkedNode = QQN::Tourist()->Nickname;
+			$this->lblNickname->Text = $this->objTourist->Nickname;
+        return $this->lblNickname;
+    }
+
+
+
 
 
 
@@ -829,6 +877,10 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 			if ($this->lblStatus) $this->lblStatus->Text = $this->objTourist->Status;
 
 
+			if ($this->txtNickname) $this->txtNickname->Text = $this->objTourist->Nickname;
+			if ($this->lblNickname) $this->lblNickname->Text = $this->objTourist->Nickname;
+
+
     }
 
     /**
@@ -885,6 +937,8 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 				if ($this->lstPosition) $this->objTourist->PositionId = $this->lstPosition->SelectedValue;
 
 				if ($this->txtStatus) $this->objTourist->Status = $this->txtStatus->Text;
+
+				if ($this->txtNickname) $this->objTourist->Nickname = $this->txtNickname->Text;
 
 
             // Update any UniqueReverseReferences for controls that have been created for it
@@ -1002,6 +1056,12 @@ class TouristConnectorGen extends \QCubed\ObjectBase
             case 'StatusLabel':
                 if (!$this->lblStatus) return $this->lblStatus_Create();
                 return $this->lblStatus;
+            case 'NicknameControl':
+                if (!$this->txtNickname) return $this->txtNickname_Create();
+                return $this->txtNickname;
+            case 'NicknameLabel':
+                if (!$this->lblNickname) return $this->lblNickname_Create();
+                return $this->lblNickname;
             default:
                 try {
                     return parent::__get($strName);
@@ -1093,6 +1153,12 @@ class TouristConnectorGen extends \QCubed\ObjectBase
                     break;
                 case 'StatusLabel':
                     $this->lblStatus = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'NicknameControl':
+                    $this->txtNickname = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');
+                    break;
+                case 'NicknameLabel':
+                    $this->lblNickname = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
                     break;
                 default:
                     parent::__set($strName, $mixValue);

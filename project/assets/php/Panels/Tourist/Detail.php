@@ -18,8 +18,16 @@ class Detail extends \QCubed\Project\Control\Editor {
 	public $lstCity;
 	/** @var \QCubed\Project\Control\ListBox */
 	public $lstCountry;
+	/** @var \QCubed\Project\Control\ListBox */
+	public $lstStatus;
 	
 	public $txtName;
+	/**
+	 *
+	 * @var \QCubed\Project\Control\ListBox
+	 */
+	public $lstNickname;
+	
 	/** @var \QCubed\Project\Control\TextBox */
 	public $txtContactinfo;
 
@@ -40,11 +48,21 @@ class Detail extends \QCubed\Project\Control\Editor {
 			return; 
 		}
 		$this->objTourist								= $objTourist;
-		$this->lstCountry->SelectedValue				= $objTourist->CountryId;
-		$this->lstCountry_Changed();
+		if($objTourist->CountryId) {
+			$this->lstCountry->SelectedValue				= $objTourist->CountryId;
+			$this->lstCountry_Changed();
+		} elseif( $objTourist->City->CountryId) {
+			$this->lstCountry->SelectedValue				= $objTourist->City->CountryId;
+			$this->lstCountry_Changed();
+		}
 		
 		$this->lstCity->SelectedValue					= $objTourist->CityId;
+		
 		$this->lstLanguage->SelectedValue				= $objTourist->LanguageId;
+		$this->lstStatus->SelectedValue					= $objTourist->Status;
+		$this->lstNickname->SelectedValue				= $objTourist->Nickname;
+
+		$this->txtContactinfo->Text						= $objTourist->Contactinfo;
 		$this->txtName->Text							= $this->objTourist->Name;
 		
 		//$this->SetCustomFields();
@@ -62,9 +80,12 @@ class Detail extends \QCubed\Project\Control\Editor {
 
 		$this->objTourist->CityId				= $this->lstCity->SelectedValue;
 		$this->objTourist->CountryId			= $this->lstCountry->SelectedValue;
+		$this->objTourist->Status				= $this->lstStatus->SelectedValue;
 		$this->objTourist->LanguageId			= $this->lstLanguage->SelectedValue;
 		$this->objTourist->Name					= $this->txtName->Text;
-		
+		$this->objTourist->Nickname				= $this->lstNickname->SelectedValue;
+		$this->objTourist->Contactinfo			= $this->txtContactinfo->Text;
+
 		$this->objTourist->save();
 		/*
 		foreach($this->ArrCustomFields as $customField){
@@ -107,7 +128,8 @@ class Detail extends \QCubed\Project\Control\Editor {
 		$this->lstCountry->addAction(new \QCubed\Event\Click(), new \QCubed\Action\AjaxControl($this,'lstCountry_Changed'));
 		$this->lstCity						= \City::GetListBox($this, null);
 		$this->lstLanguage					= \Language::GetListBox($this);
-
+		$this->lstNickname					= \Tourist::GetNicknameListBox($this);
+		$this->lstStatus					= \Tourist::GetStatusListBox($this);
 
 		$this->txtName						= new \QCubed\Project\Control\TextBox($this);
 		$this->txtContactinfo				= new \QCubed\Project\Control\TextBox($this);
