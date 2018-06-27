@@ -35,7 +35,6 @@ use QCubed\Query\ModelTrait;
  * @property string $Type the value of the type column 
  * @property \QCubed\QDateTime $Datetime the value of the datetime column 
  * @property integer $PositionId the value of the position_id column 
- * @property string $Status the value of the status column 
  * @property Device $Device the value of the Device object referenced by intDeviceId 
  * @property Position $Position the value of the Position object referenced by intPositionId 
  * @property-read boolean $__Restored whether or not this object was restored from the database (as opposed to created new)
@@ -102,16 +101,6 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
 
     const POSITION_ID_DEFAULT = null;
     const POSITION_ID_FIELD = 'position_id';
-
-
-    /**
-     * Protected member variable that maps to the database column event.status
-     * @var string strStatus
-     */
-    private $strStatus;
-
-    const STATUS_DEFAULT = 'not applicable';
-    const STATUS_FIELD = 'status';
 
 
     /**
@@ -193,8 +182,6 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
         $this->__blnValid[self::DATETIME_FIELD] = true;
         $this->intPositionId = Event::POSITION_ID_DEFAULT;
         $this->__blnValid[self::POSITION_ID_FIELD] = true;
-        $this->strStatus = Event::STATUS_DEFAULT;
-        $this->__blnValid[self::STATUS_FIELD] = true;
     }
 
    /**
@@ -491,16 +478,6 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
             else {
                 $blnNoCache = true;
             }
-            $strAlias = $strAliasPrefix . 'status';
-            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
-            if (isset ($strColumnKeys[$strAliasName])) {
-                $mixVal = $strColumns[$strAliasName];
-                $objToReturn->strStatus = $mixVal;
-                $objToReturn->__blnValid[self::STATUS_FIELD] = true;
-            }
-            else {
-                $blnNoCache = true;
-            }
 
             assert ($key === null || $objToReturn->PrimaryKey() == $key);
 
@@ -778,14 +755,12 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
 							`device_id`,
 							`type`,
 							`datetime`,
-							`position_id`,
-							`status`
+							`position_id`
 						) VALUES (
 							' . $objDatabase->SqlVariable($this->intDeviceId) . ',
 							' . $objDatabase->SqlVariable($this->strType) . ',
 							' . $objDatabase->SqlVariable($this->dttDatetime) . ',
-							' . $objDatabase->SqlVariable($this->intPositionId) . ',
-							' . $objDatabase->SqlVariable($this->strStatus) . '
+							' . $objDatabase->SqlVariable($this->intPositionId) . '
 						)
         ');
         // Update Identity column and return its value
@@ -852,11 +827,6 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
 		if (isset($this->__blnDirty[self::POSITION_ID_FIELD])) {
 			$strCol = '`position_id`';
 			$strValue = $objDatabase->sqlVariable($this->intPositionId);
-			$values[] = $strCol . ' = ' . $strValue;
-		}
-		if (isset($this->__blnDirty[self::STATUS_FIELD])) {
-			$strCol = '`status`';
-			$strValue = $objDatabase->sqlVariable($this->strStatus);
 			$values[] = $strCol . ' = ' . $strValue;
 		}
 		if ($values) {
@@ -969,10 +939,6 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
 			$this->intPositionId = $objReloaded->intPositionId;
 			$this->objPosition = $objReloaded->objPosition;
 			$this->__blnValid[self::POSITION_ID_FIELD] = true;
-		}
-		if (isset($objReloaded->__blnValid[self::STATUS_FIELD])) {
-			$this->strStatus = $objReloaded->strStatus;
-			$this->__blnValid[self::STATUS_FIELD] = true;
 		}
 	}
     ////////////////////
@@ -1238,41 +1204,6 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
         return $this;
     }
 
-   /**
-	* Gets the value of strStatus 
-	* @throws Caller
-	* @return string
-	*/
-	public function getStatus()
-    {
-		if ($this->__blnRestored && empty($this->__blnValid[self::STATUS_FIELD])) {
-			throw new Caller("Status was not selected in the most recent query and is not valid.");
-		}
-		return $this->strStatus;
-	}
-
-
-
-
-   /**
-	* Sets the value of strStatus 
-	* Returns $this to allow chaining of setters.
-	* @param string|null $strStatus
-    * @throws Caller
-	* @return Event
-	*/
-	public function setStatus($strStatus)
-    {
-		$strStatus = Type::Cast($strStatus, QCubed\Type::STRING);
-
-		if ($this->strStatus !== $strStatus) {
-			$this->strStatus = $strStatus;
-			$this->__blnDirty[self::STATUS_FIELD] = true;
-		}
-		$this->__blnValid[self::STATUS_FIELD] = true;
-		return $this; // allows chaining
-	}
-
 
     /**
     * Copying an object creates a copy of the object with all external references nulled and null primary keys in
@@ -1533,7 +1464,6 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
         $strToReturn .= '<element name="Type" type="xsd:string"/>';
         $strToReturn .= '<element name="Datetime" type="xsd:dateTime"/>';
         $strToReturn .= '<element name="Position" type="xsd1:Position"/>';
-        $strToReturn .= '<element name="Status" type="xsd:string"/>';
         $strToReturn .= '<element name="__blnRestored" type="xsd:boolean"/>';
         $strToReturn .= '</sequence></complexType>';
         return $strToReturn;
@@ -1573,8 +1503,6 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
         if ((property_exists($objSoapObject, 'Position')) &&
             ($objSoapObject->Position))
             $objToReturn->Position = Position::GetObjectFromSoapObject($objSoapObject->Position);
-        if (property_exists($objSoapObject, 'Status'))
-            $objToReturn->strStatus = $objSoapObject->Status;
         if (property_exists($objSoapObject, '__blnRestored'))
             $objToReturn->__blnRestored = $objSoapObject->__blnRestored;
         return $objToReturn;
@@ -1630,9 +1558,6 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
         }
         if (isset($this->__blnValid[self::POSITION_ID_FIELD])) {
             $iArray['PositionId'] = $this->intPositionId;
-        }
-        if (isset($this->__blnValid[self::STATUS_FIELD])) {
-            $iArray['Status'] = $this->strStatus;
         }
         return new ArrayIterator($iArray);
     }
@@ -1694,9 +1619,6 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
         } elseif (isset($this->__blnValid[self::POSITION_ID_FIELD])) {
             $a['position_id'] = $this->intPositionId;
         }
-        if (isset($this->__blnValid[self::STATUS_FIELD])) {
-            $a['status'] = $this->strStatus;
-        }
         return $a;
     }
 
@@ -1720,7 +1642,6 @@ abstract class EventGen extends \QCubed\ObjectBase implements IteratorAggregate,
  * @property-read Node\Column $Datetime
  * @property-read Node\Column $PositionId
  * @property-read NodePosition $Position
- * @property-read Node\Column $Status
  * @property-read Node\Column $_PrimaryKeyNode
  **/
 class NodeEvent extends Node\Table {
@@ -1738,7 +1659,6 @@ class NodeEvent extends Node\Table {
             "type",
             "datetime",
             "position_id",
-            "status",
         ];
     }
 
@@ -1781,8 +1701,6 @@ class NodeEvent extends Node\Table {
                 return new Node\Column('position_id', 'PositionId', 'Integer', $this);
             case 'Position':
                 return new NodePosition('position_id', 'Position', 'Integer', $this);
-            case 'Status':
-                return new Node\Column('status', 'Status', 'VarChar', $this);
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);
@@ -1805,7 +1723,6 @@ class NodeEvent extends Node\Table {
  * @property-read Node\Column $Datetime
  * @property-read Node\Column $PositionId
  * @property-read NodePosition $Position
- * @property-read Node\Column $Status
 
  * @property-read Node\Column $_PrimaryKeyNode
  **/
@@ -1824,7 +1741,6 @@ class ReverseReferenceNodeEvent extends Node\ReverseReference {
             "type",
             "datetime",
             "position_id",
-            "status",
         ];
     }
 
@@ -1859,8 +1775,6 @@ class ReverseReferenceNodeEvent extends Node\ReverseReference {
                 return new Node\Column('position_id', 'PositionId', 'Integer', $this);
             case 'Position':
                 return new NodePosition('position_id', 'Position', 'Integer', $this);
-            case 'Status':
-                return new Node\Column('status', 'Status', 'VarChar', $this);
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);
