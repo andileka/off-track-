@@ -76,7 +76,7 @@
 			$listbox				= new \QCubed\Project\Control\ListBox($objParentObject, $strControlId);
 
 			foreach($arrStatus as $strStatus) {
-				$listitem = new QCubed\Control\ListItem(ucfirst($strStatus), $strStatus);
+				$listitem = new QCubed\Control\ListItem(ucfirst(str_replace('_',' ',$strStatus)), $strStatus);
 				$listbox->addItem($listitem);
 			}
 			return $listbox;
