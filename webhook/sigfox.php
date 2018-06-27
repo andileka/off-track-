@@ -46,11 +46,13 @@ class SigfoxParser {
 			case \Event::SIGFOX_EVENT_BUTTON:
 				$event = \Event::CreateForDeviceId($device->Id, \Event::BUTTONPRESS, $_POST['lat'], $_POST['long']);
 				$objTourist->Status = Tourist::REQUESTED_HELP;
+				$objTourist->Save();
 				//$objTourist->SaveCurrentPosition($event->Position);
 				break;
 			case \Event::SIGFOX_EVENT_FALL:
 				$event = \Event::CreateForDeviceId($device->Id, \Event::FALL, $_POST['lat'], $_POST['long']);
 				$objTourist->Status = Tourist::REQUESTED_HELP;
+				$objTourist->Save();
 				//$objTourist->SaveCurrentPosition($event->Position);
 				break;
 			case \Event::SIGFOX_EVENT_CHECKIN:
