@@ -77,8 +77,8 @@ abstract class PositionGen extends \QCubed\ObjectBase implements IteratorAggrega
      * @var string strLat
      */
     private $strLat;
-    const LatMaxLength = 9; // Deprecated
-    const LAT_MAX_LENGTH = 9;
+    const LatMaxLength = 11; // Deprecated
+    const LAT_MAX_LENGTH = 11;
 
     const LAT_DEFAULT = null;
     const LAT_FIELD = 'lat';
@@ -89,8 +89,8 @@ abstract class PositionGen extends \QCubed\ObjectBase implements IteratorAggrega
      * @var string strLong
      */
     private $strLong;
-    const LongMaxLength = 9; // Deprecated
-    const LONG_MAX_LENGTH = 9;
+    const LongMaxLength = 11; // Deprecated
+    const LONG_MAX_LENGTH = 11;
 
     const LONG_DEFAULT = null;
     const LONG_FIELD = 'long';

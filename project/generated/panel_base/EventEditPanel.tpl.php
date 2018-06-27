@@ -12,3 +12,4 @@
 <?= _r($this->txtType); ?>
 <?= _r($this->calDatetime); ?>
 <?= _r($this->lstPosition); ?>
+<?= _r($this->txtStatus); ?>

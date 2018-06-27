@@ -38,6 +38,9 @@ class EventEditPanelGen extends Panel
 	/** @var \QCubed\Project\Control\ListBox */
 	protected $lstPosition;
 
+	/** @var \QCubed\Project\Control\TextBox */
+	protected $txtStatus;
+
 
 	/**
 	 * @param FormBase|ControlBase $objParentObject
@@ -70,6 +73,7 @@ class EventEditPanelGen extends Panel
 		$this->txtType = $this->mctEvent->txtType_Create();
 		$this->calDatetime = $this->mctEvent->calDatetime_Create();
 		$this->lstPosition = $this->mctEvent->lstPosition_Create();
+		$this->txtStatus = $this->mctEvent->txtStatus_Create();
 	}
 
 	/**
