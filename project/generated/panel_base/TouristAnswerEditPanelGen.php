@@ -26,11 +26,11 @@ class TouristAnswerEditPanelGen extends Panel
 	/** @var \QCubed\Control\Label */
 	protected $lblId;
 
-	/** @var \QCubed\Control\IntegerTextBox */
-	protected $txtTouristId;
+	/** @var \QCubed\Project\Control\ListBox */
+	protected $lstTourist;
 
-	/** @var \QCubed\Control\IntegerTextBox */
-	protected $txtQuestionId;
+	/** @var \QCubed\Project\Control\ListBox */
+	protected $lstQuestion;
 
 	/** @var \QCubed\Project\Control\TextBox */
 	protected $txtAnswer;
@@ -63,8 +63,8 @@ class TouristAnswerEditPanelGen extends Panel
 	 **/
 	protected function createObjects() {
 		$this->lblId = $this->mctTouristAnswer->lblId_Create();
-		$this->txtTouristId = $this->mctTouristAnswer->txtTouristId_Create();
-		$this->txtQuestionId = $this->mctTouristAnswer->txtQuestionId_Create();
+		$this->lstTourist = $this->mctTouristAnswer->lstTourist_Create();
+		$this->lstQuestion = $this->mctTouristAnswer->lstQuestion_Create();
 		$this->txtAnswer = $this->mctTouristAnswer->txtAnswer_Create();
 	}
 

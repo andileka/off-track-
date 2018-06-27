@@ -45,9 +45,9 @@ class TouristAnswerListGen extends \QCubed\Project\Control\DataGrid
 	/** @var NodeColumn */
 	public $colId;
 	/** @var NodeColumn */
-	public $colTouristId;
+	public $colTourist;
 	/** @var NodeColumn */
-	public $colQuestionId;
+	public $colQuestion;
 	/** @var NodeColumn */
 	public $colAnswer;
 
@@ -82,8 +82,8 @@ class TouristAnswerListGen extends \QCubed\Project\Control\DataGrid
 	public function createColumns() 
 	{
 		$this->colId = $this->createNodeColumn("Id", QQN::TouristAnswer()->Id);
-		$this->colTouristId = $this->createNodeColumn("Tourist Id", QQN::TouristAnswer()->TouristId);
-		$this->colQuestionId = $this->createNodeColumn("Question Id", QQN::TouristAnswer()->QuestionId);
+		$this->colTourist = $this->createNodeColumn("Tourist", QQN::TouristAnswer()->Tourist);
+		$this->colQuestion = $this->createNodeColumn("Question", QQN::TouristAnswer()->Question);
 		$this->colAnswer = $this->createNodeColumn("Answer", QQN::TouristAnswer()->Answer);
 	}
 

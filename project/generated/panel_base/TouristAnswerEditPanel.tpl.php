@@ -8,6 +8,6 @@
 ?>
 
 <?= _r($this->lblId); ?>
-<?= _r($this->txtTouristId); ?>
-<?= _r($this->txtQuestionId); ?>
+<?= _r($this->lstTourist); ?>
+<?= _r($this->lstQuestion); ?>
 <?= _r($this->txtAnswer); ?>

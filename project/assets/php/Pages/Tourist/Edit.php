@@ -14,6 +14,12 @@ class Edit extends \QCubed\Control\Panel {
 	 * @var \Hikify\Panels\Tourist\Detail
 	 */
 	public $pnlTourist;
+
+	/**
+	 *
+	 * @var \Hikify\Panels\Tourist\Questions
+	 */
+	public $pnlQuestions;
 	public $pnlEvents;
 	public $pnlMap;
 			
@@ -46,6 +52,9 @@ class Edit extends \QCubed\Control\Panel {
 		
 		$this->pnlEvents		= new \Hikify\Panels\Tourist\Event($this);
 		$this->pnlEvents->SetTourist($objTourist);
+
+		$this->pnlQuestions		= new \Hikify\Panels\Tourist\Questions($this);
+		$this->pnlQuestions->SetTourist($objTourist);
 	}
 
 	

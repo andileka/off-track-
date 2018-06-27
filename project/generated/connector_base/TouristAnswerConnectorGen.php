@@ -6,7 +6,11 @@ use QCubed\Project\Control\FormBase;
 use QCubed\Project\Control\ControlBase;
 use QCubed\Query\QQ;
 use QCubed\Control\Label;
-use QCubed\Control\IntegerTextBox;
+use QCubed\Project\Control\ListBox;
+use QCubed\Control\ListControl;
+use QCubed\Control\ListItem;
+use QCubed\Query\Condition\ConditionInterface as QQCondition;
+use QCubed\Query\Clause\ClauseInterface as QQClause;
 use QCubed\Project\Control\TextBox;
 
 /**
@@ -27,9 +31,9 @@ use QCubed\Project\Control\TextBox;
  * @subpackage ModelConnector
  * @property-read TouristAnswer $TouristAnswer the actual TouristAnswer data class being edited
  * @property-read QCubed\\Control\\Label $IdLabel
- * @property QCubed\Control\IntegerTextBox $TouristIdControl
+ * @property QCubed\Project\Control\ListBox $TouristIdControl
  * @property-read QCubed\\Control\\Label $TouristIdLabel
- * @property QCubed\Control\IntegerTextBox $QuestionIdControl
+ * @property QCubed\Project\Control\ListBox $QuestionIdControl
  * @property-read QCubed\\Control\\Label $QuestionIdLabel
  * @property QCubed\Project\Control\TextBox $AnswerControl
  * @property-read QCubed\\Control\\Label $AnswerLabel
@@ -69,30 +73,62 @@ class TouristAnswerConnectorGen extends \QCubed\ObjectBase
     protected $lblId;
 
     /**
-     * @var QCubed\Control\IntegerTextBox
-
+     * @var QCubed\Project\Control\ListBox
      * @access protected
      */
-    protected $txtTouristId;
+    protected $lstTourist;
 
+    /**
+     * @var string 
+     * @access protected
+     */
+    protected $strTouristNullLabel;
+
+    /**
+    * @var QQCondition
+    * @access protected
+    */
+    protected $objTouristCondition;
+
+    /**
+    * @var QQClause[]
+    * @access protected
+    */
+    protected $objTouristClauses;
     /**
      * @var Label
      * @access protected
      */
-    protected $lblTouristId;
+    protected $lblTourist;
 
     /**
-     * @var QCubed\Control\IntegerTextBox
-
+     * @var QCubed\Project\Control\ListBox
      * @access protected
      */
-    protected $txtQuestionId;
+    protected $lstQuestion;
 
+    /**
+     * @var string 
+     * @access protected
+     */
+    protected $strQuestionNullLabel;
+
+    /**
+    * @var QQCondition
+    * @access protected
+    */
+    protected $objQuestionCondition;
+
+    /**
+    * @var QQClause[]
+    * @access protected
+    */
+    protected $objQuestionClauses;
     /**
      * @var Label
      * @access protected
      */
-    protected $lblQuestionId;
+    protected $lblQuestion;
 
     /**
      * @var QCubed\Project\Control\TextBox
@@ -219,65 +255,131 @@ class TouristAnswerConnectorGen extends \QCubed\ObjectBase
 
 
 		/**
-		 * Create and setup a QCubed\Control\IntegerTextBox txtTouristId
+		 * Create and setup QCubed\Project\Control\ListBox lstTourist
 		 * @param string $strControlId optional ControlId to use
-		 * @return QCubed\Control\IntegerTextBox
+		 * @param QQCondition $objCondition override the default condition of QQ::all() to the query, itself
+		 * @param QQClause[] $objClauses additional QQClause object or array of QQClause objects for the query
+		 * @return ListBox
 		 */
-		public function txtTouristId_Create($strControlId = null) {
-			$this->txtTouristId = new \QCubed\Control\IntegerTextBox($this->objParentObject, $strControlId);
-			$this->txtTouristId->Name = t('Tourist Id');
-			$this->txtTouristId->PreferredRenderMethod = 'RenderWithName';
-        $this->txtTouristId->LinkedNode = QQN::TouristAnswer()->TouristId;
-			$this->txtTouristId->Text = $this->objTouristAnswer->TouristId;
-			return $this->txtTouristId;
+		public function lstTourist_Create($strControlId = null, QQCondition $objCondition = null, $objClauses = null) {
+			$this->objTouristCondition = $objCondition;
+			$this->objTouristClauses = $objClauses;
+			$this->lstTourist = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
+			$this->lstTourist->Name = t('Tourist');
+			$this->lstTourist->PreferredRenderMethod = 'RenderWithName';
+        $this->lstTourist->LinkedNode = QQN::TouristAnswer()->Tourist;
+      if (!$this->strTouristNullLabel) {
+      	if (!$this->lstTourist->Required) {
+      		$this->strTouristNullLabel = t('- None -');
+      	}
+      	elseif (!$this->blnEditMode) {
+      		$this->strTouristNullLabel = t('- Select One -');
+      	}
+      }
+      $this->lstTourist->addItem($this->strTouristNullLabel, null);
+      $this->lstTourist->addItems($this->lstTourist_GetItems());
+      $this->lstTourist->SelectedValue = $this->objTouristAnswer->TouristId;
+			return $this->lstTourist;
 		}
 
+		/**
+		 *	Create item list for use by lstTourist
+		 */
+		 public function lstTourist_GetItems() {
+			$a = array();
+			$objCondition = $this->objTouristCondition;
+			if (is_null($objCondition)) $objCondition = QQ::all();
+			$objTouristCursor = Tourist::queryCursor($objCondition, $this->objTouristClauses);
+
+			// Iterate through the Cursor
+			while ($objTourist = Tourist::instantiateCursor($objTouristCursor)) {
+				$objListItem = new ListItem($objTourist->__toString(), $objTourist->Id);
+				if (($this->objTouristAnswer->Tourist) && ($this->objTouristAnswer->Tourist->Id == $objTourist->Id))
+					$objListItem->Selected = true;
+				$a[] = $objListItem;
+			}
+			return $a;
+		 }
+
     /**
-     * Create and setup QCubed\Control\Label lblTouristId
+     * Create and setup QCubed\Control\Label lblTourist
      *
      * @param string $strControlId optional ControlId to use
      * @return QCubed\Control\Label
      */
-    public function lblTouristId_Create($strControlId = null) 
+    public function lblTourist_Create($strControlId = null) 
     {
-        $this->lblTouristId = new \QCubed\Control\Label($this->objParentObject, $strControlId);
-        $this->lblTouristId->Name = t('Tourist Id');
-        $this->lblTouristId->PreferredRenderMethod = 'RenderWithName';
-        $this->lblTouristId->LinkedNode = QQN::TouristAnswer()->TouristId;
-			$this->lblTouristId->Text = $this->objTouristAnswer->TouristId;
-        return $this->lblTouristId;
+        $this->lblTourist = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblTourist->Name = t('Tourist');
+        $this->lblTourist->PreferredRenderMethod = 'RenderWithName';
+        $this->lblTourist->LinkedNode = QQN::TouristAnswer()->Tourist;
+			$this->lblTourist->Text = $this->objTouristAnswer->Tourist ? $this->objTouristAnswer->Tourist->__toString() : null;
+        return $this->lblTourist;
     }
 
 
 
 		/**
-		 * Create and setup a QCubed\Control\IntegerTextBox txtQuestionId
+		 * Create and setup QCubed\Project\Control\ListBox lstQuestion
 		 * @param string $strControlId optional ControlId to use
-		 * @return QCubed\Control\IntegerTextBox
+		 * @param QQCondition $objCondition override the default condition of QQ::all() to the query, itself
+		 * @param QQClause[] $objClauses additional QQClause object or array of QQClause objects for the query
+		 * @return ListBox
 		 */
-		public function txtQuestionId_Create($strControlId = null) {
-			$this->txtQuestionId = new \QCubed\Control\IntegerTextBox($this->objParentObject, $strControlId);
-			$this->txtQuestionId->Name = t('Question Id');
-			$this->txtQuestionId->PreferredRenderMethod = 'RenderWithName';
-        $this->txtQuestionId->LinkedNode = QQN::TouristAnswer()->QuestionId;
-			$this->txtQuestionId->Text = $this->objTouristAnswer->QuestionId;
-			return $this->txtQuestionId;
+		public function lstQuestion_Create($strControlId = null, QQCondition $objCondition = null, $objClauses = null) {
+			$this->objQuestionCondition = $objCondition;
+			$this->objQuestionClauses = $objClauses;
+			$this->lstQuestion = new \QCubed\Project\Control\ListBox($this->objParentObject, $strControlId);
+			$this->lstQuestion->Name = t('Question');
+			$this->lstQuestion->PreferredRenderMethod = 'RenderWithName';
+        $this->lstQuestion->LinkedNode = QQN::TouristAnswer()->Question;
+      if (!$this->strQuestionNullLabel) {
+      	if (!$this->lstQuestion->Required) {
+      		$this->strQuestionNullLabel = t('- None -');
+      	}
+      	elseif (!$this->blnEditMode) {
+      		$this->strQuestionNullLabel = t('- Select One -');
+      	}
+      }
+      $this->lstQuestion->addItem($this->strQuestionNullLabel, null);
+      $this->lstQuestion->addItems($this->lstQuestion_GetItems());
+      $this->lstQuestion->SelectedValue = $this->objTouristAnswer->QuestionId;
+			return $this->lstQuestion;
 		}
 
+		/**
+		 *	Create item list for use by lstQuestion
+		 */
+		 public function lstQuestion_GetItems() {
+			$a = array();
+			$objCondition = $this->objQuestionCondition;
+			if (is_null($objCondition)) $objCondition = QQ::all();
+			$objQuestionCursor = Question::queryCursor($objCondition, $this->objQuestionClauses);
+
+			// Iterate through the Cursor
+			while ($objQuestion = Question::instantiateCursor($objQuestionCursor)) {
+				$objListItem = new ListItem($objQuestion->__toString(), $objQuestion->Id);
+				if (($this->objTouristAnswer->Question) && ($this->objTouristAnswer->Question->Id == $objQuestion->Id))
+					$objListItem->Selected = true;
+				$a[] = $objListItem;
+			}
+			return $a;
+		 }
+
     /**
-     * Create and setup QCubed\Control\Label lblQuestionId
+     * Create and setup QCubed\Control\Label lblQuestion
      *
      * @param string $strControlId optional ControlId to use
      * @return QCubed\Control\Label
      */
-    public function lblQuestionId_Create($strControlId = null) 
+    public function lblQuestion_Create($strControlId = null) 
     {
-        $this->lblQuestionId = new \QCubed\Control\Label($this->objParentObject, $strControlId);
-        $this->lblQuestionId->Name = t('Question Id');
-        $this->lblQuestionId->PreferredRenderMethod = 'RenderWithName';
-        $this->lblQuestionId->LinkedNode = QQN::TouristAnswer()->QuestionId;
-			$this->lblQuestionId->Text = $this->objTouristAnswer->QuestionId;
-        return $this->lblQuestionId;
+        $this->lblQuestion = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblQuestion->Name = t('Question');
+        $this->lblQuestion->PreferredRenderMethod = 'RenderWithName';
+        $this->lblQuestion->LinkedNode = QQN::TouristAnswer()->Question;
+			$this->lblQuestion->Text = $this->objTouristAnswer->Question ? $this->objTouristAnswer->Question->__toString() : null;
+        return $this->lblQuestion;
     }
 
 
@@ -333,12 +435,24 @@ class TouristAnswerConnectorGen extends \QCubed\ObjectBase
 			if ($this->lblId) $this->lblId->Text =  $this->blnEditMode ? $this->objTouristAnswer->Id : t('N\A');
 
 
-			if ($this->txtTouristId) $this->txtTouristId->Text = $this->objTouristAnswer->TouristId;
-			if ($this->lblTouristId) $this->lblTouristId->Text = $this->objTouristAnswer->TouristId;
+      if ($this->lstTourist) {
+        $this->lstTourist->removeAllItems();
+        $this->lstTourist->addItem($this->strTouristNullLabel, null);
+        $this->lstTourist->addItems($this->lstTourist_GetItems());
+        $this->lstTourist->SelectedValue = $this->objTouristAnswer->TouristId;
+      
+      }
+			if ($this->lblTourist) $this->lblTourist->Text = $this->objTouristAnswer->Tourist ? $this->objTouristAnswer->Tourist->__toString() : null;
 
 
-			if ($this->txtQuestionId) $this->txtQuestionId->Text = $this->objTouristAnswer->QuestionId;
-			if ($this->lblQuestionId) $this->lblQuestionId->Text = $this->objTouristAnswer->QuestionId;
+      if ($this->lstQuestion) {
+        $this->lstQuestion->removeAllItems();
+        $this->lstQuestion->addItem($this->strQuestionNullLabel, null);
+        $this->lstQuestion->addItems($this->lstQuestion_GetItems());
+        $this->lstQuestion->SelectedValue = $this->objTouristAnswer->QuestionId;
+      
+      }
+			if ($this->lblQuestion) $this->lblQuestion->Text = $this->objTouristAnswer->Question ? $this->objTouristAnswer->Question->__toString() : null;
 
 
 			if ($this->txtAnswer) $this->txtAnswer->Text = $this->objTouristAnswer->Answer;
@@ -386,9 +500,9 @@ class TouristAnswerConnectorGen extends \QCubed\ObjectBase
         try {
             // Update any fields for controls that have been created
 
-				if ($this->txtTouristId) $this->objTouristAnswer->TouristId = $this->txtTouristId->Text;
+				if ($this->lstTourist) $this->objTouristAnswer->TouristId = $this->lstTourist->SelectedValue;
 
-				if ($this->txtQuestionId) $this->objTouristAnswer->QuestionId = $this->txtQuestionId->Text;
+				if ($this->lstQuestion) $this->objTouristAnswer->QuestionId = $this->lstQuestion->SelectedValue;
 
 				if ($this->txtAnswer) $this->objTouristAnswer->Answer = $this->txtAnswer->Text;
 
@@ -453,17 +567,21 @@ class TouristAnswerConnectorGen extends \QCubed\ObjectBase
                 if (!$this->lblId) return $this->lblId_Create();
                 return $this->lblId;
             case 'TouristIdControl':
-                if (!$this->txtTouristId) return $this->txtTouristId_Create();
-                return $this->txtTouristId;
+                if (!$this->lstTourist) return $this->lstTourist_Create();
+                return $this->lstTourist;
             case 'TouristIdLabel':
-                if (!$this->lblTouristId) return $this->lblTouristId_Create();
-                return $this->lblTouristId;
+                if (!$this->lblTourist) return $this->lblTourist_Create();
+                return $this->lblTourist;
+            case 'TouristNullLabel':
+                return $this->strTouristNullLabel;
             case 'QuestionIdControl':
-                if (!$this->txtQuestionId) return $this->txtQuestionId_Create();
-                return $this->txtQuestionId;
+                if (!$this->lstQuestion) return $this->lstQuestion_Create();
+                return $this->lstQuestion;
             case 'QuestionIdLabel':
-                if (!$this->lblQuestionId) return $this->lblQuestionId_Create();
-                return $this->lblQuestionId;
+                if (!$this->lblQuestion) return $this->lblQuestion_Create();
+                return $this->lblQuestion;
+            case 'QuestionNullLabel':
+                return $this->strQuestionNullLabel;
             case 'AnswerControl':
                 if (!$this->txtAnswer) return $this->txtAnswer_Create();
                 return $this->txtAnswer;
@@ -503,16 +621,22 @@ class TouristAnswerConnectorGen extends \QCubed\ObjectBase
                     $this->lblId = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
                     break;
                 case 'TouristIdControl':
-                    $this->txtTouristId = Type::Cast($mixValue, '\\QCubed\Control\IntegerTextBox');
+                    $this->lstTourist = Type::Cast($mixValue, '\\QCubed\Project\Control\ListBox');
                     break;
                 case 'TouristIdLabel':
-                    $this->lblTouristId = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    $this->lblTourist = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'TouristNullLabel':
+                    $this->strTouristNullLabel = $mixValue;
                     break;
                 case 'QuestionIdControl':
-                    $this->txtQuestionId = Type::Cast($mixValue, '\\QCubed\Control\IntegerTextBox');
+                    $this->lstQuestion = Type::Cast($mixValue, '\\QCubed\Project\Control\ListBox');
                     break;
                 case 'QuestionIdLabel':
-                    $this->lblQuestionId = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    $this->lblQuestion = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
+                    break;
+                case 'QuestionNullLabel':
+                    $this->strQuestionNullLabel = $mixValue;
                     break;
                 case 'AnswerControl':
                     $this->txtAnswer = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');

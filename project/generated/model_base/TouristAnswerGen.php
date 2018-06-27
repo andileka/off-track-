@@ -34,6 +34,8 @@ use QCubed\Query\ModelTrait;
  * @property integer $TouristId the value of the tourist_id column 
  * @property integer $QuestionId the value of the question_id column 
  * @property string $Answer the value of the answer column 
+ * @property Tourist $Tourist the value of the Tourist object referenced by intTouristId 
+ * @property Question $Question the value of the Question object referenced by intQuestionId 
  * @property-read boolean $__Restored whether or not this object was restored from the database (as opposed to created new)
  */
 abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAggregate, JsonSerializable {
@@ -122,6 +124,26 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
     ///////////////////////////////
     // PROTECTED MEMBER OBJECTS
     ///////////////////////////////
+
+    /**
+     * Protected member variable that contains the object pointed by the reference
+     * in the database column tourist_answer.tourist_id.
+     *
+     * NOTE: Always use the Tourist property getter to correctly retrieve this Tourist object.
+     * (Because this class implements late binding, this variable reference MAY be null.)
+     * @var Tourist objTourist
+     */
+    protected $objTourist;
+
+    /**
+     * Protected member variable that contains the object pointed by the reference
+     * in the database column tourist_answer.question_id.
+     *
+     * NOTE: Always use the Question property getter to correctly retrieve this Question object.
+     * (Because this class implements late binding, this variable reference MAY be null.)
+     * @var Question objQuestion
+     */
+    protected $objQuestion;
 
 
 
@@ -360,6 +382,18 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
         }
 			
 
+        // See if we're doing an array expansion on the previous item
+        if ($objExpandAsArrayNode &&
+                is_array($objPreviousItemArray) &&
+                count($objPreviousItemArray)) {
+
+            $expansionStatus = static::expandArray ($objDbRow, $strAliasPrefix, $objExpandAsArrayNode, $objPreviousItemArray, $strColumnAliasArray);
+            if ($expansionStatus) {
+                return false; // db row was used but no new object was created
+            } elseif ($expansionStatus === null) {
+                $blnCheckDuplicate = true;
+            }
+        }
 
 
         $objToReturn = static::getFromCache ($key);
@@ -455,6 +489,28 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
         if (!$strAliasPrefix)
             $strAliasPrefix = 'tourist_answer__';
 
+        // Check for Tourist Early Binding
+        $strAlias = $strAliasPrefix . 'tourist_id__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        if (isset ($strColumns[$strAliasName])) {
+            $objExpansionNode = (empty($objExpansionAliasArray['tourist_id']) ? null : $objExpansionAliasArray['tourist_id']);
+            $objToReturn->objTourist = Tourist::instantiateDbRow($objDbRow, $strAliasPrefix . 'tourist_id__', $objExpansionNode, null, $strColumnAliasArray, false, 'touristanswer', $objToReturn);
+        }
+        elseif ($strParentExpansionKey === 'tourist_id' && $objExpansionParent) {
+            $objToReturn->objTourist = $objExpansionParent;
+        }
+
+        // Check for Question Early Binding
+        $strAlias = $strAliasPrefix . 'question_id__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        if (isset ($strColumns[$strAliasName])) {
+            $objExpansionNode = (empty($objExpansionAliasArray['question_id']) ? null : $objExpansionAliasArray['question_id']);
+            $objToReturn->objQuestion = Question::instantiateDbRow($objDbRow, $strAliasPrefix . 'question_id__', $objExpansionNode, null, $strColumnAliasArray, false, 'touristanswer', $objToReturn);
+        }
+        elseif ($strParentExpansionKey === 'question_id' && $objExpansionParent) {
+            $objToReturn->objQuestion = $objExpansionParent;
+        }
+
 
 
 
@@ -544,6 +600,76 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
                 QQ::Equal(QQN::TouristAnswer()->Id, $intId)
             ),
             $objOptionalClauses
+        );
+    }
+
+    /**
+     * Load an array of TouristAnswer objects,
+     * by TouristId Index(es)
+     * @param integer $intTouristId
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @throws Caller
+     * @return TouristAnswer[]
+    */
+    public static function loadArrayByTouristId($intTouristId, $objOptionalClauses = null)
+    {
+        // Call TouristAnswer::QueryArray to perform the LoadArrayByTouristId query
+        try {
+            return TouristAnswer::QueryArray(
+                QQ::Equal(QQN::TouristAnswer()->TouristId, $intTouristId),
+                $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Count TouristAnswers
+     * by TouristId Index(es)
+     * @param integer $intTouristId
+     * @return int
+    */
+    public static function countByTouristId($intTouristId)
+    {
+        // Call TouristAnswer::QueryCount to perform the CountByTouristId query
+        return TouristAnswer::QueryCount(
+            QQ::Equal(QQN::TouristAnswer()->TouristId, $intTouristId)
+        );
+    }
+
+    /**
+     * Load an array of TouristAnswer objects,
+     * by QuestionId Index(es)
+     * @param integer $intQuestionId
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @throws Caller
+     * @return TouristAnswer[]
+    */
+    public static function loadArrayByQuestionId($intQuestionId, $objOptionalClauses = null)
+    {
+        // Call TouristAnswer::QueryArray to perform the LoadArrayByQuestionId query
+        try {
+            return TouristAnswer::QueryArray(
+                QQ::Equal(QQN::TouristAnswer()->QuestionId, $intQuestionId),
+                $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Count TouristAnswers
+     * by QuestionId Index(es)
+     * @param integer $intQuestionId
+     * @return int
+    */
+    public static function countByQuestionId($intQuestionId)
+    {
+        // Call TouristAnswer::QueryCount to perform the CountByQuestionId query
+        return TouristAnswer::QueryCount(
+            QQ::Equal(QQN::TouristAnswer()->QuestionId, $intQuestionId)
         );
     }
 
@@ -765,10 +891,12 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
 		$this->__blnValid[self::ID_FIELD] = true;
 		if (isset($objReloaded->__blnValid[self::TOURIST_ID_FIELD])) {
 			$this->intTouristId = $objReloaded->intTouristId;
+			$this->objTourist = $objReloaded->objTourist;
 			$this->__blnValid[self::TOURIST_ID_FIELD] = true;
 		}
 		if (isset($objReloaded->__blnValid[self::QUESTION_ID_FIELD])) {
 			$this->intQuestionId = $objReloaded->intQuestionId;
+			$this->objQuestion = $objReloaded->objQuestion;
 			$this->__blnValid[self::QUESTION_ID_FIELD] = true;
 		}
 		if (isset($objReloaded->__blnValid[self::ANSWER_FIELD])) {
@@ -829,6 +957,23 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
 	}
 
 
+    /**
+     * Gets the value of the Tourist object referenced by intTouristId 
+     * If the object is not loaded, will load the object (caching it) before returning it.
+     * @throws Caller
+     * @return Tourist
+     */
+     public function getTourist()
+     {
+ 		if ($this->__blnRestored && empty($this->__blnValid[self::TOURIST_ID_FIELD])) {
+			throw new Caller("TouristId was not selected in the most recent query and is not valid.");
+		}
+        if ((!$this->objTourist) && (!is_null($this->intTouristId))) {
+            $this->objTourist = Tourist::Load($this->intTouristId);
+        }
+        return $this->objTourist;
+     }
+
 
 
    /**
@@ -843,12 +988,37 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
 		$intTouristId = Type::Cast($intTouristId, QCubed\Type::INTEGER);
 
 		if ($this->intTouristId !== $intTouristId) {
+			$this->objTourist = null; // remove the associated object
 			$this->intTouristId = $intTouristId;
 			$this->__blnDirty[self::TOURIST_ID_FIELD] = true;
 		}
 		$this->__blnValid[self::TOURIST_ID_FIELD] = true;
 		return $this; // allows chaining
 	}
+
+    /**
+     * Sets the value of the Tourist object referenced by intTouristId 
+     * @param null|Tourist $objTourist
+     * @throws Caller
+     * @return TouristAnswer
+     */
+    public function setTourist($objTourist) {
+        if (is_null($objTourist)) {
+            $this->setTouristId(null);
+        } else {
+            $objTourist = Type::Cast($objTourist, 'Tourist');
+
+            // Make sure its a SAVED Tourist object
+            if (is_null($objTourist->Id)) {
+                throw new Caller('Unable to set an unsaved Tourist for this TouristAnswer');
+            }
+
+            // Update Local Member Variables
+            $this->setTouristId($objTourist->getId());
+            $this->objTourist = $objTourist;
+        }
+        return $this;
+    }
 
    /**
 	* Gets the value of intQuestionId 
@@ -864,6 +1034,23 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
 	}
 
 
+    /**
+     * Gets the value of the Question object referenced by intQuestionId 
+     * If the object is not loaded, will load the object (caching it) before returning it.
+     * @throws Caller
+     * @return Question
+     */
+     public function getQuestion()
+     {
+ 		if ($this->__blnRestored && empty($this->__blnValid[self::QUESTION_ID_FIELD])) {
+			throw new Caller("QuestionId was not selected in the most recent query and is not valid.");
+		}
+        if ((!$this->objQuestion) && (!is_null($this->intQuestionId))) {
+            $this->objQuestion = Question::Load($this->intQuestionId);
+        }
+        return $this->objQuestion;
+     }
+
 
 
    /**
@@ -878,12 +1065,37 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
 		$intQuestionId = Type::Cast($intQuestionId, QCubed\Type::INTEGER);
 
 		if ($this->intQuestionId !== $intQuestionId) {
+			$this->objQuestion = null; // remove the associated object
 			$this->intQuestionId = $intQuestionId;
 			$this->__blnDirty[self::QUESTION_ID_FIELD] = true;
 		}
 		$this->__blnValid[self::QUESTION_ID_FIELD] = true;
 		return $this; // allows chaining
 	}
+
+    /**
+     * Sets the value of the Question object referenced by intQuestionId 
+     * @param null|Question $objQuestion
+     * @throws Caller
+     * @return TouristAnswer
+     */
+    public function setQuestion($objQuestion) {
+        if (is_null($objQuestion)) {
+            $this->setQuestionId(null);
+        } else {
+            $objQuestion = Type::Cast($objQuestion, 'Question');
+
+            // Make sure its a SAVED Question object
+            if (is_null($objQuestion->Id)) {
+                throw new Caller('Unable to set an unsaved Question for this TouristAnswer');
+            }
+
+            // Update Local Member Variables
+            $this->setQuestionId($objQuestion->getId());
+            $this->objQuestion = $objQuestion;
+        }
+        return $this;
+    }
 
    /**
 	* Gets the value of strAnswer 
@@ -1176,8 +1388,8 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
     {
         $strToReturn = '<complexType name="TouristAnswer"><sequence>';
         $strToReturn .= '<element name="Id" type="xsd:int"/>';
-        $strToReturn .= '<element name="TouristId" type="xsd:int"/>';
-        $strToReturn .= '<element name="QuestionId" type="xsd:int"/>';
+        $strToReturn .= '<element name="Tourist" type="xsd1:Tourist"/>';
+        $strToReturn .= '<element name="Question" type="xsd1:Question"/>';
         $strToReturn .= '<element name="Answer" type="xsd:string"/>';
         $strToReturn .= '<element name="__blnRestored" type="xsd:boolean"/>';
         $strToReturn .= '</sequence></complexType>';
@@ -1188,6 +1400,8 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
     {
         if (!array_key_exists('TouristAnswer', $strComplexTypeArray)) {
             $strComplexTypeArray['TouristAnswer'] = TouristAnswer::GetSoapComplexTypeXml();
+            Tourist::AlterSoapComplexTypeArray($strComplexTypeArray);
+            Question::AlterSoapComplexTypeArray($strComplexTypeArray);
         }
     }
 
@@ -1206,10 +1420,12 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
         $objToReturn = new TouristAnswer();
         if (property_exists($objSoapObject, 'Id'))
             $objToReturn->intId = $objSoapObject->Id;
-        if (property_exists($objSoapObject, 'TouristId'))
-            $objToReturn->intTouristId = $objSoapObject->TouristId;
-        if (property_exists($objSoapObject, 'QuestionId'))
-            $objToReturn->intQuestionId = $objSoapObject->QuestionId;
+        if ((property_exists($objSoapObject, 'Tourist')) &&
+            ($objSoapObject->Tourist))
+            $objToReturn->Tourist = Tourist::GetObjectFromSoapObject($objSoapObject->Tourist);
+        if ((property_exists($objSoapObject, 'Question')) &&
+            ($objSoapObject->Question))
+            $objToReturn->Question = Question::GetObjectFromSoapObject($objSoapObject->Question);
         if (property_exists($objSoapObject, 'Answer'))
             $objToReturn->strAnswer = $objSoapObject->Answer;
         if (property_exists($objSoapObject, '__blnRestored'))
@@ -1232,6 +1448,14 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
 
     public static function getSoapObjectFromObject($objObject, $blnBindRelatedObjects)
     {
+        if ($objObject->objTourist)
+            $objObject->objTourist = Tourist::GetSoapObjectFromObject($objObject->objTourist, false);
+        else if (!$blnBindRelatedObjects)
+            $objObject->intTouristId = null;
+        if ($objObject->objQuestion)
+            $objObject->objQuestion = Question::GetSoapObjectFromObject($objObject->objQuestion, false);
+        else if (!$blnBindRelatedObjects)
+            $objObject->intQuestionId = null;
         return $objObject;
     }
 
@@ -1299,10 +1523,14 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
         if (isset($this->__blnValid[self::ID_FIELD])) {
             $a['id'] = $this->intId;
         }
-        if (isset($this->__blnValid[self::TOURIST_ID_FIELD])) {
+        if (isset($this->objTourist)) {
+            $a['tourist'] = $this->objTourist;
+        } elseif (isset($this->__blnValid[self::TOURIST_ID_FIELD])) {
             $a['tourist_id'] = $this->intTouristId;
         }
-        if (isset($this->__blnValid[self::QUESTION_ID_FIELD])) {
+        if (isset($this->objQuestion)) {
+            $a['question'] = $this->objQuestion;
+        } elseif (isset($this->__blnValid[self::QUESTION_ID_FIELD])) {
             $a['question_id'] = $this->intQuestionId;
         }
         if (isset($this->__blnValid[self::ANSWER_FIELD])) {
@@ -1326,7 +1554,9 @@ abstract class TouristAnswerGen extends \QCubed\ObjectBase implements IteratorAg
 /**
  * @property-read Node\Column $Id
  * @property-read Node\Column $TouristId
+ * @property-read NodeTourist $Tourist
  * @property-read Node\Column $QuestionId
+ * @property-read NodeQuestion $Question
  * @property-read Node\Column $Answer
  * @property-read Node\Column $_PrimaryKeyNode
  **/
@@ -1376,8 +1606,12 @@ class NodeTouristAnswer extends Node\Table {
                 return new Node\Column('id', 'Id', 'Integer', $this);
             case 'TouristId':
                 return new Node\Column('tourist_id', 'TouristId', 'Integer', $this);
+            case 'Tourist':
+                return new NodeTourist('tourist_id', 'Tourist', 'Integer', $this);
             case 'QuestionId':
                 return new Node\Column('question_id', 'QuestionId', 'Integer', $this);
+            case 'Question':
+                return new NodeQuestion('question_id', 'Question', 'Integer', $this);
             case 'Answer':
                 return new Node\Column('answer', 'Answer', 'VarChar', $this);
 
@@ -1397,7 +1631,9 @@ class NodeTouristAnswer extends Node\Table {
 /**
  * @property-read Node\Column $Id
  * @property-read Node\Column $TouristId
+ * @property-read NodeTourist $Tourist
  * @property-read Node\Column $QuestionId
+ * @property-read NodeQuestion $Question
  * @property-read Node\Column $Answer
 
  * @property-read Node\Column $_PrimaryKeyNode
@@ -1440,8 +1676,12 @@ class ReverseReferenceNodeTouristAnswer extends Node\ReverseReference {
                 return new Node\Column('id', 'Id', 'Integer', $this);
             case 'TouristId':
                 return new Node\Column('tourist_id', 'TouristId', 'Integer', $this);
+            case 'Tourist':
+                return new NodeTourist('tourist_id', 'Tourist', 'Integer', $this);
             case 'QuestionId':
                 return new Node\Column('question_id', 'QuestionId', 'Integer', $this);
+            case 'Question':
+                return new NodeQuestion('question_id', 'Question', 'Integer', $this);
             case 'Answer':
                 return new Node\Column('answer', 'Answer', 'VarChar', $this);
 

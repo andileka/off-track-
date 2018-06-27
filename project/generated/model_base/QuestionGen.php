@@ -32,6 +32,10 @@ use QCubed\Query\ModelTrait;
  * @subpackage ModelGen
  * @property-read integer $Id the value of the id column (Read-Only PK)
  * @property string $Question the value of the question column 
+ * @property-read TouristAnswer $_TouristAnswer the value of the protected _objTouristAnswer (Read-Only) if set due to an expansion on the tourist_answer.question_id reverse relationship
+ * @property-read TouristAnswer $TouristAnswer the value of the protected _objTouristAnswer (Read-Only) if set due to an expansion on the tourist_answer.question_id reverse relationship
+ * @property-read TouristAnswer[] $_TouristAnswerArray the value of the protected _objTouristAnswerArray (Read-Only) if set due to an ExpandAsArray on the tourist_answer.question_id reverse relationship
+ * @property-read TouristAnswer[] $TouristAnswerArray the value of the protected _objTouristAnswerArray (Read-Only) if set due to an ExpandAsArray on the tourist_answer.question_id reverse relationship
  * @property-read boolean $__Restored whether or not this object was restored from the database (as opposed to created new)
  */
 abstract class QuestionGen extends \QCubed\ObjectBase implements IteratorAggregate, JsonSerializable {
@@ -69,6 +73,22 @@ abstract class QuestionGen extends \QCubed\ObjectBase implements IteratorAggrega
     const QUESTION_DEFAULT = null;
     const QUESTION_FIELD = 'question';
 
+
+    /**
+     * Protected member variable that stores a reference to a single TouristAnswer object
+     * (of type TouristAnswer), if this Question object was restored with
+     * an expansion on the tourist_answer association table.
+     * @var TouristAnswer _objTouristAnswer;
+     */
+    protected $_objTouristAnswer;
+
+    /**
+     * Protected member variable that stores a reference to an array of TouristAnswer objects
+     * (of type TouristAnswer[]), if this Question object was restored with
+     * an ExpandAsArray on the tourist_answer association table.
+     * @var TouristAnswer[] _objTouristAnswerArray;
+     */
+    protected $_objTouristAnswerArray = null;
 
     /**
      * Protected array of virtual attributes for this object (e.g. extra/other calculated and/or non-object bound
@@ -336,6 +356,18 @@ abstract class QuestionGen extends \QCubed\ObjectBase implements IteratorAggrega
         }
 			
 
+        // See if we're doing an array expansion on the previous item
+        if ($objExpandAsArrayNode &&
+                is_array($objPreviousItemArray) &&
+                count($objPreviousItemArray)) {
+
+            $expansionStatus = static::expandArray ($objDbRow, $strAliasPrefix, $objExpandAsArrayNode, $objPreviousItemArray, $strColumnAliasArray);
+            if ($expansionStatus) {
+                return false; // db row was used but no new object was created
+            } elseif ($expansionStatus === null) {
+                $blnCheckDuplicate = true;
+            }
+        }
 
 
         $objToReturn = static::getFromCache ($key);
@@ -407,6 +439,24 @@ abstract class QuestionGen extends \QCubed\ObjectBase implements IteratorAggrega
 
 
 
+
+        // Check for TouristAnswer Virtual Binding
+        $strAlias = $strAliasPrefix . 'touristanswer__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        $objExpansionNode = (empty($objExpansionAliasArray['touristanswer']) ? null : $objExpansionAliasArray['touristanswer']);
+        $blnExpanded = ($objExpansionNode && $objExpansionNode->ExpandAsArray);
+        if ($blnExpanded && null === $objToReturn->_objTouristAnswerArray)
+            $objToReturn->_objTouristAnswerArray = array();
+        if (isset ($strColumns[$strAliasName])) {
+            if ($blnExpanded) {
+                $objToReturn->_objTouristAnswerArray[] = TouristAnswer::instantiateDbRow($objDbRow, $strAliasPrefix . 'touristanswer__', $objExpansionNode, null, $strColumnAliasArray, false, 'question_id', $objToReturn);
+            } elseif (is_null($objToReturn->_objTouristAnswer)) {
+                $objToReturn->_objTouristAnswer = TouristAnswer::instantiateDbRow($objDbRow, $strAliasPrefix . 'touristanswer__', $objExpansionNode, null, $strColumnAliasArray, false, 'question_id', $objToReturn);
+            }
+        }
+        elseif ($strParentExpansionKey === 'touristanswer' && $objExpansionParent) {
+            $objToReturn->_objTouristAnswer = $objExpansionParent;
+        }
 
         return $objToReturn;
     }
@@ -798,6 +848,10 @@ abstract class QuestionGen extends \QCubed\ObjectBase implements IteratorAggrega
 
 
 
+   		// Reverse references
+		$objCopy->_objTouristAnswer = null;
+		$objCopy->_objTouristAnswerArray = null;
+
 		return $objCopy;
 	}
 
@@ -897,6 +951,24 @@ abstract class QuestionGen extends \QCubed\ObjectBase implements IteratorAggrega
             // (If restored via a "Many-to" expansion)
             ////////////////////////////
 
+            case 'TouristAnswer':
+            case '_TouristAnswer':
+                /**
+                 * Gets the value of the protected _objTouristAnswer (Read-Only)
+                 * if set due to an expansion on the tourist_answer.question_id reverse relationship
+                 * @return TouristAnswer
+                 */
+                return $this->_objTouristAnswer;
+
+            case 'TouristAnswerArray':
+            case '_TouristAnswerArray':
+                /**
+                 * Gets the value of the protected _objTouristAnswerArray (Read-Only)
+                 * if set due to an ExpandAsArray on the tourist_answer.question_id reverse relationship
+                 * @return TouristAnswer[]
+                 */
+                return $this->_objTouristAnswerArray;
+
 
             case '__Restored':
                 return $this->__blnRestored;
@@ -979,6 +1051,165 @@ abstract class QuestionGen extends \QCubed\ObjectBase implements IteratorAggrega
     // ASSOCIATED OBJECTS' METHODS
     ///////////////////////////////
 
+
+
+    // Related Objects' Methods for TouristAnswer
+    //-------------------------------------------------------------------
+
+    /**
+     * Gets all associated TouristAnswers as an array of TouristAnswer objects
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @return TouristAnswer[]
+     * @throws Caller
+     */
+    public function getTouristAnswerArray($objOptionalClauses = null)
+    {
+        if ((is_null($this->intId)))
+            return array();
+
+        try {
+            return TouristAnswer::LoadArrayByQuestionId($this->intId, $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Counts all associated TouristAnswers
+     * @return int
+    */
+    public function countTouristAnswers()
+    {
+        if ((is_null($this->intId)))
+            return 0;
+
+        return TouristAnswer::CountByQuestionId($this->intId);
+    }
+
+    /**
+     * Associates a TouristAnswer
+     * @param TouristAnswer $objTouristAnswer
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function associateTouristAnswer(TouristAnswer $objTouristAnswer)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTouristAnswer on this unsaved Question.');
+        if ((is_null($objTouristAnswer->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTouristAnswer on this Question with an unsaved TouristAnswer.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Question::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist_answer`
+            SET
+                `question_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTouristAnswer->Id) . '
+        ');
+    }
+
+    /**
+     * Unassociates a TouristAnswer
+     * @param TouristAnswer $objTouristAnswer
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function unassociateTouristAnswer(TouristAnswer $objTouristAnswer)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this unsaved Question.');
+        if ((is_null($objTouristAnswer->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this Question with an unsaved TouristAnswer.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Question::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist_answer`
+            SET
+                `question_id` = null
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTouristAnswer->Id) . ' AND
+                `question_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Unassociates all TouristAnswers
+     * @return void
+    */
+    public function unassociateAllTouristAnswers()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this unsaved Question.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Question::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist_answer`
+            SET
+                `question_id` = null
+            WHERE
+                `question_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes an associated TouristAnswer
+     * @param TouristAnswer $objTouristAnswer
+     * @return void
+    */
+    public function deleteAssociatedTouristAnswer(TouristAnswer $objTouristAnswer)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this unsaved Question.');
+        if ((is_null($objTouristAnswer->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this Question with an unsaved TouristAnswer.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Question::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `tourist_answer`
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTouristAnswer->Id) . ' AND
+                `question_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes all associated TouristAnswers
+     * @return void
+    */
+    public function deleteAllTouristAnswers()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this unsaved Question.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Question::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `tourist_answer`
+            WHERE
+                `question_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
 
 
     
@@ -1148,6 +1379,11 @@ abstract class QuestionGen extends \QCubed\ObjectBase implements IteratorAggrega
         if (isset($this->__blnValid[self::QUESTION_FIELD])) {
             $a['question'] = $this->strQuestion;
         }
+        if (isset($this->_objTouristAnswer)) {
+            $a['tourist_answer'] = $this->_objTouristAnswer;
+        } elseif (isset($this->_objTouristAnswerArray)) {
+            $a['tourist_answer'] = $this->_objTouristAnswerArray;
+        }
         return $a;
     }
 
@@ -1166,6 +1402,7 @@ abstract class QuestionGen extends \QCubed\ObjectBase implements IteratorAggrega
 /**
  * @property-read Node\Column $Id
  * @property-read Node\Column $Question
+ * @property-read ReverseReferenceNodeTouristAnswer $TouristAnswer
  * @property-read Node\Column $_PrimaryKeyNode
  **/
 class NodeQuestion extends Node\Table {
@@ -1212,6 +1449,8 @@ class NodeQuestion extends Node\Table {
                 return new Node\Column('id', 'Id', 'Integer', $this);
             case 'Question':
                 return new Node\Column('question', 'Question', 'VarChar', $this);
+            case 'TouristAnswer':
+                return new ReverseReferenceNodeTouristAnswer($this, 'touristanswer', \QCubed\Type::REVERSE_REFERENCE, 'question_id', 'TouristAnswer');
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);
@@ -1229,6 +1468,7 @@ class NodeQuestion extends Node\Table {
 /**
  * @property-read Node\Column $Id
  * @property-read Node\Column $Question
+ * @property-read ReverseReferenceNodeTouristAnswer $TouristAnswer
 
  * @property-read Node\Column $_PrimaryKeyNode
  **/
@@ -1268,6 +1508,8 @@ class ReverseReferenceNodeQuestion extends Node\ReverseReference {
                 return new Node\Column('id', 'Id', 'Integer', $this);
             case 'Question':
                 return new Node\Column('question', 'Question', 'VarChar', $this);
+            case 'TouristAnswer':
+                return new ReverseReferenceNodeTouristAnswer($this, 'touristanswer', \QCubed\Type::REVERSE_REFERENCE, 'question_id', 'TouristAnswer');
 
             case '_PrimaryKeyNode':
                 return new Node\Column('id', 'Id', 'Integer', $this);

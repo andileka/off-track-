@@ -48,6 +48,10 @@ use QCubed\Query\ModelTrait;
  * @property-read DeviceTourist $DeviceTourist the value of the protected _objDeviceTourist (Read-Only) if set due to an expansion on the device_tourist.tourist_id reverse relationship
  * @property-read DeviceTourist[] $_DeviceTouristArray the value of the protected _objDeviceTouristArray (Read-Only) if set due to an ExpandAsArray on the device_tourist.tourist_id reverse relationship
  * @property-read DeviceTourist[] $DeviceTouristArray the value of the protected _objDeviceTouristArray (Read-Only) if set due to an ExpandAsArray on the device_tourist.tourist_id reverse relationship
+ * @property-read TouristAnswer $_TouristAnswer the value of the protected _objTouristAnswer (Read-Only) if set due to an expansion on the tourist_answer.tourist_id reverse relationship
+ * @property-read TouristAnswer $TouristAnswer the value of the protected _objTouristAnswer (Read-Only) if set due to an expansion on the tourist_answer.tourist_id reverse relationship
+ * @property-read TouristAnswer[] $_TouristAnswerArray the value of the protected _objTouristAnswerArray (Read-Only) if set due to an ExpandAsArray on the tourist_answer.tourist_id reverse relationship
+ * @property-read TouristAnswer[] $TouristAnswerArray the value of the protected _objTouristAnswerArray (Read-Only) if set due to an ExpandAsArray on the tourist_answer.tourist_id reverse relationship
  * @property-read TouristTrack $_TouristTrack the value of the protected _objTouristTrack (Read-Only) if set due to an expansion on the tourist_track.tourist_id reverse relationship
  * @property-read TouristTrack $TouristTrack the value of the protected _objTouristTrack (Read-Only) if set due to an expansion on the tourist_track.tourist_id reverse relationship
  * @property-read TouristTrack[] $_TouristTrackArray the value of the protected _objTouristTrackArray (Read-Only) if set due to an ExpandAsArray on the tourist_track.tourist_id reverse relationship
@@ -191,6 +195,22 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
      * @var DeviceTourist[] _objDeviceTouristArray;
      */
     protected $_objDeviceTouristArray = null;
+
+    /**
+     * Protected member variable that stores a reference to a single TouristAnswer object
+     * (of type TouristAnswer), if this Tourist object was restored with
+     * an expansion on the tourist_answer association table.
+     * @var TouristAnswer _objTouristAnswer;
+     */
+    protected $_objTouristAnswer;
+
+    /**
+     * Protected member variable that stores a reference to an array of TouristAnswer objects
+     * (of type TouristAnswer[]), if this Tourist object was restored with
+     * an ExpandAsArray on the tourist_answer association table.
+     * @var TouristAnswer[] _objTouristAnswerArray;
+     */
+    protected $_objTouristAnswerArray = null;
 
     /**
      * Protected member variable that stores a reference to a single TouristTrack object
@@ -766,6 +786,24 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         }
         elseif ($strParentExpansionKey === 'devicetourist' && $objExpansionParent) {
             $objToReturn->_objDeviceTourist = $objExpansionParent;
+        }
+
+        // Check for TouristAnswer Virtual Binding
+        $strAlias = $strAliasPrefix . 'touristanswer__id';
+        $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+        $objExpansionNode = (empty($objExpansionAliasArray['touristanswer']) ? null : $objExpansionAliasArray['touristanswer']);
+        $blnExpanded = ($objExpansionNode && $objExpansionNode->ExpandAsArray);
+        if ($blnExpanded && null === $objToReturn->_objTouristAnswerArray)
+            $objToReturn->_objTouristAnswerArray = array();
+        if (isset ($strColumns[$strAliasName])) {
+            if ($blnExpanded) {
+                $objToReturn->_objTouristAnswerArray[] = TouristAnswer::instantiateDbRow($objDbRow, $strAliasPrefix . 'touristanswer__', $objExpansionNode, null, $strColumnAliasArray, false, 'tourist_id', $objToReturn);
+            } elseif (is_null($objToReturn->_objTouristAnswer)) {
+                $objToReturn->_objTouristAnswer = TouristAnswer::instantiateDbRow($objDbRow, $strAliasPrefix . 'touristanswer__', $objExpansionNode, null, $strColumnAliasArray, false, 'tourist_id', $objToReturn);
+            }
+        }
+        elseif ($strParentExpansionKey === 'touristanswer' && $objExpansionParent) {
+            $objToReturn->_objTouristAnswer = $objExpansionParent;
         }
 
         // Check for TouristTrack Virtual Binding
@@ -1871,6 +1909,8 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
    		// Reverse references
 		$objCopy->_objDeviceTourist = null;
 		$objCopy->_objDeviceTouristArray = null;
+		$objCopy->_objTouristAnswer = null;
+		$objCopy->_objTouristAnswerArray = null;
 		$objCopy->_objTouristTrack = null;
 		$objCopy->_objTouristTrackArray = null;
 
@@ -1990,6 +2030,24 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
                  * @return DeviceTourist[]
                  */
                 return $this->_objDeviceTouristArray;
+
+            case 'TouristAnswer':
+            case '_TouristAnswer':
+                /**
+                 * Gets the value of the protected _objTouristAnswer (Read-Only)
+                 * if set due to an expansion on the tourist_answer.tourist_id reverse relationship
+                 * @return TouristAnswer
+                 */
+                return $this->_objTouristAnswer;
+
+            case 'TouristAnswerArray':
+            case '_TouristAnswerArray':
+                /**
+                 * Gets the value of the protected _objTouristAnswerArray (Read-Only)
+                 * if set due to an ExpandAsArray on the tourist_answer.tourist_id reverse relationship
+                 * @return TouristAnswer[]
+                 */
+                return $this->_objTouristAnswerArray;
 
             case 'TouristTrack':
             case '_TouristTrack':
@@ -2246,6 +2304,165 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         $objDatabase->NonQuery('
             DELETE FROM
                 `device_tourist`
+            WHERE
+                `tourist_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+
+    // Related Objects' Methods for TouristAnswer
+    //-------------------------------------------------------------------
+
+    /**
+     * Gets all associated TouristAnswers as an array of TouristAnswer objects
+     * @param iClause[] $objOptionalClauses additional optional iClause objects for this query
+     * @return TouristAnswer[]
+     * @throws Caller
+     */
+    public function getTouristAnswerArray($objOptionalClauses = null)
+    {
+        if ((is_null($this->intId)))
+            return array();
+
+        try {
+            return TouristAnswer::LoadArrayByTouristId($this->intId, $objOptionalClauses);
+        } catch (Caller $objExc) {
+            $objExc->incrementOffset();
+            throw $objExc;
+        }
+    }
+
+    /**
+     * Counts all associated TouristAnswers
+     * @return int
+    */
+    public function countTouristAnswers()
+    {
+        if ((is_null($this->intId)))
+            return 0;
+
+        return TouristAnswer::CountByTouristId($this->intId);
+    }
+
+    /**
+     * Associates a TouristAnswer
+     * @param TouristAnswer $objTouristAnswer
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function associateTouristAnswer(TouristAnswer $objTouristAnswer)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTouristAnswer on this unsaved Tourist.');
+        if ((is_null($objTouristAnswer->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call AssociateTouristAnswer on this Tourist with an unsaved TouristAnswer.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Tourist::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist_answer`
+            SET
+                `tourist_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTouristAnswer->Id) . '
+        ');
+    }
+
+    /**
+     * Unassociates a TouristAnswer
+     * @param TouristAnswer $objTouristAnswer
+     * @throws \QCubed\Database\Exception\UndefinedPrimaryKey
+     * @return void
+    */
+    public function unassociateTouristAnswer(TouristAnswer $objTouristAnswer)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this unsaved Tourist.');
+        if ((is_null($objTouristAnswer->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this Tourist with an unsaved TouristAnswer.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Tourist::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist_answer`
+            SET
+                `tourist_id` = null
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTouristAnswer->Id) . ' AND
+                `tourist_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Unassociates all TouristAnswers
+     * @return void
+    */
+    public function unassociateAllTouristAnswers()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this unsaved Tourist.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Tourist::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            UPDATE
+                `tourist_answer`
+            SET
+                `tourist_id` = null
+            WHERE
+                `tourist_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes an associated TouristAnswer
+     * @param TouristAnswer $objTouristAnswer
+     * @return void
+    */
+    public function deleteAssociatedTouristAnswer(TouristAnswer $objTouristAnswer)
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this unsaved Tourist.');
+        if ((is_null($objTouristAnswer->Id)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this Tourist with an unsaved TouristAnswer.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Tourist::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `tourist_answer`
+            WHERE
+                `id` = ' . $objDatabase->SqlVariable($objTouristAnswer->Id) . ' AND
+                `tourist_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+        ');
+    }
+
+    /**
+     * Deletes all associated TouristAnswers
+     * @return void
+    */
+    public function deleteAllTouristAnswers()
+    {
+        if ((is_null($this->intId)))
+            throw new \QCubed\Database\Exception\UndefinedPrimaryKey('Unable to call UnassociateTouristAnswer on this unsaved Tourist.');
+
+        // Get the Database Object for this Class
+        $objDatabase = Tourist::GetDatabase();
+
+        // Perform the SQL Query
+        $objDatabase->NonQuery('
+            DELETE FROM
+                `tourist_answer`
             WHERE
                 `tourist_id` = ' . $objDatabase->SqlVariable($this->intId) . '
         ');
@@ -2687,6 +2904,11 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         } elseif (isset($this->_objDeviceTouristArray)) {
             $a['device_tourist'] = $this->_objDeviceTouristArray;
         }
+        if (isset($this->_objTouristAnswer)) {
+            $a['tourist_answer'] = $this->_objTouristAnswer;
+        } elseif (isset($this->_objTouristAnswerArray)) {
+            $a['tourist_answer'] = $this->_objTouristAnswerArray;
+        }
         if (isset($this->_objTouristTrack)) {
             $a['tourist_track'] = $this->_objTouristTrack;
         } elseif (isset($this->_objTouristTrackArray)) {
@@ -2723,6 +2945,7 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
  * @property-read Node\Column $Status
  * @property-read Node\Column $Nickname
  * @property-read ReverseReferenceNodeDeviceTourist $DeviceTourist
+ * @property-read ReverseReferenceNodeTouristAnswer $TouristAnswer
  * @property-read ReverseReferenceNodeTouristTrack $TouristTrack
  * @property-read Node\Column $_PrimaryKeyNode
  **/
@@ -2804,6 +3027,8 @@ class NodeTourist extends Node\Table {
                 return new Node\Column('nickname', 'Nickname', 'VarChar', $this);
             case 'DeviceTourist':
                 return new ReverseReferenceNodeDeviceTourist($this, 'devicetourist', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'DeviceTourist');
+            case 'TouristAnswer':
+                return new ReverseReferenceNodeTouristAnswer($this, 'touristanswer', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'TouristAnswer');
             case 'TouristTrack':
                 return new ReverseReferenceNodeTouristTrack($this, 'touristtrack', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'TouristTrack');
 
@@ -2836,6 +3061,7 @@ class NodeTourist extends Node\Table {
  * @property-read Node\Column $Status
  * @property-read Node\Column $Nickname
  * @property-read ReverseReferenceNodeDeviceTourist $DeviceTourist
+ * @property-read ReverseReferenceNodeTouristAnswer $TouristAnswer
  * @property-read ReverseReferenceNodeTouristTrack $TouristTrack
 
  * @property-read Node\Column $_PrimaryKeyNode
@@ -2910,6 +3136,8 @@ class ReverseReferenceNodeTourist extends Node\ReverseReference {
                 return new Node\Column('nickname', 'Nickname', 'VarChar', $this);
             case 'DeviceTourist':
                 return new ReverseReferenceNodeDeviceTourist($this, 'devicetourist', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'DeviceTourist');
+            case 'TouristAnswer':
+                return new ReverseReferenceNodeTouristAnswer($this, 'touristanswer', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'TouristAnswer');
             case 'TouristTrack':
                 return new ReverseReferenceNodeTouristTrack($this, 'touristtrack', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'TouristTrack');
 
