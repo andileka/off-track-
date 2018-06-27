@@ -14,6 +14,13 @@ class Navigator extends \QCubed\Control\Panel {
 	public static $Lisenceplate;	
 	public $ctrl;
 	public $action;
+
+	/**
+	 *
+	 * @var \QCubed\Control\Proxy
+	 */
+	public $objProxy;
+	
 	/**
 	 *
 	 * @var \QCubed\Project\Control\ListBox
@@ -51,13 +58,39 @@ class Navigator extends \QCubed\Control\Panel {
 		
 		$this->AddCssClass('main-header');
 		$this->AddMenuLang();
+		$this->AddWatcher();
 	}
-	
+
+	public function objProxy_Clicked() {
+		error_log('objProxy_clicked, lets check the event log to see if someone is in trouble');
+		\QCubed\Project\Application::executeJavaScript(' setTimeout(function(){ '.$this->objProxy->renderAsScript().' }, 5000);');
+		$intEventCount =	\Event::queryCount(
+									\QCubed\Query\QQ::andCondition(
+										\QCubed\Query\QQ::orCondition(
+											\QCubed\Query\QQ::equal(\QQN::event()->Type, \Event::FALL),
+											\QCubed\Query\QQ::equal(\QQN::event()->Type, \Event::BUTTONPRESS)
+										)
+									)
+							);
+		if($intEventCount) {
+			\QCubed\Project\Application::displayAlert('Someone is in trouble! To the rescue!');
+		}
+	}
+
 	public static function SetJobInfoInMenu(\Job $objJob=null, $objAppointment=null ){
 		self::$jobNr			=	$objJob->Id;
 		self::$Lisenceplate		= ($objJob->VehicleId) ? $objJob->Vehicle->Plate : '';
 		self::$expertName		= ($objAppointment) ? $objAppointment->Expert : '';  
 	}
+	
+	private function AddWatcher() {
+		$this->objProxy = new \QCubed\Control\Proxy($this);
+		$this->objProxy->addAction(new \QCubed\Event\Click(), new \QCubed\Action\AjaxControl($this,'objProxy_Clicked'));
+		$strScript = $this->objProxy->renderAsScript();
+		error_log($strScript);
+		\QCubed\Project\Application::executeJavaScript(' setTimeout(function(){ '.$strScript.' }, 5000);');
+	}
+	
 	
 	public function AddMenuLang(){
 		$this->lstLanguage						= new \QCubed\Project\Control\ListBox($this);
