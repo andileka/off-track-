@@ -14,6 +14,20 @@
 	 *
 	 */
 	class Event extends EventGen {
+		const LOCATIONCHECKIN		= "location check in";
+		const BUTTONPRESS			= "button pressed";
+		const FALL					= "fall detected";
+
+		const STATUS_TOBESEEN		= 'to be seen';
+		const STATUS_SEENBYADMIN	= 'seen by admin';
+		const STATUS_ACTIONTAKEN	= 'action taken';
+		const STATUS_ALLOK			= 'all ok';
+		const STATUS_NOTAPPLICABLE	= 'not applicable';
+
+		const SIGFOX_EVENT_BUTTON	= 12;
+		const SIGFOX_EVENT_FALL		= 00;
+		const SIGFOX_EVENT_CHECKIN	= 01;
+		
 		/**
 		 * Default "to string" handler
 		 * Allows pages to _p()/echo()/print() this object, and to define the default
@@ -22,12 +36,15 @@
 		 * @return string a nicely formatted string representation of this object
 		 */
 		public function __toString() {
-			return 'Event Object ' . $this->PrimaryKey();
+			return $this->Datetime->format('Y-m-d H:i') . ' ' . $this->Type;
 		}
 
 		public function save($blnForceInsert = false, $blnForceUpdate = false) {
 			if(is_null($this->Datetime)) {
 				$this->Datetime	= QCubed\QDateTime::now();
+			}
+			if(is_null($this->Status)) {
+				$this->Status	= self::STATUS_NOTAPPLICABLE;
 			}
   			return parent::save($blnForceInsert, $blnForceUpdate);
 		}
