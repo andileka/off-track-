@@ -18,6 +18,10 @@
 				<label class=""><?= tr("Name") ?></label>
 				<?=$_CONTROL->txtName->RenderFormGroup();?>
 			</div>
+			<div class="form-group">
+				<label class=""><?= tr("Nickname") ?></label>
+				<?=$_CONTROL->lstNickname->RenderFormGroup();?>
+			</div>
 		</div>
 		<div class="col-sm-12 col-md-6">
 			<div class="form-group">
