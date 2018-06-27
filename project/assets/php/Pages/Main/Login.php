@@ -82,6 +82,6 @@ class Login extends \QCubed\Control\Panel {
 	public function Login(){
 		SecurityHelper::DestroySession();
 		SecurityHelper::Login($this->txtEmail->Text, $this->txtPassword->Text);
-		\QCubed\Project\Application::Redirect('/');
+		\QCubed\Project\Application::Redirect('index.php?c=tourist');
 	}
 }
