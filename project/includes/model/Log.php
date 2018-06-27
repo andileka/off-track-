@@ -14,6 +14,9 @@
 	 *
 	 */
 	class Log extends LogGen {
+		const LOGON			="LOGON";
+		const LOGON_FAILED	="LOGON_FAILED";
+		
 		public static function MakeEntry($action, $value) {
 			$log = new Log();
 			$log->Action = $action;

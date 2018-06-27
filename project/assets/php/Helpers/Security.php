@@ -55,18 +55,6 @@ class Security {
 	 * @return User
 	 */
     public static function Login($strUsername, $strPassword){
-		/*$objLastLoginLog				= Log::GetLastSuccessfullLoginFor($strUsername);
-		$intRecentFailedLoginAttempts	= Log::CountRecentFailedLoginAttemptsFor($strUsername, $objLastLoginLog ? $objLastLoginLog->Datetime : null);
-		
-		if($intRecentFailedLoginAttempts && ($objLastFailedLoginLog		= Log::GetLastFailedLoginFor($strUsername)) ) {
-			$objWaitUntil				= clone $objLastFailedLoginLog->DateTime; //we zouden de objWaitUntil nog kunnen gebruiken later om een werkelijke datetime te tonen, maar voorlopig is een seconde timer voldoende.
-			$objWaitUntil->AddSeconds($intRecentFailedLoginAttempts*self::FAILED_ATTEMPT_WAIT_X_SECONDS); //1 poging fout = 1 x 5s, 2poginginen= 2x5s= 10s, 3=15, 4 = 20,...
-			$intSecondsToWait			= $objWaitUntil->Difference(\QCubed\QDateTime::Now())->Seconds;
-			if($intSecondsToWait > 0) {
-				Log::MakeEntry(Log::LOGON_FAILED, $strUsername);
-				throw new Exception('You are logging in too fast. Please try again in %d seconds.', $intSecondsToWait);
-			}
-		}*/
 		if(($user = self::CheckLoginDetails($strUsername, $strPassword))) {
 			//user logged in now log it
 			self::MakeSession($user);

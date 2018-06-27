@@ -44,7 +44,6 @@
 		}
 
 		public function renderDevice(Tourist $objTourist) {
-			error_log(print_r($objTourist, true));
 			return (string)$objTourist->DeviceTourist->Device;
 		}
 
