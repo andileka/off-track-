@@ -129,14 +129,15 @@ class Map extends \QCubed\Control\Panel {
 			$arrCoordinates[]			= (string)$objTourist->Position;
 			$strAdditionalClassName		= '';
 
-			if(isset($_GET['highlight']) && $objTourist->Id == $_GET['highlight']) {
+			if(isset($_GET['highlight']) && $objTourist->Id == $_GET['highlight'] || $objTourist->Status == \Tourist::REQUESTED_HELP) {
 				$strAdditionalClassName = ' blink';
 				$this->mpbox->SetMapCenter($objTourist->Position->Lat, $objTourist->Position->Long);
 			}
-			
+
+			$event = $objTourist->Position->Event;
 			$arrProperties[]	=	array(
-										'title'=>(string)$objTourist,
-										'description'=>'desc'.$objTourist,
+										'title'=>(string)$objTourist->GetUrl(),
+										'description'=>$objTourist->Status . '<br/>'.(string)$objTourist->Language->Name . '<br/>'.$objTourist->Contactinfo . '<br/>'.($event ? ' last known position recorded on ' . $event : ''),
 										'className'=>$objTourist->Status . $strAdditionalClassName
 									) ;
 		}
