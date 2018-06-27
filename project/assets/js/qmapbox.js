@@ -7,7 +7,8 @@ var mapbox = function () {
 	var arrLayers = [];
 	var toggleableLayerIds = [];
 	var default_style='mapbox://styles/matthiaz/cjivp4t9a8v422sqg0pqvsqbc';
-	
+	var centerOn;
+
 	function GenerateRandomString() {
 		/* random string generator */
 		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -35,7 +36,7 @@ var mapbox = function () {
 		var map = new mapboxgl.Map({
 			container: containerId,
 			style: default_style,
-			center: arrCoordinates[0],
+			center: centerOn ? centerOn : arrCoordinates[0],
 			zoom: 10
 		});
 
@@ -64,6 +65,9 @@ var mapbox = function () {
 		init: function (strContainer, api_token) {
 			containerId = strContainer;
 			token = api_token;
+		},
+		setMapCenter: function(_lat, _long) {
+			centerOn = {lng: _long, lat: _lat};
 		},
 		// SetAPI : function(api_token){token = api_token},
 		DrawMap: function (arr, _arrProperties) {
@@ -124,7 +128,7 @@ var mapbox = function () {
 			map = new mapboxgl.Map({
 				container: containerId,
 				style: default_style,
-				center: arrCoordinates[0],
+				center: centerOn ? centerOn : arrCoordinates[0],
 				zoom: 10
 			});
 

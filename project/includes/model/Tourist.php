@@ -16,9 +16,9 @@
 	class Tourist extends TouristGen {
 		//ENUM('safe', 'requested help', 'acknowledged help request', 'rescue on the way')
 		const SAFE						='safe';
-		const REQUESTED_HELP			='requested help';
-		const ACKNOWLEDGE_HELP_REQUEST	='acknowledged help request';
-		const RESCUE_ON_THE_WAY			='rescue on the way';
+		const REQUESTED_HELP			='requested_help';
+		const ACKNOWLEDGE_HELP_REQUEST	='acknowledged_help_request';
+		const RESCUE_ON_THE_WAY			='rescue_on_the_way';
 		/**
 		 * Default "to string" handler
 		 * Allows pages to _p()/echo()/print() this object, and to define the default

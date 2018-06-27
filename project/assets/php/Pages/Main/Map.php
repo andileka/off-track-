@@ -61,8 +61,9 @@ class Map extends \QCubed\Control\Panel {
 		$this->Build();
 		if(isset($_GET['e']) && $_GET['e']!== ""){
 			$this->lstTourist->SelectedValues = explode(',',$_GET['e']);
-			$this->Databind();			
+			
 		}
+		$this->Databind();	
 		
 	}
 	public function GetConditions(){
@@ -93,17 +94,11 @@ class Map extends \QCubed\Control\Panel {
 	public function rand_color() {
 		return sprintf('#%06X', mt_rand(0, 0xFFFFFF));
 	}
-	private function HideNotification(){
-		$this->pnlNotification->Display =false;
-	}
-		
+
+	
 	private function Build() {		
 		$this->navPlanning = new \QCubed\Bootstrap\Nav($this);
 		$this->navPlanning->addAction(new \QCubed\Event\Click(), new \QCubed\Action\AjaxControl($this, "Click"));
-		
-		$this->pnlNotification						= new \QCubed\Control\Panel($this);
-		$this->pnlNotification->AddCssClass("callout callout-warning ");
-		$this->pnlNotification->Text				= tr('<p><i class="fa fa-warning" aria-hidden="true"></i> '.tr("Select Tourist and Date").'</p>');
 		
 		$this->ShowTabs(false);
 		$this->BuildFilter();
@@ -120,30 +115,33 @@ class Map extends \QCubed\Control\Panel {
 	}
 	
 	protected function DraWMap(){
-		$arrTourists = $this->GetAllFilteredTourists();
+		$arrTourists = \Tourist::loadAll();
 		if(!count($arrTourists)) {
 			return;
 		}
 		$this->mpbox				= new \QCubed\Project\Control\Mapbox($this->navPlanning);
 		$this->mpbox->Name			= tr("Mapview");
 
-		$arrCoordinates = array_map(function(\Tourist $objTourist) {
-			return (string)$objTourist->Position;
-		}, $arrTourists); //ff adressen omzetten naar coordinates
+		$arrCoordinates = array();
+		$arrProperties	= array();
+		
+		foreach($arrTourists as $objTourist) {
+			$arrCoordinates[]			= (string)$objTourist->Position;
+			$strAdditionalClassName		= '';
 
-		$arrProperties = array_map(function(\Tourist $objTourist) {
-			return array('title'=>(string)$objTourist, 'description'=>'desc'.$objTourist);
-		}, $arrTourists); //ff adressen omzetten naar coordinates
+			if(isset($_GET['highlight']) && $objTourist->Id == $_GET['highlight']) {
+				$strAdditionalClassName = ' blink';
+				$this->mpbox->SetMapCenter($objTourist->Position->Lat, $objTourist->Position->Long);
+			}
+			
+			$arrProperties[]	=	array(
+										'title'=>(string)$objTourist,
+										'description'=>'desc'.$objTourist,
+										'className'=>$objTourist->Status . $strAdditionalClassName
+									) ;
+		}
 		
 		$this->mpbox->Draw($arrCoordinates, $arrProperties);
-
-		
-		foreach($arrEvents as $objEvent) {
-			$arrCoordinates[] = (string)$objEvent->Position;
-			$arrProperties [] = array('title'=>(string)$objEvent->Type,'description'=>$objEvent->Datetime->format('Y-m-d H:i'),'className'=>'counter','dataid'=>$objEvent->Datetime->format('H:i'));
-		}
-
-		$this->mpbox->Draw($arrCoordinates,$arrProperties);
 		
 	}
 	
@@ -169,7 +167,6 @@ class Map extends \QCubed\Control\Panel {
 	
 	protected function ShowTabs($blnShow=false){
 		if($blnShow){
-			$this->HideNotification();
 			$this->navPlanning->removeChildControls(true);
 						
 			$this->DraWMap();

@@ -69,6 +69,19 @@ class Navigator extends \QCubed\Control\Panel {
 							);
 		if($intTouristsInTrouble) {
 			\QCubed\Project\Application::displayAlert('Someone needs help! To the rescue!');
+			$strScript = $this->objProxy->renderAsScript('QChangeEvent');
+			\QCubed\Project\Application::executeJavaScript($strScript);
+		}
+	}
+
+	public function objProxy_changed() {
+		$objTourist=	\Tourist::querySingle(
+								\QCubed\Query\QQ::equal(\QQN::tourist()->Status, \Tourist::REQUESTED_HELP)
+							);
+		if($objTourist) {
+			$objTourist->Status = \Tourist::ACKNOWLEDGE_HELP_REQUEST;
+			$objTourist->save();
+			\QCubed\Project\Application::executeJavaScript("document.location.href='index.php?c=main&a=map&highlight={$objTourist->Id}'");
 		}
 	}
 
@@ -81,8 +94,9 @@ class Navigator extends \QCubed\Control\Panel {
 	private function AddWatcher() {
 		$this->objProxy = new \QCubed\Control\Proxy($this);
 		$this->objProxy->addAction(new \QCubed\Event\Click(), new \QCubed\Action\AjaxControl($this,'objProxy_Clicked'));
+		$this->objProxy->addAction(new \QCubed\Event\Change(), new \QCubed\Action\AjaxControl($this,'objProxy_Changed'));
 		$strScript = $this->objProxy->renderAsScript();
-		error_log($strScript);
+		
 		\QCubed\Project\Application::executeJavaScript(' setTimeout(function(){ '.$strScript.' }, 5000);');
 	}
 	

@@ -28,7 +28,10 @@ namespace QCubed\Project\Control;
 		public static function GetRandomHexColor(){
 			return str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
 		}
-		
+
+		public function SetMapCenter($lat, $long) {
+			\QCubed\Project\Application::executeJavaScript("mapbox.setMapCenter('$lat','$long')");
+		}
 		/**
 		 * 
 		 * @param QMapBoxCoordinate[] $arrCoordinates

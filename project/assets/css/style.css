@@ -1,3 +1,53 @@
+
+
+/* Firefox old*/
+@-moz-keyframes blink {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+
+@-webkit-keyframes blink {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+/* IE */
+@-ms-keyframes blink {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+/* Opera and prob css3 final iteration */
+@keyframes blink {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
 @import url("tabs.css");
 body, html {
     height:  100%;
@@ -484,7 +534,7 @@ sup{color:red;}
 
 #map { position:absolute; top:0; bottom:0; width:100%; }
 .marker {
-	background-image: url('../images/logo_round.png');
+	background-image: url('../images/logo_round_grey.png');
 	background-size: cover;
 	width: 50px;
 	height: 50px;
@@ -505,6 +555,29 @@ sup{color:red;}
 	font-weight: bold;
 	content: attr(data-id);
 }
+.marker.requested_help {
+	background-image: url('../images/logo_round_red.png');
+	-moz-animation: blink normal 2s infinite ease-in-out; /* Firefox */
+    -webkit-animation: blink normal 2s infinite ease-in-out; /* Webkit */
+    -ms-animation: blink normal 2s infinite ease-in-out; /* IE */
+    animation: blink normal 2s infinite ease-in-out; /* Opera and prob css3 final iteration */
+}
+.marker.blink {
+	-moz-animation: blink normal 2s infinite ease-in-out; /* Firefox */
+    -webkit-animation: blink normal 2s infinite ease-in-out; /* Webkit */
+    -ms-animation: blink normal 2s infinite ease-in-out; /* IE */
+    animation: blink normal 2s infinite ease-in-out; /* Opera and prob css3 final iteration */
+}
+.marker.acknowledged_help_request {
+	background-image: url('../images/logo_round_red.png');
+}
+.marker.rescue_on_the_way {
+	background-image: url('../images/logo_round_red.png');
+}
+.marker.safe {
+	background-image: url('../images/logo_round_green.png');
+}
+
 .mapboxgl-popup {
 	max-width: 200px;
 }
