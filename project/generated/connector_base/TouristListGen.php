@@ -58,6 +58,8 @@ class TouristListGen extends \QCubed\Project\Control\DataGrid
 	public $colCountry;
 	/** @var NodeColumn */
 	public $colPosition;
+	/** @var NodeColumn */
+	public $colStatus;
 
 
 	/**
@@ -97,6 +99,7 @@ class TouristListGen extends \QCubed\Project\Control\DataGrid
 		$this->colCity = $this->createNodeColumn("City", QQN::Tourist()->City);
 		$this->colCountry = $this->createNodeColumn("Country", QQN::Tourist()->Country);
 		$this->colPosition = $this->createNodeColumn("Position", QQN::Tourist()->Position);
+		$this->colStatus = $this->createNodeColumn("Status", QQN::Tourist()->Status);
 	}
 
    /**

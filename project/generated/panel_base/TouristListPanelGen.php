@@ -150,7 +150,8 @@ abstract class TouristListPanelGen extends \QCubed\Control\Panel
             \QCubed\Query\QQ::equal(QQN::Tourist()->LanguageId, $strSearchValue),
             \QCubed\Query\QQ::equal(QQN::Tourist()->CityId, $strSearchValue),
             \QCubed\Query\QQ::equal(QQN::Tourist()->CountryId, $strSearchValue),
-            \QCubed\Query\QQ::equal(QQN::Tourist()->PositionId, $strSearchValue)
+            \QCubed\Query\QQ::equal(QQN::Tourist()->PositionId, $strSearchValue),
+            \QCubed\Query\QQ::like(QQN::Tourist()->Status, "%" . $strSearchValue . "%")
 			);
 		}
 

@@ -64,16 +64,11 @@ class Navigator extends \QCubed\Control\Panel {
 	public function objProxy_Clicked() {
 		error_log('objProxy_clicked, lets check the event log to see if someone is in trouble');
 		\QCubed\Project\Application::executeJavaScript(' setTimeout(function(){ '.$this->objProxy->renderAsScript().' }, 5000);');
-		$intEventCount =	\Event::queryCount(
-									\QCubed\Query\QQ::andCondition(
-										\QCubed\Query\QQ::orCondition(
-											\QCubed\Query\QQ::equal(\QQN::event()->Type, \Event::FALL),
-											\QCubed\Query\QQ::equal(\QQN::event()->Type, \Event::BUTTONPRESS)
-										)
-									)
+		$intTouristsInTrouble =	\Tourist::queryCount(
+								\QCubed\Query\QQ::equal(\QQN::tourist()->Status, \Tourist::REQUESTED_HELP)
 							);
-		if($intEventCount) {
-			\QCubed\Project\Application::displayAlert('Someone is in trouble! To the rescue!');
+		if($intTouristsInTrouble) {
+			\QCubed\Project\Application::displayAlert('Someone needs help! To the rescue!');
 		}
 	}
 

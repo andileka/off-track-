@@ -15,3 +15,4 @@
 <?= _r($this->lstCity); ?>
 <?= _r($this->lstCountry); ?>
 <?= _r($this->lstPosition); ?>
+<?= _r($this->txtStatus); ?>

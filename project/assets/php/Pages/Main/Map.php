@@ -61,8 +61,7 @@ class Map extends \QCubed\Control\Panel {
 		$this->Build();
 		if(isset($_GET['e']) && $_GET['e']!== ""){
 			$this->lstTourist->SelectedValues = explode(',',$_GET['e']);
-			$this->Databind();
-			
+			$this->Databind();			
 		}
 		
 	}
@@ -128,8 +127,6 @@ class Map extends \QCubed\Control\Panel {
 		$this->mpbox				= new \QCubed\Project\Control\Mapbox($this->navPlanning);
 		$this->mpbox->Name			= tr("Mapview");
 
-		$strType					= 'Marker';
-
 		$arrCoordinates = array_map(function(\Tourist $objTourist) {
 			return (string)$objTourist->Position;
 		}, $arrTourists); //ff adressen omzetten naar coordinates
@@ -139,6 +136,14 @@ class Map extends \QCubed\Control\Panel {
 		}, $arrTourists); //ff adressen omzetten naar coordinates
 		
 		$this->mpbox->Draw($arrCoordinates, $arrProperties);
+
+		
+		foreach($arrEvents as $objEvent) {
+			$arrCoordinates[] = (string)$objEvent->Position;
+			$arrProperties [] = array('title'=>(string)$objEvent->Type,'description'=>$objEvent->Datetime->format('Y-m-d H:i'),'className'=>'counter','dataid'=>$objEvent->Datetime->format('H:i'));
+		}
+
+		$this->mpbox->Draw($arrCoordinates,$arrProperties);
 		
 	}
 	
@@ -167,17 +172,19 @@ class Map extends \QCubed\Control\Panel {
 			$this->HideNotification();
 			$this->navPlanning->removeChildControls(true);
 						
+			$this->DraWMap();
+
 			$this->tblTourist						= new \TouristList($this->navPlanning);
 			$this->tblTourist->Name					= tr("Listview");
 			$this->tblTourist->CssClass				= 'work_table table';
 			$this->tblTourist->CreateColumns();
-			
+			/*
 			$this->pnlChart						= new \QCubed\Project\Jqui\ChartJS($this->navPlanning);
 			$this->pnlChart->Name				= tr("Chartview");
 			$this->pnlChart->SetDataSet("bar",$this::SetChartData());
 			$this->pnlChart->Draw();
+			*/
 			
-			$this->DraWMap();
 			$this->DrawCalendar();
 		}
 		

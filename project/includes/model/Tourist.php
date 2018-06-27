@@ -14,6 +14,11 @@
 	 *
 	 */
 	class Tourist extends TouristGen {
+		//ENUM('safe', 'requested help', 'acknowledged help request', 'rescue on the way')
+		const SAFE						='safe';
+		const REQUESTED_HELP			='requested help';
+		const ACKNOWLEDGE_HELP_REQUEST	='acknowledged help request';
+		const RESCUE_ON_THE_WAY			='rescue on the way';
 		/**
 		 * Default "to string" handler
 		 * Allows pages to _p()/echo()/print() this object, and to define the default
@@ -41,6 +46,12 @@
 			return $listbox;
 		}
 
+		public function save($blnForceInsert = false, $blnForceUpdate = false) {
+			if(!$this->Status) {
+				$this->Status = self::SAFE;
+			}
+			return parent::save($blnForceInsert, $blnForceUpdate);
+		}
 		public function MoveTo($lat, $long, QCubed\QDateTime $datetime=null) {
 			$devicetourist = DeviceTourist::loadArrayByTouristId($this->Id);
 			if(!count($devicetourist)) {

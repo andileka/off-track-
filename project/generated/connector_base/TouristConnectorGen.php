@@ -45,6 +45,8 @@ use QCubed\Query\Clause\ClauseInterface as QQClause;
  * @property-read QCubed\\Control\\Label $CountryIdLabel
  * @property QCubed\Project\Control\ListBox $PositionIdControl
  * @property-read QCubed\\Control\\Label $PositionIdLabel
+ * @property QCubed\Project\Control\TextBox $StatusControl
+ * @property-read QCubed\\Control\\Label $StatusLabel
  * @property-read string $TitleVerb a verb indicating whether or not this is being edited or created
  * @property-read boolean $EditMode a boolean indicating whether or not this is being edited or created
  */
@@ -234,6 +236,19 @@ class TouristConnectorGen extends \QCubed\ObjectBase
      * @access protected
      */
     protected $lblPosition;
+
+    /**
+     * @var QCubed\Project\Control\TextBox
+
+     * @access protected
+     */
+    protected $txtStatus;
+
+    /**
+     * @var Label
+     * @access protected
+     */
+    protected $lblStatus;
 
 
 
@@ -707,6 +722,38 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 
 
 
+		/**
+		 * Create and setup a QCubed\Project\Control\TextBox txtStatus
+		 * @param string $strControlId optional ControlId to use
+		 * @return QCubed\Project\Control\TextBox
+		 */
+		public function txtStatus_Create($strControlId = null) {
+			$this->txtStatus = new \QCubed\Project\Control\TextBox($this->objParentObject, $strControlId);
+			$this->txtStatus->Name = t('Status');
+			$this->txtStatus->PreferredRenderMethod = 'RenderWithName';
+        $this->txtStatus->LinkedNode = QQN::Tourist()->Status;
+			$this->txtStatus->Text = $this->objTourist->Status;
+			return $this->txtStatus;
+		}
+
+    /**
+     * Create and setup QCubed\Control\Label lblStatus
+     *
+     * @param string $strControlId optional ControlId to use
+     * @return QCubed\Control\Label
+     */
+    public function lblStatus_Create($strControlId = null) 
+    {
+        $this->lblStatus = new \QCubed\Control\Label($this->objParentObject, $strControlId);
+        $this->lblStatus->Name = t('Status');
+        $this->lblStatus->PreferredRenderMethod = 'RenderWithName';
+        $this->lblStatus->LinkedNode = QQN::Tourist()->Status;
+			$this->lblStatus->Text = $this->objTourist->Status;
+        return $this->lblStatus;
+    }
+
+
+
 
 
 
@@ -778,6 +825,10 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 			if ($this->lblPosition) $this->lblPosition->Text = $this->objTourist->Position ? $this->objTourist->Position->__toString() : null;
 
 
+			if ($this->txtStatus) $this->txtStatus->Text = $this->objTourist->Status;
+			if ($this->lblStatus) $this->lblStatus->Text = $this->objTourist->Status;
+
+
     }
 
     /**
@@ -832,6 +883,8 @@ class TouristConnectorGen extends \QCubed\ObjectBase
 				if ($this->lstCountry) $this->objTourist->CountryId = $this->lstCountry->SelectedValue;
 
 				if ($this->lstPosition) $this->objTourist->PositionId = $this->lstPosition->SelectedValue;
+
+				if ($this->txtStatus) $this->objTourist->Status = $this->txtStatus->Text;
 
 
             // Update any UniqueReverseReferences for controls that have been created for it
@@ -943,6 +996,12 @@ class TouristConnectorGen extends \QCubed\ObjectBase
                 return $this->lblPosition;
             case 'PositionNullLabel':
                 return $this->strPositionNullLabel;
+            case 'StatusControl':
+                if (!$this->txtStatus) return $this->txtStatus_Create();
+                return $this->txtStatus;
+            case 'StatusLabel':
+                if (!$this->lblStatus) return $this->lblStatus_Create();
+                return $this->lblStatus;
             default:
                 try {
                     return parent::__get($strName);
@@ -1028,6 +1087,12 @@ class TouristConnectorGen extends \QCubed\ObjectBase
                     break;
                 case 'PositionNullLabel':
                     $this->strPositionNullLabel = $mixValue;
+                    break;
+                case 'StatusControl':
+                    $this->txtStatus = Type::Cast($mixValue, '\\QCubed\Project\Control\TextBox');
+                    break;
+                case 'StatusLabel':
+                    $this->lblStatus = Type::Cast($mixValue, '\\QCubed\\Control\\Label');
                     break;
                 default:
                     parent::__set($strName, $mixValue);

@@ -38,6 +38,7 @@ use QCubed\Query\ModelTrait;
  * @property integer $CityId the value of the city_id column 
  * @property integer $CountryId the value of the country_id column 
  * @property integer $PositionId the value of the position_id column 
+ * @property string $Status the value of the status column 
  * @property Language $Language the value of the Language object referenced by intLanguageId 
  * @property City $City the value of the City object referenced by intCityId 
  * @property Country $Country the value of the Country object referenced by intCountryId 
@@ -150,6 +151,16 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 
     const POSITION_ID_DEFAULT = null;
     const POSITION_ID_FIELD = 'position_id';
+
+
+    /**
+     * Protected member variable that maps to the database column tourist.status
+     * @var string strStatus
+     */
+    private $strStatus;
+
+    const STATUS_DEFAULT = 'safe';
+    const STATUS_FIELD = 'status';
 
 
     /**
@@ -289,6 +300,8 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         $this->__blnValid[self::COUNTRY_ID_FIELD] = true;
         $this->intPositionId = Tourist::POSITION_ID_DEFAULT;
         $this->__blnValid[self::POSITION_ID_FIELD] = true;
+        $this->strStatus = Tourist::STATUS_DEFAULT;
+        $this->__blnValid[self::STATUS_FIELD] = true;
     }
 
    /**
@@ -614,6 +627,16 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
                 }
                 $objToReturn->intPositionId = $mixVal;
                 $objToReturn->__blnValid[self::POSITION_ID_FIELD] = true;
+            }
+            else {
+                $blnNoCache = true;
+            }
+            $strAlias = $strAliasPrefix . 'status';
+            $strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+            if (isset ($strColumnKeys[$strAliasName])) {
+                $mixVal = $strColumns[$strAliasName];
+                $objToReturn->strStatus = $mixVal;
+                $objToReturn->__blnValid[self::STATUS_FIELD] = true;
             }
             else {
                 $blnNoCache = true;
@@ -1026,7 +1049,8 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 							`language_id`,
 							`city_id`,
 							`country_id`,
-							`position_id`
+							`position_id`,
+							`status`
 						) VALUES (
 							' . $objDatabase->SqlVariable($this->strName) . ',
 							' . $objDatabase->SqlVariable($this->strPassport) . ',
@@ -1034,7 +1058,8 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 							' . $objDatabase->SqlVariable($this->intLanguageId) . ',
 							' . $objDatabase->SqlVariable($this->intCityId) . ',
 							' . $objDatabase->SqlVariable($this->intCountryId) . ',
-							' . $objDatabase->SqlVariable($this->intPositionId) . '
+							' . $objDatabase->SqlVariable($this->intPositionId) . ',
+							' . $objDatabase->SqlVariable($this->strStatus) . '
 						)
         ');
         // Update Identity column and return its value
@@ -1116,6 +1141,11 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 		if (isset($this->__blnDirty[self::POSITION_ID_FIELD])) {
 			$strCol = '`position_id`';
 			$strValue = $objDatabase->sqlVariable($this->intPositionId);
+			$values[] = $strCol . ' = ' . $strValue;
+		}
+		if (isset($this->__blnDirty[self::STATUS_FIELD])) {
+			$strCol = '`status`';
+			$strValue = $objDatabase->sqlVariable($this->strStatus);
 			$values[] = $strCol . ' = ' . $strValue;
 		}
 		if ($values) {
@@ -1242,6 +1272,10 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
 			$this->intPositionId = $objReloaded->intPositionId;
 			$this->objPosition = $objReloaded->objPosition;
 			$this->__blnValid[self::POSITION_ID_FIELD] = true;
+		}
+		if (isset($objReloaded->__blnValid[self::STATUS_FIELD])) {
+			$this->strStatus = $objReloaded->strStatus;
+			$this->__blnValid[self::STATUS_FIELD] = true;
 		}
 	}
     ////////////////////
@@ -1707,6 +1741,41 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         }
         return $this;
     }
+
+   /**
+	* Gets the value of strStatus 
+	* @throws Caller
+	* @return string
+	*/
+	public function getStatus()
+    {
+		if ($this->__blnRestored && empty($this->__blnValid[self::STATUS_FIELD])) {
+			throw new Caller("Status was not selected in the most recent query and is not valid.");
+		}
+		return $this->strStatus;
+	}
+
+
+
+
+   /**
+	* Sets the value of strStatus 
+	* Returns $this to allow chaining of setters.
+	* @param string|null $strStatus
+    * @throws Caller
+	* @return Tourist
+	*/
+	public function setStatus($strStatus)
+    {
+		$strStatus = Type::Cast($strStatus, QCubed\Type::STRING);
+
+		if ($this->strStatus !== $strStatus) {
+			$this->strStatus = $strStatus;
+			$this->__blnDirty[self::STATUS_FIELD] = true;
+		}
+		$this->__blnValid[self::STATUS_FIELD] = true;
+		return $this; // allows chaining
+	}
 
 
     /**
@@ -2331,6 +2400,7 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         $strToReturn .= '<element name="City" type="xsd1:City"/>';
         $strToReturn .= '<element name="Country" type="xsd1:Country"/>';
         $strToReturn .= '<element name="Position" type="xsd1:Position"/>';
+        $strToReturn .= '<element name="Status" type="xsd:string"/>';
         $strToReturn .= '<element name="__blnRestored" type="xsd:boolean"/>';
         $strToReturn .= '</sequence></complexType>';
         return $strToReturn;
@@ -2380,6 +2450,8 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         if ((property_exists($objSoapObject, 'Position')) &&
             ($objSoapObject->Position))
             $objToReturn->Position = Position::GetObjectFromSoapObject($objSoapObject->Position);
+        if (property_exists($objSoapObject, 'Status'))
+            $objToReturn->strStatus = $objSoapObject->Status;
         if (property_exists($objSoapObject, '__blnRestored'))
             $objToReturn->__blnRestored = $objSoapObject->__blnRestored;
         return $objToReturn;
@@ -2450,6 +2522,9 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         }
         if (isset($this->__blnValid[self::POSITION_ID_FIELD])) {
             $iArray['PositionId'] = $this->intPositionId;
+        }
+        if (isset($this->__blnValid[self::STATUS_FIELD])) {
+            $iArray['Status'] = $this->strStatus;
         }
         return new ArrayIterator($iArray);
     }
@@ -2524,6 +2599,9 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
         } elseif (isset($this->__blnValid[self::POSITION_ID_FIELD])) {
             $a['position_id'] = $this->intPositionId;
         }
+        if (isset($this->__blnValid[self::STATUS_FIELD])) {
+            $a['status'] = $this->strStatus;
+        }
         if (isset($this->_objDeviceTourist)) {
             $a['device_tourist'] = $this->_objDeviceTourist;
         } elseif (isset($this->_objDeviceTouristArray)) {
@@ -2562,6 +2640,7 @@ abstract class TouristGen extends \QCubed\ObjectBase implements IteratorAggregat
  * @property-read NodeCountry $Country
  * @property-read Node\Column $PositionId
  * @property-read NodePosition $Position
+ * @property-read Node\Column $Status
  * @property-read ReverseReferenceNodeDeviceTourist $DeviceTourist
  * @property-read ReverseReferenceNodeTouristTrack $TouristTrack
  * @property-read Node\Column $_PrimaryKeyNode
@@ -2584,6 +2663,7 @@ class NodeTourist extends Node\Table {
             "city_id",
             "country_id",
             "position_id",
+            "status",
         ];
     }
 
@@ -2636,6 +2716,8 @@ class NodeTourist extends Node\Table {
                 return new Node\Column('position_id', 'PositionId', 'Integer', $this);
             case 'Position':
                 return new NodePosition('position_id', 'Position', 'Integer', $this);
+            case 'Status':
+                return new Node\Column('status', 'Status', 'VarChar', $this);
             case 'DeviceTourist':
                 return new ReverseReferenceNodeDeviceTourist($this, 'devicetourist', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'DeviceTourist');
             case 'TouristTrack':
@@ -2667,6 +2749,7 @@ class NodeTourist extends Node\Table {
  * @property-read NodeCountry $Country
  * @property-read Node\Column $PositionId
  * @property-read NodePosition $Position
+ * @property-read Node\Column $Status
  * @property-read ReverseReferenceNodeDeviceTourist $DeviceTourist
  * @property-read ReverseReferenceNodeTouristTrack $TouristTrack
 
@@ -2690,6 +2773,7 @@ class ReverseReferenceNodeTourist extends Node\ReverseReference {
             "city_id",
             "country_id",
             "position_id",
+            "status",
         ];
     }
 
@@ -2734,6 +2818,8 @@ class ReverseReferenceNodeTourist extends Node\ReverseReference {
                 return new Node\Column('position_id', 'PositionId', 'Integer', $this);
             case 'Position':
                 return new NodePosition('position_id', 'Position', 'Integer', $this);
+            case 'Status':
+                return new Node\Column('status', 'Status', 'VarChar', $this);
             case 'DeviceTourist':
                 return new ReverseReferenceNodeDeviceTourist($this, 'devicetourist', \QCubed\Type::REVERSE_REFERENCE, 'tourist_id', 'DeviceTourist');
             case 'TouristTrack':
