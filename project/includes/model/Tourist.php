@@ -30,6 +30,10 @@
 			return $this->Name;
 		}
 
+		public function GetUrl() {
+			return "<a href='index.php?c=tourist&a=edit&id=$this->Id'>$this->Name</a>";
+		}
+
 		/**
 		 *
 		 * @param \QCubed\Project\Control\ControlBase $objParentObject
