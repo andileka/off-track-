@@ -36,7 +36,7 @@
 			$listbox				= new \QCubed\Project\Control\ListBox($objParentObject, $strControlId);
 			
 			foreach($arrCities as $objTourist) {
-				$listbox->AddItem((string)$objTourist, $objTourist->Id);
+				$listbox->AddItem((string)$objTourist, $objTourist->Id, true);
 			}
 			return $listbox;
 		}
