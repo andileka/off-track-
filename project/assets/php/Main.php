@@ -83,6 +83,15 @@ class Main extends \QCubed\Project\Control\FormBase {
     protected function formCreate() {
 		
 		if ($this->action === 'logout' || !SecurityHelper::IsAuthorised($this->ctrl, $this->action)) {
+			if($this->ctrl == 'tourist' && $this->action == 'qr') {
+				// Run the dispatcher, to conver c=main&a=index into MainIndex = actual class name
+				$strClassName					= '\\' .$this->Dispatch();
+
+				// Load class into the AppController
+				$this->pnlAppController			= new $strClassName($this);
+				$this->pnlAppController->addCssFile(__VIRTUAL_DIRECTORY__."/project/assets/css/datatables.css");
+				return;
+			}
 			$this->ctrl = 'main';
 			$this->ClassBody = "login-page";
 			$this->action = 'login';
@@ -94,24 +103,23 @@ class Main extends \QCubed\Project\Control\FormBase {
 			// @TODO temporarily bypass language error
 			/*$this->lstLang					= Language::GetListBox($this, 'lstLang', false, \QCubed\Project\Application::$LanguageCode, true);
 			$this->lstLang->AddAction(new \QCubed\Event\Change(), new \QCubed\Action\Ajax('ChangeLanguage'));*/
-			//if($this->ctrl != 'tourist' && $this->action != 'device') {
-				$this->pnlAlert					= new \QCubed\Project\Control\Alert($this);
-				$this->pnlAlert->Display		= false;
-				$this->pnlAlert->HasCloseButton	= true;
-				$this->pnlAlert->AddCssClass(\QCubed\Bootstrap\Bootstrap::ALERT_DANGER);
-
-				$this->pnlMenu					= new Panels\Navigator($this);
-				$this->pnlMenu->ctrl			= $this->ctrl;
-				$this->pnlMenu->action			= $this->action;
-
-				$this->btnLogout				= new \QCubed\Control\Label($this,'btnLogout');
-				$this->btnLogout->Text			= '';
-				$this->btnLogout->ToolTip		= tr('Logout');
-				$this->btnLogout->HtmlEntities	= false;
-				$this->btnLogout->AddAction(new \QCubed\Event\Click(), new \QCubed\Action\Server('Logout'));
-			//}
 			
+			$this->pnlAlert					= new \QCubed\Project\Control\Alert($this);
+			$this->pnlAlert->Display		= false;
+			$this->pnlAlert->HasCloseButton	= true;
+			$this->pnlAlert->AddCssClass(\QCubed\Bootstrap\Bootstrap::ALERT_DANGER);
 
+			$this->pnlMenu					= new Panels\Navigator($this);
+			$this->pnlMenu->ctrl			= $this->ctrl;
+			$this->pnlMenu->action			= $this->action;
+
+			$this->btnLogout				= new \QCubed\Control\Label($this,'btnLogout');
+			$this->btnLogout->Text			= '';
+			$this->btnLogout->ToolTip		= tr('Logout');
+			$this->btnLogout->HtmlEntities	= false;
+			$this->btnLogout->AddAction(new \QCubed\Event\Click(), new \QCubed\Action\Server('Logout'));
+
+			
 
 		}
 		// Run the dispatcher, to conver c=main&a=index into MainIndex = actual class name

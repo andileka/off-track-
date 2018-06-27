@@ -30,6 +30,6 @@
 		</div>
 		<!-- ./wrapper -->
 		<?php $this->renderEnd(); ?>
-		
+		<img src="project/assets/images/sharebuttons.png" width="150"/>
 	</body>
 </html>	
