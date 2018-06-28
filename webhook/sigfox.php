@@ -46,6 +46,7 @@ class SigfoxParser {
 		$intEvent = (int)$_POST['data'];
 		Log::MakeEntry("SIGFOX9", "Event " . $intEvent);
 		switch($intEvent) {
+			case \Event::SIGFOX_EVENT_BUTTON_SINGLE:
 			case \Event::SIGFOX_EVENT_BUTTON:
 				Log::MakeEntry("SIGFOX_10", "BUTTON");
 				$event = \Event::CreateForDeviceId($device->Id, \Event::BUTTONPRESS, $_POST['lat'], $_POST['long']);
