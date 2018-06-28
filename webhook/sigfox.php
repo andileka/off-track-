@@ -35,15 +35,19 @@ class SigfoxParser {
 
 
 
-
+		Log::MakeEntry("SIGFOX6", "device toursist lookup" . $device->Id);
 		$devicetourist = \DeviceTourist::loadArrayByDeviceId($device->Id, QCubed\Query\QQ::expand(QQN::deviceTourist()->Tourist));
 		if(!count($devicetourist)) {
+			Log::MakeEntry("SIGFOX7", "device toursist lookup " . $device->Id . 'NOT FOUND');
 			return;
 		}
 		$objTourist = $devicetourist[0]->Tourist;
-
-		switch($_POST['data']) {
+		Log::MakeEntry("SIGFOX8", "Tourist found " . $objTourist);
+		$intEvent = (int)$_POST['data'];
+		Log::MakeEntry("SIGFOX9", "Event " . $intEvent);
+		switch($intEvent) {
 			case \Event::SIGFOX_EVENT_BUTTON:
+				Log::MakeEntry("SIGFOX_10", "BUTTON");
 				$event = \Event::CreateForDeviceId($device->Id, \Event::BUTTONPRESS, $_POST['lat'], $_POST['long']);
 				$objTourist->Status = Tourist::REQUESTED_HELP;
 				$objTourist->Save();
@@ -51,6 +55,7 @@ class SigfoxParser {
 				//$objTourist->SaveCurrentPosition($event->Position);
 				break;
 			case \Event::SIGFOX_EVENT_FALL:
+				Log::MakeEntry("SIGFOX_11", "BUTTON");
 				$event = \Event::CreateForDeviceId($device->Id, \Event::FALL, $_POST['lat'], $_POST['long']);
 				$objTourist->Status = Tourist::REQUESTED_HELP;
 				$objTourist->Save();
@@ -58,13 +63,15 @@ class SigfoxParser {
 				//$objTourist->SaveCurrentPosition($event->Position);
 				break;
 			case \Event::SIGFOX_EVENT_CHECKIN:
+				Log::MakeEntry("SIGFOX_12", "BUTTON");
 				$event = \Event::CreateForDeviceId($device->Id, \Event::LOCATIONCHECKIN, $_POST['lat'], $_POST['long']);
 				$objTourist->SaveCurrentPosition($event->Position);
 				break;
 			default:
-				Log::MakeEntry("SIGFOX6", "unexpected data " . $_POST['data']);
+				Log::MakeEntry("SIGFOX6", "unexpected data " . $intEvent);
 				break;
 		}
+		Log::MakeEntry("SIGFOX_DONE", "DONE");
 	}
 	
 	private static function requireqcubed(){
