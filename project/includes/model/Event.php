@@ -24,7 +24,9 @@
 		const STATUS_ALLOK			= 'all ok';
 		const STATUS_NOTAPPLICABLE	= 'not applicable';
 
-		const SIGFOX_EVENT_BUTTON	= 12;
+
+		const SIGFOX_EVENT_BUTTON			= 12;
+		const SIGFOX_EVENT_BUTTON_SINGLE	= 11;
 		const SIGFOX_EVENT_FALL		= 00;
 		const SIGFOX_EVENT_CHECKIN	= 01;
 		
