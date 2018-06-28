@@ -95,6 +95,7 @@ class Main extends \QCubed\Project\Control\FormBase {
 				$this->pnlAppController->addCssFile(__VIRTUAL_DIRECTORY__."/project/assets/css/datatables.css");
 				return;
 			}
+			\QCubed\Project\Application::redirect('front.php');
 			$this->ctrl = 'main';
 			$this->ClassBody = "login-page";
 			$this->action = 'login';
