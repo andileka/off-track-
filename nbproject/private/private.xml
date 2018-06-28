@@ -12,10 +12,12 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/matthias/NetBeansProjects/hikify/project/assets/php/Panels/Tourist/Detail.php</file>
-            <file>file:/home/matthias/NetBeansProjects/hikify/project/assets/php/Panels/Tourist/Estimates.php</file>
-            <file>file:/home/matthias/NetBeansProjects/hikify/project/assets/php/Panels/Tourist/Main.php</file>
-            <file>file:/home/matthias/NetBeansProjects/hikify/project/assets/php/Panels/Tourist/Event.php</file>
+            <file>file:/home/matthias/NetBeansProjects/hikify/webhook/sigfox.php</file>
+            <file>file:/home/matthias/NetBeansProjects/hikify/project/assets/templates/panels/tourist/main.tpl.php</file>
+            <file>file:/home/matthias/NetBeansProjects/hikify/project/assets/php/Helpers/Security.php</file>
+            <file>file:/home/matthias/NetBeansProjects/hikify/index.tpl.php</file>
+            <file>file:/home/matthias/NetBeansProjects/hikify/project/assets/php/Main.php</file>
+            <file>file:/home/matthias/NetBeansProjects/hikify/project/assets/php/Pages/Tourist/Qr.php</file>
         </group>
     </open-files>
 </project-private>
