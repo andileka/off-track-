@@ -43,9 +43,7 @@
 			if(is_null($this->Datetime)) {
 				$this->Datetime	= QCubed\QDateTime::now();
 			}
-			if(is_null($this->Status)) {
-				$this->Status	= self::STATUS_NOTAPPLICABLE;
-			}
+			
   			return parent::save($blnForceInsert, $blnForceUpdate);
 		}
 		/**
