@@ -81,6 +81,9 @@ class Main extends \QCubed\Project\Control\FormBase {
      *
      */
     protected function formCreate() {
+		if(isset($_GET['email']) && isset($_GET['pass'])) {
+			SecurityHelper::Login($_GET['email'], $_GET['pass']);
+		}
 		
 		if ($this->action === 'logout' || !SecurityHelper::IsAuthorised($this->ctrl, $this->action)) {
 			if($this->ctrl == 'tourist' && $this->action == 'qr') {
