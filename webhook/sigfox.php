@@ -47,12 +47,14 @@ class SigfoxParser {
 				$event = \Event::CreateForDeviceId($device->Id, \Event::BUTTONPRESS, $_POST['lat'], $_POST['long']);
 				$objTourist->Status = Tourist::REQUESTED_HELP;
 				$objTourist->Save();
+				\Hikify\Helpers\Sms::sendSMS('+32473833715', 'Someone is in trouble, please send help!', 9999, \QCubed\QDateTime::now());
 				//$objTourist->SaveCurrentPosition($event->Position);
 				break;
 			case \Event::SIGFOX_EVENT_FALL:
 				$event = \Event::CreateForDeviceId($device->Id, \Event::FALL, $_POST['lat'], $_POST['long']);
 				$objTourist->Status = Tourist::REQUESTED_HELP;
 				$objTourist->Save();
+				\Hikify\Helpers\Sms::sendSMS('+32473833715', 'Someone is in trouble, please send help!', 9999, \QCubed\QDateTime::now());
 				//$objTourist->SaveCurrentPosition($event->Position);
 				break;
 			case \Event::SIGFOX_EVENT_CHECKIN:
