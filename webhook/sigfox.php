@@ -64,9 +64,9 @@ class SigfoxParser {
 				//$objTourist->SaveCurrentPosition($event->Position);
 				break;
 			case \Event::SIGFOX_EVENT_CHECKIN:
-				Log::MakeEntry("SIGFOX_12", "BUTTON");
+				/*Log::MakeEntry("SIGFOX_12", "BUTTON");
 				$event = \Event::CreateForDeviceId($device->Id, \Event::LOCATIONCHECKIN, $_POST['lat'], $_POST['long']);
-				$objTourist->SaveCurrentPosition($event->Position);
+				$objTourist->SaveCurrentPosition($event->Position);*/
 				break;
 			default:
 				Log::MakeEntry("SIGFOX6", "unexpected data " . $intEvent);
